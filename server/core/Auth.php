@@ -1,6 +1,8 @@
 <?php
 
 class Auth {
+    protected static $checked = false, $user;
+
     protected static function generateSession () {
         $session = md5(microtime(true) . $_SERVER['REMOTE_ADDR']);
         if (Sessions::select($session)->rowCount() == 1) {
@@ -10,6 +12,7 @@ class Auth {
     }
 
     protected static function createSession ($user_id) {
+        static::$checked = false;
         $session = static::generateSession();
         Sessions::insert([
             'session' => $session,
@@ -29,6 +32,7 @@ class Auth {
     }
 
     public static function revokeSession ($session) {
+        static::$checked = false;
         Sessions::update($session, [ 'expires_at' => date('Y-m-d H:i:s') ]);
         if ($_COOKIE[SESSION_COOKIE_NAME] == $session) {
             unset($_COOKIE[SESSION_COOKIE_NAME]);
@@ -69,9 +73,6 @@ class Auth {
         }
         return false;
     }
-
-    protected static $checked = false;
-    protected static $user;
 
     public static function user () {
         if (!static::$checked) {

@@ -23,12 +23,14 @@ class TransactionsController {
 
     public static function store () {
         $from_account = Accounts::select($_POST['from_account_id'])->fetch();
-        $from_new_amount = $from_account->amount - $_POST['amount'];
+        $from_account->amount -= $_POST['amount'];
+        $to_account = Accounts::select($_POST['to_account_id'])->fetch();
+        $to_account->amount += $_POST['amount'];
 
         if (
             $_POST['from_account_id'] != $_POST['to_account_id'] &&
             $from_account->user_id == Auth::id() &&
-            $from_new_amount >= 0
+            $from_account->amount >= 0
         ) {
             Transactions::insert([
                 'name' => $_POST['name'],
@@ -37,17 +39,9 @@ class TransactionsController {
                 'amount' => $_POST['amount'],
                 'created_at' => date('Y-m-d H:i:s')
             ]);
-
             $transaction_id = Database::lastInsertId();
-
-            Accounts::update($_POST['from_account_id'], [
-                'amount' => $from_new_amount
-            ]);
-
-            Accounts::update($_POST['to_account_id'], [
-                'amount' => Accounts::select($_POST['to_account_id'])->fetch()->amount + $_POST['amount']
-            ]);
-
+            Accounts::update($_POST['from_account_id'], [ 'amount' => $from_account->amount ]);
+            Accounts::update($_POST['to_account_id'], [ 'amount' => $to_account->amount ]);
             Router::redirect('/transactions/' . $transaction_id);
         } else {
             Router::back();

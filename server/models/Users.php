@@ -9,6 +9,7 @@ class Users extends Model {
             `username` VARCHAR(191) UNIQUE NOT NULL,
             `email` VARCHAR(191) UNIQUE NOT NULL,
             `password` VARCHAR(191) NOT NULL,
+            `role` TINYINT UNSIGNED NOT NULL,
             `created_at` DATETIME NOT NULL
         )');
     }
@@ -20,6 +21,7 @@ class Users extends Model {
             'username' => 'bplaat',
             'email' => 'bastiaan.v.d.plaat@gmail.com',
             'password' => password_hash('gouda', PASSWORD_DEFAULT),
+            'role' => USER_ROLE_ADMIN,
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
@@ -29,6 +31,7 @@ class Users extends Model {
             'username' => 'jan',
             'email' => 'jan.jansen@gmail.com',
             'password' => password_hash('jan', PASSWORD_DEFAULT),
+            'role' => USER_ROLE_NORMAL,
             'created_at' => date('Y-m-d H:i:s')
         ]);
     }

@@ -49,6 +49,7 @@ class SettingsController {
     }
 
     public static function deleteAccount () {
+        Accounts::delete([ 'user_id' => Auth::id() ]);
         Auth::revokeSession($_COOKIE[SESSION_COOKIE_NAME]);
         Sessions::delete([ 'user_id' => Auth::id() ]);
         Users::delete(Auth::id());

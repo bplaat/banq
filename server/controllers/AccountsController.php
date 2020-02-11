@@ -2,7 +2,7 @@
 
 class AccountsController {
     public static function index () {
-        $accounts = Accounts::select([ 'user_id' => Auth::id() ]);
+        $accounts = Accounts::select([ 'user_id' => Auth::id() ])->fetchAll();
         return view('accounts.index', [ 'accounts' => $accounts ]);
     }
 

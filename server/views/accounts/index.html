@@ -6,13 +6,17 @@
     <a class="button is-link" href="/accounts/create">Create</a>
 </div>
 
-@foreach ($accounts as $account):
-    <div class="box">
-        <h2 class="title is-4">
-            <a href="/accounts/{{ $account->id }}">{{ $account->name }}</a>
-        </h2>
-        <p>Amount: <b>&euro; {{ $account->amount }}</b></p>
-    </div>
-@endforeach
+@if (count($accounts) > 0):
+    @foreach ($accounts as $account):
+        <div class="box">
+            <h2 class="title is-4">
+                <a href="/accounts/{{ $account->id }}">{{ $account->name }}</a>
+            </h2>
+            <p>Amount: <b>&euro; {{ $account->amount }}</b></p>
+        </div>
+    @endforeach
+@else:
+    <p><i>There are no accounts yet!</i></p>
+@endif
 
 @view('footer')

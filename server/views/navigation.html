@@ -1,31 +1,39 @@
 <div class="navbar is-light is-fixed-top">
     <div class="container">
         <div class="navbar-brand">
-            <a class="navbar-item has-text-weight-bold" href="/">Bank</a>
+            <a class="navbar-item has-text-weight-bold" href="/">Banq</a>
             <a id="navbar-burger" class="navbar-burger burger"><span></span><span></span><span></span></a>
         </div>
         <div id="navbar-menu" class="navbar-menu">
             @if (Auth::check()):
                 <div class="navbar-start">
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link is-arrowless" href="/accounts">Accounts</a>
-                        <div class="navbar-dropdown">
-                            @$accounts = Accounts::select([ 'user_id' => Auth::id() ])->fetchAll()
-                            @foreach ($accounts as $account):
-                                <a class="navbar-item" href="/accounts/{{ $account->id }}">{{ $account->name }}</a>
-                            @endforeach
+                    @$accounts = Accounts::select([ 'user_id' => Auth::id() ])->fetchAll()
+                    @if (count($accounts) > 0):
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link is-arrowless" href="/accounts">Accounts</a>
+                            <div class="navbar-dropdown">
+                                @foreach ($accounts as $account):
+                                    <a class="navbar-item" href="/accounts/{{ $account->id }}">{{ cut($account->name, 35) }}</a>
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
+                    @else:
+                        <a class="navbar-item" href="/accounts">Accounts</a>
+                    @endif
 
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link is-arrowless" href="/transactions">Transactions</a>
-                        <div class="navbar-dropdown">
-                            @$transactions = Transactions::selectAll(5)->fetchAll()
-                            @foreach ($transactions as $transaction):
-                                <a class="navbar-item" href="/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
-                            @endforeach
+                    @$transactions = Transactions::selectAll(5)->fetchAll()
+                    @if (count($transactions) > 0):
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link is-arrowless" href="/transactions">Transactions</a>
+                            <div class="navbar-dropdown">
+                                @foreach ($transactions as $transaction):
+                                    <a class="navbar-item" href="/transactions/{{ $transaction->id }}">{{ cut($transaction->name, 35) }}</a>
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
+                    @else:
+                        <a class="navbar-item" href="/transactions">Transactions</a>
+                    @endif
                 </div>
 
                 <div class="navbar-end">
@@ -36,6 +44,9 @@
                     <div class="navbar-item">
                         <div class="buttons">
                             <a class="button" href="/auth/settings">Settings</a>
+                            @if (Auth::user()->role == USER_ROLE_ADMIN):
+                                <a class="button is-info" href="/admin">Admin</a>
+                            @endif
                             <a class="button is-dark" href="/auth/logout">Logout</a>
                         </div>
                     </div>

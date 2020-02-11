@@ -27,7 +27,7 @@ class AuthController {
 
                 Accounts::insert([
                     'name' => $_POST['firstname'] . '\'s Account',
-                    'user_id' => Database::lastInsertId(),
+                    'user_id' => Auth::id(),
                     'amount' => 0,
                     'created_at' => date('Y-m-d H:i:s')
                 ]);

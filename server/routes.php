@@ -25,6 +25,11 @@ if (Auth::check()) {
     Router::get('/auth/settings/revoke_session/{Sessions}', 'SettingsController::revokeSession');
     Router::get('/auth/settings/delete', 'SettingsController::deleteAccount');
 
+    // Admin
+    if (Auth::user()->role == USER_ROLE_ADMIN) {
+        Router::get('/admin', 'AdminController::index');
+    }
+
     // Auth
     Router::get('/auth/logout', 'AuthController::logout');
 }
