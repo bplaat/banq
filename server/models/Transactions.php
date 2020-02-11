@@ -7,7 +7,7 @@ class Transactions extends Model {
     public static function create () {
         return Database::query('CREATE TABLE `transactions` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            `name` VARCHAR(' . NAME_MAX_LENGTH . ') NOT NULL,
+            `name` VARCHAR(' . static::NAME_MAX_LENGTH . ') NOT NULL,
             `from_account_id` INT UNSIGNED NOT NULL,
             `to_account_id` INT UNSIGNED NOT NULL,
             `amount` BIGINT UNSIGNED NOT NULL,

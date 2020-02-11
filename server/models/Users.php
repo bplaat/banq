@@ -17,10 +17,10 @@ class Users extends Model {
     public static function create () {
         return Database::query('CREATE TABLE `users` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            `firstname` VARCHAR(' . FIRSTNAME_MAX_LENGTH . ') NOT NULL,
-            `lastname` VARCHAR(' . LASTNAME_MAX_LENGTH . ') NOT NULL,
-            `username` VARCHAR(' . USERNAME_MAX_LENGTH . ') UNIQUE NOT NULL,
-            `email` VARCHAR(' . EMAIL_MAX_LENGTH . ') UNIQUE NOT NULL,
+            `firstname` VARCHAR(' . static::FIRSTNAME_MAX_LENGTH . ') NOT NULL,
+            `lastname` VARCHAR(' . static::LASTNAME_MAX_LENGTH . ') NOT NULL,
+            `username` VARCHAR(' . static::USERNAME_MAX_LENGTH . ') UNIQUE NOT NULL,
+            `email` VARCHAR(' . static::EMAIL_MAX_LENGTH . ') UNIQUE NOT NULL,
             `password` VARCHAR(191) NOT NULL,
             `role` TINYINT UNSIGNED NOT NULL,
             `created_at` DATETIME NOT NULL
