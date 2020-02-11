@@ -1,0 +1,18 @@
+@view('header', [ 'title' => 'Accounts' ])
+
+<h1 class="title">Accounts</h1>
+
+<div class="buttons">
+    <a class="button is-link" href="/accounts/create">Create</a>
+</div>
+
+@foreach ($accounts as $account):
+    <div class="box">
+        <h2 class="title is-4">
+            <a href="/accounts/{{ $account->id }}">{{ cut($account->name, 25) }}</a>
+        </h2>
+        <p>Amount: {{ $account->amount }}</p>
+    </div>
+@endforeach
+
+@view('footer')

@@ -1,0 +1,15 @@
+@view('header', [ 'title' => 'Edit account - Accounts' ])
+
+<h1 class="title">Edit account</h1>
+
+<form method="post" action="/accounts/{{ $account->id }}">
+    <div class="field">
+        <label class="label" for="name">Name</label>
+        <input class="input" type="text" id="name" name="name" value="{{ $account->name }}" autofocus required>
+    </div>
+    <div class="field">
+        <button class="button is-link" type="submit">Edit account</button>
+    </div>
+</form>
+
+@view('footer')

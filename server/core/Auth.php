@@ -14,6 +14,7 @@ class Auth {
         Sessions::insert([
             'session' => $session,
             'user_id' => $user_id,
+            'created_at' => date('Y-m-d H:i:s'),
             'expires_at' => date('Y-m-d H:i:s', time() + SESSION_DURATION)
         ]);
         $_COOKIE[SESSION_COOKIE_NAME] = $session;
@@ -60,7 +61,8 @@ class Auth {
             Users::insert(array_merge([
                 'username' => $username,
                 'email' => $email,
-                'password' => password_hash($password, PASSWORD_DEFAULT)
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'created_at' => date('Y-m-d H:i:s')
             ], $extra));
             static::createSession(Database::lastInsertId());
             return true;

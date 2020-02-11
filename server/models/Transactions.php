@@ -7,7 +7,7 @@ class Transactions extends Model {
             `from_user_id` INT UNSIGNED NOT NULL,
             `to_user_id` INT UNSIGNED NOT NULL,
             `amount` BIGINT UNSIGNED NOT NULL,
-            `send_at` DATETIME NOT NULL
+            `created_at` DATETIME NOT NULL
         )');
     }
 }

@@ -24,6 +24,14 @@ class AuthController {
         ) {
             if (Auth::register($_POST['username'], $_POST['email'], $_POST['password'],
                 [ 'firstname' => $_POST['firstname'], 'lastname' => $_POST['lastname'] ])) {
+
+                Accounts::insert([
+                    'name' => $_POST['firstname'] . '\'s Account',
+                    'user_id' => Database::lastInsertId(),
+                    'amount' => 0,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+
                 Router::redirect('/');
             }
         }

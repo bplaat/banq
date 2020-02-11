@@ -3,6 +3,15 @@
 Router::get('/', 'PagesController::index');
 
 if (Auth::check()) {
+    // Accounts
+    Router::get('/accounts', 'AccountsController::index');
+    Router::get('/accounts/create', 'AccountsController::create');
+    Router::post('/accounts', 'AccountsController::store');
+    Router::get('/accounts/{Accounts}/edit', 'AccountsController::edit');
+    Router::post('/accounts/{Accounts}', 'AccountsController::update');
+    Router::get('/accounts/{Accounts}/delete', 'AccountsController::delete');
+    Router::get('/accounts/{Accounts}', 'AccountsController::show');
+
     // Settings
     Router::get('/auth/settings', 'SettingsController::showSettingsForm');
     Router::post('/auth/settings/change_details', 'SettingsController::changeDetails');

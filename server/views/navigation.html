@@ -6,6 +6,18 @@
         </div>
         <div id="navbar-menu" class="navbar-menu">
             @if (Auth::check()):
+                <div class="navbar-start">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link is-arrowless" href="/accounts">Accounts</a>
+                        <div class="navbar-dropdown">
+                            @$accounts = Accounts::select([ 'user_id' => Auth::id() ])->fetchAll()
+                            @foreach ($accounts as $account):
+                                <a class="navbar-item" href="/accounts/{{ $account->id }}">{{ $account->name }}</a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
                 <div class="navbar-end">
                     <div class="navbar-item" style="display: flex; align-items: center;">
                         <img style="border-radius: 50%; margin-right: 12px;" src="https://www.gravatar.com/avatar/<?= md5(Auth::user()->email) ?>?s=48" alt="User gravater">

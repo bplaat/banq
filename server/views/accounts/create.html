@@ -1,0 +1,15 @@
+@view('header', [ 'title' => 'Create account - Accounts' ])
+
+<h1 class="title">Create account</h1>
+
+<form method="post" action="/accounts">
+    <div class="field">
+        <label class="label" for="name">Name</label>
+        <input class="input" type="text" id="name" name="name" autofocus required>
+    </div>
+    <div class="field">
+        <button class="button is-link" type="submit">Create account</button>
+    </div>
+</form>
+
+@view('footer')

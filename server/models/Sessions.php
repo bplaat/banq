@@ -8,6 +8,7 @@ class Sessions extends Model {
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             `session` CHAR(32) UNIQUE NOT NULL,
             `user_id` INT UNSIGNED NOT NULL,
+            `created_at` DATETIME NOT NULL,
             `expires_at` DATETIME NOT NULL
         )');
     }

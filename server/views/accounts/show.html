@@ -1,0 +1,12 @@
+@view('header', [ 'title' => $account->name . ' - Accounts' ])
+
+<h1 class="title">{{ $account->name }}</h1>
+
+<div class="buttons">
+    <a class="button is-link" href="/accounts/{{ $account->id }}/edit">Edit</a>
+    <a class="button is-danger" href="/accounts/{{ $account->id }}/delete">Delete</a>
+</div>
+
+<p>Amount: {{ $account->amount }}</p>
+
+@view('footer')
