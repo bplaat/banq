@@ -1,8 +1,9 @@
 @view('header', [ 'title' => $transaction->name . ' - Transactions' ])
 
 <h1 class="title">{{ $transaction->name }}</h1>
-<p>From: {{ $transaction->from_account_id }}</p>
-<p>To: {{ $transaction->to_account_id }}</p>
+<p>From: <a href="/accounts/{{ $transaction->from_account_id }}">{{ $transaction->from_account->name }}</a></p>
+<p>To: <a href="/accounts/{{ $transaction->to_account_id }}">{{ $transaction->to_account->name }}</a></p>
 <p>Amount: <b>&euro; {{ $transaction->amount }}</b></p>
+<p>Send at: <i>{{ $transaction->created_at }}</i></p>
 
 @view('footer')

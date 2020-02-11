@@ -3,6 +3,10 @@
 class TransactionsController {
     public static function index () {
         $transactions = Transactions::selectAll(50)->fetchAll();
+        foreach ($transactions as $transaction) {
+            $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
+            $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();
+        }
         return view('transactions.index', [ 'transactions' => $transactions ]);
     }
 
@@ -18,8 +22,14 @@ class TransactionsController {
     }
 
     public static function store () {
-        $from_new_amount = Accounts::select($_POST['from_account_id'])->fetch()->amount - $_POST['amount'];
-        if ($from_new_amount >= 0) {
+        $from_account = Accounts::select($_POST['from_account_id'])->fetch();
+        $from_new_amount = $from_account->amount - $_POST['amount'];
+
+        if (
+            $_POST['from_account_id'] != $_POST['to_account_id'] &&
+            $from_account->user_id == Auth::id() &&
+            $from_new_amount >= 0
+        ) {
             Transactions::insert([
                 'name' => $_POST['name'],
                 'from_account_id' => $_POST['from_account_id'],
@@ -45,9 +55,9 @@ class TransactionsController {
     }
 
     public static function show ($transaction) {
-        $from_account = Accounts::select($transaction->from_account_id)->fetch();
-        $to_account = Accounts::select($transaction->to_account_id)->fetch();
-        if ($from_account->user_id == Auth::id() || $to_account->user_id == Auth::id()) {
+        $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
+        $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();
+        if ($transaction->from_account->user_id == Auth::id() || $transaction->to_account->user_id == Auth::id()) {
             return view('transactions.show', [ 'transaction' => $transaction ]);
         } else {
             return false;

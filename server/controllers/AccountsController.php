@@ -21,12 +21,13 @@ class AccountsController {
     }
 
     public static function show ($account) {
-        if ($account->user_id == Auth::id()) {
-            $transactions = Transactions::selectAllByAccount($account->id);
-            return view('accounts.show', [ 'account' => $account, 'transactions' => $transactions ]);
-        } else {
-            return false;
+        $account->user = Users::select($account->user_id)->fetch();
+        $transactions = Transactions::selectAllByAccount($account->id)->fetchAll();
+        foreach ($transactions as $transaction) {
+            $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
+            $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();
         }
+        return view('accounts.show', [ 'account' => $account, 'transactions' => $transactions ]);
     }
 
     public static function edit ($account) {
