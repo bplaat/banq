@@ -28,6 +28,7 @@ class TransactionsController {
         $to_account->amount += $_POST['amount'];
 
         if (
+            $_POST['amount'] > 0 &&
             $_POST['from_account_id'] != $_POST['to_account_id'] &&
             $from_account->user_id == Auth::id() &&
             $from_account->amount >= 0

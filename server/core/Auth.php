@@ -21,14 +21,7 @@ class Auth {
             'expires_at' => date('Y-m-d H:i:s', time() + SESSION_DURATION)
         ]);
         $_COOKIE[SESSION_COOKIE_NAME] = $session;
-        setcookie(SESSION_COOKIE_NAME, $session, [
-            'expires' => time() + SESSION_DURATION,
-            'path' => '/',
-            'domain' => $_SERVER['HTTP_HOST'],
-            'secure' => isset($_SERVER['HTTPS']),
-            'httponly' => true,
-            'samesite' => 'Strict'
-        ]);
+        setcookie(SESSION_COOKIE_NAME, $session, time() + SESSION_DURATION, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']), true);
     }
 
     public static function revokeSession ($session) {
@@ -36,14 +29,7 @@ class Auth {
         Sessions::update($session, [ 'expires_at' => date('Y-m-d H:i:s') ]);
         if ($_COOKIE[SESSION_COOKIE_NAME] == $session) {
             unset($_COOKIE[SESSION_COOKIE_NAME]);
-            setcookie(SESSION_COOKIE_NAME, '', [
-                'expires' => time() - 3600,
-                'path' => '/',
-                'domain' => $_SERVER['HTTP_HOST'],
-                'secure' => isset($_SERVER['HTTPS']),
-                'httponly' => true,
-                'samesite' => 'Strict'
-            ]);
+            setcookie(SESSION_COOKIE_NAME, '', time() - 3600, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']), true);
         }
     }
 
