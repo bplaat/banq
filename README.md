@@ -1,2 +1,2 @@
-# Bank
+# Banq
 A nice bank system
