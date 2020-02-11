@@ -22,6 +22,15 @@ class Users extends Model {
             'password' => password_hash('gouda', PASSWORD_DEFAULT),
             'created_at' => date('Y-m-d H:i:s')
         ]);
+
+        static::insert([
+            'firstname' => 'Jan',
+            'lastname' => 'Jansen',
+            'username' => 'jan',
+            'email' => 'jan.jansen@gmail.com',
+            'password' => password_hash('jan', PASSWORD_DEFAULT),
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
     }
 
     public static function selectByLogin ($username, $email) {

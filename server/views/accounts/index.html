@@ -9,9 +9,9 @@
 @foreach ($accounts as $account):
     <div class="box">
         <h2 class="title is-4">
-            <a href="/accounts/{{ $account->id }}">{{ cut($account->name, 25) }}</a>
+            <a href="/accounts/{{ $account->id }}">{{ $account->name }}</a>
         </h2>
-        <p>Amount: {{ $account->amount }}</p>
+        <p>Amount: <b>&euro; {{ $account->amount }}</b></p>
     </div>
 @endforeach
 

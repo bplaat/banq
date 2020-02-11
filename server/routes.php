@@ -12,6 +12,12 @@ if (Auth::check()) {
     Router::get('/accounts/{Accounts}/delete', 'AccountsController::delete');
     Router::get('/accounts/{Accounts}', 'AccountsController::show');
 
+    // Transactions
+    Router::get('/transactions', 'TransactionsController::index');
+    Router::get('/transactions/create', 'TransactionsController::create');
+    Router::post('/transactions', 'TransactionsController::store');
+    Router::get('/transactions/{Transactions}', 'TransactionsController::show');
+
     // Settings
     Router::get('/auth/settings', 'SettingsController::showSettingsForm');
     Router::post('/auth/settings/change_details', 'SettingsController::changeDetails');

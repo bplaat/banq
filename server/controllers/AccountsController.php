@@ -22,7 +22,8 @@ class AccountsController {
 
     public static function show ($account) {
         if ($account->user_id == Auth::id()) {
-            return view('accounts.show', [ 'account' => $account ]);
+            $transactions = Transactions::selectAllByAccount($account->id);
+            return view('accounts.show', [ 'account' => $account, 'transactions' => $transactions ]);
         } else {
             return false;
         }

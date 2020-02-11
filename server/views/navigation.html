@@ -16,6 +16,16 @@
                             @endforeach
                         </div>
                     </div>
+
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link is-arrowless" href="/transactions">Transactions</a>
+                        <div class="navbar-dropdown">
+                            @$transactions = Transactions::selectAll(5)->fetchAll()
+                            @foreach ($transactions as $transaction):
+                                <a class="navbar-item" href="/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
 
                 <div class="navbar-end">

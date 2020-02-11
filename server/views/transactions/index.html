@@ -1,15 +1,10 @@
-@view('header', [ 'title' => $account->name . ' - Accounts' ])
+@view('header', [ 'title' => 'Transactions' ])
 
-<h1 class="title">{{ $account->name }}</h1>
-<p style="margin-bottom: 16px;">Amount: <b>&euro; {{ $account->amount }}</b></p>
+<h1 class="title">Transactions</h1>
 
 <div class="buttons">
-    <a class="button is-success" href="/transactions/create/?from_account_id={{ $account->id }}">Pay</a>
-    <a class="button is-link" href="/accounts/{{ $account->id }}/edit">Edit</a>
-    <a class="button is-danger" href="/accounts/{{ $account->id }}/delete">Delete</a>
+    <a class="button is-link" href="/transactions/create">Create</a>
 </div>
-
-<h2 class="title">Transactions</h2>
 
 @foreach ($transactions as $transaction):
     @if (Accounts::select($transaction->from_account_id)->fetch()->user_id == Auth::id()):
@@ -18,6 +13,7 @@
                 <a class="has-text-white" href="/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
             </h2>
             <p>To: {{ Accounts::select($transaction->to_account_id)->fetch()->name }}</p>
+            <p>From: {{ Accounts::select($transaction->from_account_id)->fetch()->name }}</p>
             <p>Amount: <b>&euro; {{ $transaction->amount }}</b></p>
         </div>
     @endif
@@ -26,6 +22,7 @@
             <h2 class="title is-4">
                 <a class="has-text-white" href="/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
             </h2>
+            <p>To: {{ Accounts::select($transaction->to_account_id)->fetch()->name }}</p>
             <p>From: {{ Accounts::select($transaction->from_account_id)->fetch()->name }}</p>
             <p>Amount: <b>&euro; {{ $transaction->amount }}</b></p>
         </div>

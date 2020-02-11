@@ -28,15 +28,6 @@ if (DEBUG) {
             $class = pathinfo($path, PATHINFO_FILENAME);
             call_user_func($class . '::drop');
             call_user_func($class . '::create');
-        }
-        Router::redirect('/');
-    });
-
-    Router::get('/debug/fill', function () {
-        $paths = glob(ROOT . '/models/*');
-        foreach ($paths as $path) {
-            $class = pathinfo($path, PATHINFO_FILENAME);
-            call_user_func($class . '::clear');
             if (method_exists($class, 'fill')) {
                 call_user_func($class . '::fill');
             }
