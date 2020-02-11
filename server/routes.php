@@ -26,7 +26,7 @@ if (Auth::check()) {
     Router::get('/auth/settings/delete', 'SettingsController::deleteAccount');
 
     // Admin
-    if (Auth::user()->role == USER_ROLE_ADMIN) {
+    if (Auth::user()->role == Users::ROLE_ADMIN) {
         Router::get('/admin', 'AdminController::index');
     }
 

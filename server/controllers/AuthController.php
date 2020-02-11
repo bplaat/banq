@@ -19,7 +19,16 @@ class AuthController {
 
     public static function register () {
         if (
+            strlen($_POST['firstname']) >= Users::FIRSTNAME_MIN_LENGTH &&
+            strlen($_POST['firstname']) <= Users::FIRSTNAME_MAX_LENGTH &&
+            strlen($_POST['lastname']) >= Users::LASTNAME_MIN_LENGTH &&
+            strlen($_POST['lastname']) <= Users::LASTNAME_MAX_LENGTH &&
+            strlen($_POST['username']) >= Users::USERNAME_MIN_LENGTH &&
+            strlen($_POST['username']) <= Users::USERNAME_MAX_LENGTH &&
+            strlen($_POST['email']) <= Users::EMAIL_MAX_LENGTH &&
             filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) &&
+            strlen($_POST['password']) >= Users::PASSWORD_MIN_LENGTH &&
+            strlen($_POST['password']) <= Users::PASSWORD_MAX_LENGTH &&
             $_POST['password'] == $_POST['confirm_password']
         ) {
             if (Auth::register($_POST['username'], $_POST['email'], $_POST['password'],

@@ -11,13 +11,22 @@ class AccountsController {
     }
 
     public static function store () {
-        Accounts::insert([
-            'name' => $_POST['name'],
-            'user_id' => Auth::id(),
-            'amount' => 0,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-        Router::redirect('/accounts/' . Database::lastInsertId());
+        $accounts = Accounts::select([ 'user_id' => Auth::id() ]);
+        if (
+            $accounts->rowCount() < Accounts::MAX_COUNT &&
+            strlen($_POST['name']) >= Accounts::NAME_MIN_LENGTH &&
+            strlen($_POST['name']) <= Accounts::NAME_MAX_LENGTH
+        ) {
+            Accounts::insert([
+                'name' => $_POST['name'],
+                'user_id' => Auth::id(),
+                'amount' => 0,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            Router::redirect('/accounts/' . Database::lastInsertId());
+        } else {
+            Router::back();
+        }
     }
 
     public static function show ($account) {
@@ -40,10 +49,17 @@ class AccountsController {
 
     public static function update ($account) {
         if ($account->user_id == Auth::id()) {
-            Accounts::update($account->id, [
-                'name' => $_POST['name']
-            ]);
-            Router::redirect('/accounts/' . $account->id);
+            if (
+                strlen($_POST['name']) >= Accounts::NAME_MIN_LENGTH &&
+                strlen($_POST['name']) <= Accounts::NAME_MAX_LENGTH
+            ) {
+                Accounts::update($account->id, [
+                    'name' => $_POST['name']
+                ]);
+                Router::redirect('/accounts/' . $account->id);
+            } else {
+                Router::back();
+            }
         } else {
             return false;
         }

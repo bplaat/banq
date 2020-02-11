@@ -1,10 +1,13 @@
 <?php
 
 class Transactions extends Model {
+    const NAME_MIN_LENGTH = 3;
+    const NAME_MAX_LENGTH = 35;
+
     public static function create () {
         return Database::query('CREATE TABLE `transactions` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            `name` VARCHAR(191) NOT NULL,
+            `name` VARCHAR(' . NAME_MAX_LENGTH . ') NOT NULL,
             `from_account_id` INT UNSIGNED NOT NULL,
             `to_account_id` INT UNSIGNED NOT NULL,
             `amount` BIGINT UNSIGNED NOT NULL,

@@ -10,10 +10,10 @@
             <div class="box" style="height: 100%">
                 <h2 class="title is-4">
                     <a href="#">{{ $user->firstname }} {{ $user->lastname }}</a>
-                    @if ($user->role == USER_ROLE_NORMAL):
+                    @if ($user->role == Users::ROLE_NORMAL):
                         <span class="tag is-pulled-right is-success">NORMAL</span>
                     @endif
-                    @if ($user->role == USER_ROLE_ADMIN):
+                    @if ($user->role == Users::ROLE_ADMIN):
                         <span class="tag is-pulled-right is-danger">ADMIN</span>
                     @endif
                 </h2>

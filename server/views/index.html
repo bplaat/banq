@@ -3,7 +3,13 @@
 @if (Auth::check()):
     <h1 class="title">Welcome {{ Auth::user()->firstname }}!</h1>
 @else:
-    <h1 class="title">Home</h1>
+    <h1 class="title">Welcome to Banq</h1>
+    <p style="margin-bottom: 16px;">Banq is very secure online banking system made to make you happy!</p>
+    <p style="margin-bottom: 16px;">Login or register to use our services:</p>
+    <div class="buttons">
+        <a class="button is-link" href="/auth/login">Login</a>
+        <a class="button" href="/auth/register">Register</a>
+    </div>
 @endif
 
 @view('footer')

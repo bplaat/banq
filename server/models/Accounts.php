@@ -1,10 +1,14 @@
 <?php
 
 class Accounts extends Model {
+    const MAX_COUNT = 5;
+    const NAME_MIN_LENGTH = 3;
+    const NAME_MAX_LENGTH = 25;
+
     public static function create () {
         return Database::query('CREATE TABLE `accounts` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            `name` VARCHAR(191) NOT NULL,
+            `name` VARCHAR(' . NAME_MAX_LENGTH . ') NOT NULL,
             `user_id` INT UNSIGNED NOT NULL,
             `amount` BIGINT UNSIGNED NOT NULL,
             `created_at` DATETIME NOT NULL

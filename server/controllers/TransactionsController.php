@@ -28,6 +28,8 @@ class TransactionsController {
         $to_account->amount += $_POST['amount'];
 
         if (
+            strlen($_POST['name']) >= Transactions::NAME_MIN_LENGTH &&
+            strlen($_POST['name']) <= Transactions::NAME_MAX_LENGTH &&
             $_POST['amount'] > 0 &&
             $_POST['from_account_id'] != $_POST['to_account_id'] &&
             $from_account->user_id == Auth::id() &&
