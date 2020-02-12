@@ -28,6 +28,8 @@ if (Auth::check()) {
     // Admin
     if (Auth::user()->role == Users::ROLE_ADMIN) {
         Router::get('/admin', 'AdminController::index');
+        Router::get('/admin/users/{Users}', 'AdminController::usersShow');
+        Router::get('/admin/accounts/{Accounts}', 'AdminController::accountsShow');
     }
 
     // Auth

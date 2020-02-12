@@ -1,0 +1,24 @@
+@view('header', [ 'title' => $user->firstname . ' - Users - Admin' ])
+
+<h1 class="title">{{ $user->firstname }}</h1>
+
+<h2 class="subtitle">Accounts</h2>
+
+<div class="buttons">
+    <a class="button is-link" href="/accounts/create">Create</a>
+</div>
+
+@if (count($accounts) > 0):
+    @foreach ($accounts as $account):
+        <div class="box">
+            <h2 class="title is-4">
+                <a href="/admin/accounts/{{ $account->id }}">{{ $account->name }}</a>
+            </h2>
+            <p>Amount: <b>&euro; {{ $account->amount }}</b></p>
+        </div>
+    @endforeach
+@else:
+    <p><i>There are no accounts yet!</i></p>
+@endif
+
+@view('footer')

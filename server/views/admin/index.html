@@ -2,14 +2,12 @@
 
 <h1 class="title" style="margin-bottom: 48px;">Admin</h1>
 
-<h2 class="subtitle">Users</h2>
-
 <div class="columns is-multiline">
     @foreach ($users as $user):
         <div class="column is-one-third">
             <div class="box" style="height: 100%">
                 <h2 class="title is-4">
-                    <a href="#">{{ $user->firstname }} {{ $user->lastname }}</a>
+                    <a href="/admin/users/{{ $user->id }}">{{ $user->firstname }} {{ $user->lastname }}</a>
                     @if ($user->role == Users::ROLE_NORMAL):
                         <span class="tag is-pulled-right is-success">NORMAL</span>
                     @endif

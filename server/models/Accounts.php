@@ -3,7 +3,7 @@
 class Accounts extends Model {
     const MAX_COUNT = 5;
     const NAME_MIN_LENGTH = 3;
-    const NAME_MAX_LENGTH = 25;
+    const NAME_MAX_LENGTH = 35;
 
     public static function create () {
         return Database::query('CREATE TABLE `accounts` (
