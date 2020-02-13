@@ -1,0 +1,25 @@
+@view('header', [ 'title' => 'Transactions - Admin' ])
+
+<h1 class="title">Transactions</h1>
+
+<div class="buttons">
+    <a class="button is-link" href="/admin/transactions/create">Create</a>
+</div>
+
+<div class="columns is-multiline">
+    @foreach ($transactions as $transaction):
+        <div class="column is-one-third">
+            <div class="box" style="height: 100%;">
+                <h2 class="title is-4">
+                    <a href="/admin/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
+                </h2>
+                <p>From: <a href="/admin/accounts/{{ $transaction->from_account_id }}">{{ $transaction->from_account->name }}</a></p>
+                <p>To: <a href="/admin/accounts/{{ $transaction->to_account_id }}">{{ $transaction->to_account->name }}</a></p>
+                <p>Amount: <b>&euro; {{ $transaction->amount }}</b></p>
+                <p>Send at: <i>{{ $transaction->created_at }}</i></p>
+            </div>
+        </div>
+    @endforeach
+</div>
+
+@view('footer')

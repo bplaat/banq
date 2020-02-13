@@ -2,10 +2,19 @@
 
 <h1 class="title">{{ $user->firstname }}</h1>
 
-<h2 class="subtitle">Accounts</h2>
+<div class="buttons">
+    <a class="button is-link" href="/admin/users/{{ $user->id }}/edit">Edit</a>
+    <a class="button is-danger" href="/admin/users/{{ $user->id }}/delete">Delete</a>
+</div>
+
+<p>Name: {{ $user->firstname }} {{ $user->lastname }}</p>
+<p>Username: {{ $user->username }}</p>
+<p style="margin-bottom: 2rem;">Email: <a href="mailto:{{ $user->email }}">{{ $user->email }}</a></p>
+
+<h2 class="title is-4">Accounts</h2>
 
 <div class="buttons">
-    <a class="button is-link" href="/accounts/create">Create</a>
+    <a class="button is-link" href="/admin/accounts/create?user_id={{ $user->id }}">Create</a>
 </div>
 
 @if (count($accounts) > 0):

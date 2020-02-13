@@ -34,7 +34,7 @@ abstract class Model {
     public static function insert ($values) {
         foreach ($values as $key => $value) $keys[] = '`' . $key . '`';
         return Database::query('INSERT INTO `' . static::table() . '` (' . implode(', ', $keys) . ') ' .
-            'VALUES (' . implode(array_fill(0, count($values), '?'), ', ') . ')', ...array_values($values));
+            'VALUES (' . implode(', ', array_fill(0, count($values), '?')) . ')', ...array_values($values));
     }
 
     public static function update ($where, $values) {

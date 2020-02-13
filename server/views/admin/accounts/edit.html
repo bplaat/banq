@@ -1,0 +1,27 @@
+@view('header', [ 'title' => 'Edit account - Accounts - Admin' ])
+
+<h1 class="title">Edit account</h1>
+
+<form method="post" action="/admin/accounts/{{ $account->id }}">
+    <div class="field">
+        <label class="label" for="name">Name</label>
+        <input class="input" type="text" id="name" name="name" value="{{ $account->name }}" autofocus required>
+    </div>
+    <div class="field">
+        <label class="label" for="user_id">User</label>
+        <select class="input" id="user_id" name="user_id" required>
+            @foreach ($users as $user):
+                <option value="{{ $user->id }}" {{ $user->id == $account->user_id ? 'selected' : ''}}>{{ $user->firstname }} {{ $user->lastname }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="field">
+        <label class="label" for="amount">Amount</label>
+        <input class="input" type="number" id="amount" name="amount" value="{{ $account->amount }}" required>
+    </div>
+    <div class="field">
+        <button class="button is-link" type="submit">Edit account</button>
+    </div>
+</form>
+
+@view('footer')

@@ -1,8 +1,8 @@
-@view('header', [ 'title' => 'Create transaction - Transactions' ])
+@view('header', [ 'title' => 'Create transaction - Admin - Transactions' ])
 
 <h1 class="title">Create transaction</h1>
 
-<form method="post" action="/transactions">
+<form method="post" action="/admin/transactions">
     <div class="field">
         <label class="label" for="name">Name</label>
         <input class="input" type="text" id="name" name="name" value="Transaction at {{ date('Y-m-d H:i:s') }}" required>
@@ -10,7 +10,7 @@
     <div class="field">
         <label class="label" for="from_account_id">From account</label>
         <select class="input" id="from_account_id" name="from_account_id" required>
-            @foreach ($from_accounts as $account):
+            @foreach ($accounts as $account):
                 <option value="{{ $account->id }}" {{ $from_account_id == $account->id ? 'selected' : '' }}>{{ $account->name }}</option>
             @endforeach
         </select>
@@ -18,7 +18,7 @@
     <div class="field">
         <label class="label" for="to_account_id">To account</label>
         <select class="input" id="to_account_id" name="to_account_id" required>
-            @foreach ($to_accounts as $account):
+            @foreach ($accounts as $account):
                 <option value="{{ $account->id }}">{{ $account->name }}</option>
             @endforeach
         </select>

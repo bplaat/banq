@@ -41,6 +41,17 @@
                     @else:
                         <a class="navbar-item" href="/transactions">Transactions</a>
                     @endif
+
+                    @if (Auth::user()->role == Users::ROLE_ADMIN):
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link is-arrowless" href="/admin">Admin</a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" href="/admin/users">Users</a>
+                                <a class="navbar-item" href="/admin/accounts">Accounts</a>
+                                <a class="navbar-item" href="/admin/transactions">Transactions</a>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="navbar-end">
@@ -51,9 +62,6 @@
                     <div class="navbar-item">
                         <div class="buttons">
                             <a class="button" href="/auth/settings">Settings</a>
-                            @if (Auth::user()->role == Users::ROLE_ADMIN):
-                                <a class="button is-info" href="/admin">Admin</a>
-                            @endif
                             <a class="button is-dark" href="/auth/logout">Logout</a>
                         </div>
                     </div>

@@ -1,0 +1,27 @@
+@view('header', [ 'title' => 'Create account - Accounts - Admin' ])
+
+<h1 class="title">Create account</h1>
+
+<form method="post" action="/admin/accounts">
+    <div class="field">
+        <label class="label" for="name">Name</label>
+        <input class="input" type="text" id="name" name="name" autofocus required>
+    </div>
+    <div class="field">
+        <label class="label" for="user_id">User</label>
+        <select class="input" id="user_id" name="user_id" required>
+            @foreach ($users as $user):
+                <option value="{{ $user->id }}" {{ $user->id == $user_id ? 'selected' : ''}}>{{ $user->firstname }} {{ $user->lastname }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="field">
+        <label class="label" for="amount">Amount</label>
+        <input class="input" type="number" id="amount" name="amount" value="0" required>
+    </div>
+    <div class="field">
+        <button class="button is-link" type="submit">Create account</button>
+    </div>
+</form>
+
+@view('footer')

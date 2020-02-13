@@ -24,13 +24,35 @@ if (Auth::check()) {
     Router::post('/auth/settings/change_details', 'SettingsController::changeDetails');
     Router::post('/auth/settings/change_password', 'SettingsController::changePassword');
     Router::get('/auth/settings/revoke_session/{Sessions}', 'SettingsController::revokeSession');
-    Router::get('/auth/settings/delete', 'SettingsController::deleteAccount');
+    Router::get('/auth/settings/delete', 'SettingsController::deleteUser');
 
     // Admin
     if (Auth::user()->role == Users::ROLE_ADMIN) {
         Router::get('/admin', 'AdminController::index');
-        Router::get('/admin/users/{Users}', 'AdminController::usersShow');
-        Router::get('/admin/accounts/{Accounts}', 'AdminController::accountsShow');
+
+        // Admin users
+        Router::get('/admin/users', 'AdminUsersController::index');
+        Router::get('/admin/users/create', 'AdminUsersController::create');
+        Router::post('/admin/users', 'AdminUsersController::store');
+        Router::get('/admin/users/{Users}/edit', 'AdminUsersController::edit');
+        Router::post('/admin/users/{Users}', 'AdminUsersController::update');
+        Router::get('/admin/users/{Users}/delete', 'AdminUsersController::delete');
+        Router::get('/admin/users/{Users}', 'AdminUsersController::show');
+
+        // Admin accounts
+        Router::get('/admin/accounts', 'AdminAccountsController::index');
+        Router::get('/admin/accounts/create', 'AdminAccountsController::create');
+        Router::post('/admin/accounts', 'AdminAccountsController::store');
+        Router::get('/admin/accounts/{Accounts}/edit', 'AdminAccountsController::edit');
+        Router::post('/admin/accounts/{Accounts}', 'AdminAccountsController::update');
+        Router::get('/admin/accounts/{Accounts}/delete', 'AdminAccountsController::delete');
+        Router::get('/admin/accounts/{Accounts}', 'AdminAccountsController::show');
+
+        // Admin transactions
+        Router::get('/admin/transactions', 'AdminTransactionsController::index');
+        Router::get('/admin/transactions/create', 'AdminTransactionsController::create');
+        Router::post('/admin/transactions', 'AdminTransactionsController::store');
+        Router::get('/admin/transactions/{Transactions}', 'AdminTransactionsController::show');
     }
 
     // Auth

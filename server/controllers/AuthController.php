@@ -32,7 +32,7 @@ class AuthController {
             $_POST['password'] == $_POST['confirm_password']
         ) {
             if (Auth::register($_POST['username'], $_POST['email'], $_POST['password'],
-                [ 'firstname' => $_POST['firstname'], 'lastname' => $_POST['lastname'] ])) {
+                [ 'firstname' => $_POST['firstname'], 'lastname' => $_POST['lastname'], 'role' => Users::ROLE_NORMAL ])) {
 
                 Accounts::insert([
                     'name' => $_POST['firstname'] . '\'s Account',

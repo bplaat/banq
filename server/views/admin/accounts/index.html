@@ -1,0 +1,20 @@
+@view('header', [ 'title' => 'Accounts - Admin' ])
+
+<h1 class="title">Accounts</h1>
+
+<div class="buttons">
+    <a class="button is-link" href="/admin/accounts/create">Create</a>
+</div>
+
+<div class="columns is-multiline">
+    @foreach ($accounts as $account):
+        <div class="column is-one-third">
+            <div class="box" style="height: 100%">
+                <h2 class="title is-4"><a href="/admin/accounts/{{ $account->id }}">{{ $account->name }}</a></h2>
+                <p>Amount: <b>&euro; {{ $account->amount }}</b></p>
+            </div>
+        </div>
+    @endforeach
+</div>
+
+@view('footer')

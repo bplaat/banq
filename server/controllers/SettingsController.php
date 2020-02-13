@@ -39,10 +39,10 @@ class SettingsController {
             password_verify($_POST['old_password'], Auth::user()->password) &&
             strlen($_POST['password']) >= Users::PASSWORD_MIN_LENGTH &&
             strlen($_POST['password']) <= Users::PASSWORD_MAX_LENGTH &&
-            $_POST['new_password'] == $_POST['confirm_new_password']
+            $_POST['password'] == $_POST['confirm_password']
         ) {
             Users::update(Auth::id(), [
-                'password' => password_hash($_POST['new_password'], PASSWORD_DEFAULT)
+                'password' => password_hash($_POST['password'], PASSWORD_DEFAULT)
             ]);
             Router::redirect('/auth/settings');
         }
@@ -57,11 +57,9 @@ class SettingsController {
         Router::back();
     }
 
-    public static function deleteAccount () {
-        Accounts::delete([ 'user_id' => Auth::id() ]);
+    public static function deleteUser () {
         Auth::revokeSession($_COOKIE[SESSION_COOKIE_NAME]);
-        Sessions::delete([ 'user_id' => Auth::id() ]);
-        Users::delete(Auth::id());
+        Users::deleteComplete(Auth::id());
         Router::redirect('/');
     }
 }
