@@ -1,5 +1,5 @@
 if ('serviceWorker' in navigator) {
-    // navigator.serviceWorker.register('/serviceworker.js');
+    navigator.serviceWorker.register('/serviceworker.js');
 }
 
 var navbar_burger = document.getElementById('navbar-burger');

@@ -1,5 +1,5 @@
 var CACHE_NAME = 'banq-v1';
-var urlsToCache = [
+var filesToCache = [
     '/offline',
     '/bulma.min.css',
     '/script.js',
@@ -10,18 +10,24 @@ var urlsToCache = [
 
 self.addEventListener('install', function (event) {
     event.waitUntil(caches.open(CACHE_NAME).then(function (cache) {
-        return cache.addAll(urlsToCache);
+        return cache.addAll(filesToCache);
     }));
 });
 
-self.addEventListener('fetch', function (event) {
-    if (event.request.mode === 'navigate') {
-        event.respondWith(fetch(event.request.url, { redirect: 'follow' }).catch(function () {
+self.addEventListener('activate', function (event) {
+    event.waitUntil(caches.keys().then(function (cacheNames) {
+        return Promise.all(cacheNames.filter(function (cacheName) {
+            return cacheName != CACHE_NAME
+        }).map(function (cacheName) {
+            return caches.delete(cacheName);
+        }));
+    }));
+});
+
+self.addEventListener('fetch', (event) => {
+    event.respondWith(caches.match(event.request).then(function (response) {
+        return response || fetch(event.request).catch(function () {
             return caches.match('/offline');
-        }));
-    } else {
-        event.respondWith(caches.match(event.request).then(function (response) {
-            return response || fetch(event.request, { redirect: 'follow' });
-        }));
-    }
+        });
+    }));
 });
