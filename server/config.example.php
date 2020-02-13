@@ -1,6 +1,12 @@
 <?php
 
-define('DEBUG', true);
+if ($_SERVER['HTTP_HOST'] == 'banq.local') {
+    define('DEBUG', true);
+} else {
+    define('DEBUG', false);
+    $_SERVER['HTTP_HOST'] = 'banq.ml';
+    $_SERVER['HTTPS'] = 'on';
+}
 
 define('DATABASE_DSN', 'mysql:host=127.0.0.1;dbname=banq');
 define('DATABASE_USER', 'banq');

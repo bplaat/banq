@@ -3,12 +3,11 @@
     @if (!IS_MOBILE_APP):
         <div class="footer">
             <div class="content has-text-centered">
-                <p>
-                    <code>{{ round((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000, 1) }} ms - {{ Database::queryCount() }} queries</code>
-                </p>
-                <p>Download our <a href="https://raw.githubusercontent.com/bplaat/banq/master/banq.apk">Android app</a></p>
+                @if (!isset($disable_metrics)):
+                    <p><code>{{ round((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000, 1) }} ms - {{ Database::queryCount() }} queries</code></p>
+                @endif
                 <p>Made by <a href="https://bastiaan.ml/" target="_blank">Bastiaan van der Plaat</a>, Deniz Kahriman and Don Luijendijk</p>
-                <p>For the source code go to <a href="https://github.com/bplaat/banq" target="_blank">GitHub</a></p>
+                <p>Download our <a href="/banq.apk">Android app</a> and for the source code go to <a href="https://github.com/bplaat/banq" target="_blank">GitHub</a></p>
             </div>
         </div>
     @endif

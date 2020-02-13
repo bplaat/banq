@@ -1,6 +1,7 @@
 <?php
 
 Router::get('/', 'PagesController::index');
+Router::get('/offline', 'PagesController::offline');
 
 if (Auth::check()) {
     // Accounts
