@@ -14,9 +14,14 @@ class Auth {
     public static function createSession ($user_id) {
         static::$checked = false;
         $session = static::generateSession();
+        $user_agent = parse_user_agent();
         Sessions::insert([
             'session' => $session,
             'user_id' => $user_id,
+            'ip' => get_ip(),
+            'browser' => $user_agent['browser'],
+            'version' => $user_agent['version'],
+            'platform' => $user_agent['platform'],
             'expires_at' => date('Y-m-d H:i:s', time() + SESSION_DURATION)
         ]);
         $_COOKIE[SESSION_COOKIE_NAME] = $session;

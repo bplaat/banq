@@ -2,6 +2,15 @@
 
 class SettingsController {
     public static function showSettingsForm() {
+        $user_agent = parse_user_agent();
+        Sessions::update($_COOKIE[SESSION_COOKIE_NAME], [
+            'ip' => get_ip(),
+            'browser' => $user_agent['browser'],
+            'version' => $user_agent['version'],
+            'platform' => $user_agent['platform'],
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
         $sessions = Sessions::select([ 'user_id' => Auth::id() ])->fetchAll();
         $active_sessions = [];
         foreach ($sessions as $session) {

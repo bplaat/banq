@@ -64,12 +64,13 @@
     @foreach ($active_sessions as $session):
         <div class="box">
             <h1 class="title is-5">
-                <code>{{ $session->session }}</code>
+                {{ $session->ip }} using {{ $session->browser }} {{ $session->version }} on {{ $session->platform }}
                 @if ($session->session == $_COOKIE[SESSION_COOKIE_NAME]):
-                    <div class="tag is-link">Current session</div>
+                    <div class="tag is-link" style="margin-left: 16px;">Current session</div>
                 @endif
             </h1>
-            <p><a class="button is-danger" href="/auth/settings/revoke_session/{{ $session->session }}">Delete session</a></p>
+            <p style="margin-bottom: 16px;">Created on {{ $session->created_at }}, last used on {{ $session->updated_at }} and expires on {{ $session->expires_at }}</p>
+            <p><a class="button is-danger" href="/auth/settings/revoke_session/{{ $session->session }}">Revoke session</a></p>
         </div>
     @endforeach
 </div>
