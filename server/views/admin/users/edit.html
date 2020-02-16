@@ -1,43 +1,55 @@
 @view('header', [ 'title' => 'Edit user - Users - Admin' ])
 
+<div class="breadcrumb">
+    <ul>
+      <li><a href="/">Banq</a></li>
+      <li><a href="/admin">Admin</a></li>
+      <li><a href="/admin/users">Users</a></li>
+      <li><a href="/admin/users/{{ $user->id }}">{{ $user->username }}</a></li>
+      <li class="is-active"><a href="/admin/users/{{ $user->id }}/edit">Edit</a></li>
+    </ul>
+</div>
+
 <h1 class="title">Edit user</h1>
+
+@view('errors')
 
 <form method="post" action="/admin/users/{{ $user->id }}">
     <div class="columns">
         <div class="column">
             <div class="field">
                 <label class="label" for="firstname">First name</label>
-                <input class="input" type="text" id="firstname" name="firstname" value="{{ $user->firstname }}" autofocus required>
+                <input class="input" type="text" id="firstname" name="firstname" value="{{ old('firstname', $user->firstname) }}" {{ !isset($errors) ? 'autofocus' : '' }} required>
             </div>
         </div>
         <div class="column">
             <div class="field">
                 <label class="label" for="lastname">Last name</label>
-                <input class="input" type="text" id="lastname" name="lastname" value="{{ $user->lastname }}" required>
+                <input class="input" type="text" id="lastname" name="lastname" value="{{ old('lastname', $user->lastname) }}" required>
             </div>
         </div>
     </div>
     <div class="field">
         <label class="label" for="username">Username</label>
-        <input class="input" type="text" id="username" name="username" value="{{ $user->username }}" required>
+        <input class="input" type="text" id="username" name="username" value="{{ old('username', $user->username) }}" required>
     </div>
     <div class="field">
         <label class="label" for="email">Email address</label>
-        <input class="input" type="email" id="email" name="email" value="{{ $user->email }}" required>
+        <input class="input" type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required>
     </div>
     <div class="field">
         <label class="label" for="password">Password (leave empty to not change)</label>
         <input class="input" type="password" id="password" name="password">
     </div>
     <div class="field">
-        <label class="label" for="confirm_password">Confirm password</label>
-        <input class="input" type="password" id="confirm_password" name="confirm_password">
+        <label class="label" for="password_confirmation">Confirm password</label>
+        <input class="input" type="password" id="password_confirmation" name="password_confirmation">
     </div>
     <div class="field">
         <label class="label" for="role">Role</label>
         <select class="input" id="role" name="role" required>
-            <option value="{{ Users::ROLE_NORMAL }}" {{ $user->role == Users::ROLE_NORMAL ? 'selected' : ''}}>Normal</option>
-            <option value="{{ Users::ROLE_ADMIN }}" {{ $user->role == Users::ROLE_ADMIN ? 'selected' : ''}}>Admin</option>
+            <option value="{{ Users::ROLE_NORMAL }}" {{ old('role', $user->role) == Users::ROLE_NORMAL ? 'selected' : ''}}>Normal</option>
+            <option value="{{ Users::ROLE_ADMIN }}" {{ old('role', $user->role) == Users::ROLE_ADMIN ? 'selected' : ''}}>Admin</option>
         </select>
     </div>
     <div class="field">

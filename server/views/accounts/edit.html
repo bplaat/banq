@@ -1,11 +1,22 @@
 @view('header', [ 'title' => 'Edit account - Accounts' ])
 
+<div class="breadcrumb">
+    <ul>
+      <li><a href="/">Banq</a></li>
+      <li><a href="/accounts">Accounts</a></li>
+      <li><a href="/accounts/{{ $account->id }}">{{ $account->name }}</a></li>
+      <li class="is-active"><a href="/accounts/{{ $account->id }}/edit">Edit</a></li>
+    </ul>
+</div>
+
 <h1 class="title">Edit account</h1>
+
+@view('errors')
 
 <form method="post" action="/accounts/{{ $account->id }}">
     <div class="field">
         <label class="label" for="name">Name</label>
-        <input class="input" type="text" id="name" name="name" value="{{ $account->name }}" autofocus required>
+        <input class="input" type="text" id="name" name="name" value="{{ old('name', $account->name) }}" {{ !isset($errors) ? 'autofocus' : '' }} required>
     </div>
     <div class="field">
         <button class="button is-link" type="submit">Edit account</button>

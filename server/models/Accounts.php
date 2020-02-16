@@ -1,49 +1,25 @@
 <?php
 
 class Accounts extends Model {
-    const MAX_COUNT = 5;
-    const NAME_MIN_LENGTH = 3;
-    const NAME_MAX_LENGTH = 35;
+    const MAX_COUNT = 6;
+    const NAME_VALIDATION = 'required|min:3|max:35';
+    const USER_ID_VALIDATION = 'required|int|exits:User,id';
+    const AMOUNT_VALIDATION = 'required|int|number_min:0';
+
+    public static function MAX_COUNT_VALIDATION ($key, $value) {
+        if (static::select([ $key => $value ])->rowCount() >= static::MAX_COUNT) {
+            return 'You can create a maximum of ' . static::MAX_COUNT . ' accounts';
+        }
+    }
 
     public static function create () {
         return Database::query('CREATE TABLE `accounts` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            `name` VARCHAR(' . static::NAME_MAX_LENGTH . ') NOT NULL,
+            `name` VARCHAR(255) NOT NULL,
             `user_id` INT UNSIGNED NOT NULL,
             `amount` BIGINT UNSIGNED NOT NULL,
-            `created_at` DATETIME NOT NULL
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )');
-    }
-
-    public static function fill () {
-        // Bastiaan's accounts
-        static::insert([
-            'name' => 'Bastiaan\'s Account',
-            'user_id' => 1,
-            'amount' => 100,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-        static::insert([
-            'name' => 'Bastiaan\'s Spaarpotje',
-            'user_id' => 1,
-            'amount' => 50,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-        // Jan's accounts
-        static::insert([
-            'name' => 'Jan\'s Account',
-            'user_id' => 2,
-            'amount' => 0,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-        static::insert([
-            'name' => 'Jan\'s Spaarpotje',
-            'user_id' => 2,
-            'amount' => 0,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
     }
 }

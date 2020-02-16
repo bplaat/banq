@@ -11,3 +11,9 @@ if (navbar_burger != undefined && navbar_menu != undefined) {
         navbar_menu.classList.toggle('is-active');
     }, false);
 }
+
+(document.querySelectorAll('.notification .delete') || []).forEach(function (deleteButton) {
+    deleteButton.addEventListener('click', function () {
+        this.parentNode.parentNode.removeChild(this.parentNode);
+    });
+});

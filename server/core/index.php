@@ -5,8 +5,6 @@ spl_autoload_register(function ($class) {
     if (file_exists($file)) require_once $file;
 });
 
-require_once ROOT . '/core/utils.php';
-
 spl_autoload_register(function ($class) {
     $file = ROOT . '/controllers/' . $class . '.php';
     if (file_exists($file)) require_once $file;
@@ -18,6 +16,10 @@ spl_autoload_register(function ($class) {
 });
 
 require_once ROOT . '/config.php';
+
+Session::init();
+
+require_once ROOT . '/core/utils.php';
 
 if (DEBUG) {
     ini_set('display_errors', 1);

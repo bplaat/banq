@@ -1,5 +1,14 @@
 @view('header', [ 'title' => $account->name . ' - Accounts - Admin' ])
 
+<div class="breadcrumb">
+    <ul>
+      <li><a href="/">Banq</a></li>
+      <li><a href="/admin">Admin</a></li>
+      <li><a href="/admin/accounts">Accounts</a></li>
+      <li class="is-active"><a href="/admin/accounts/{{ $account->id }}">{{ $account->name }}</a></li>
+    </ul>
+</div>
+
 <h1 class="title">{{ $account->name }}</h1>
 
 <p style="margin-bottom: 16px;">Amount: <b>&euro; {{ $account->amount }}</b></p>

@@ -1,5 +1,14 @@
 @view('header', [ 'title' => $user->firstname . ' - Users - Admin' ])
 
+<div class="breadcrumb">
+    <ul>
+      <li><a href="/">Banq</a></li>
+      <li><a href="/admin">Admin</a></li>
+      <li><a href="/admin/users">Users</a></li>
+      <li class="is-active"><a href="/admin/users/{{ $user->id }}">{{ $user->username }}</a></li>
+    </ul>
+</div>
+
 <h1 class="title">{{ $user->firstname }}</h1>
 
 <div class="buttons">

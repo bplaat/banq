@@ -3,7 +3,7 @@
     @if (!IS_MOBILE_APP):
         <div class="footer">
             <div class="content has-text-centered">
-                @if (!isset($disable_metrics)):
+                @if (DEBUG && !isset($disable_metrics)):
                     <p><code>{{ round((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000, 1) }} ms - {{ Database::queryCount() }} queries</code></p>
                 @endif
                 <p>Made by <a href="https://bastiaan.ml/" target="_blank">Bastiaan van der Plaat</a>, Deniz Kahriman and Don Luijendijk</p>

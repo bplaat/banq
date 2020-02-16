@@ -1,6 +1,15 @@
 @view('header', [ 'title' => 'Login' ])
 
+<div class="breadcrumb">
+    <ul>
+      <li><a href="/">Banq</a></li>
+      <li class="is-active"><a href="/auth/login">Login</a></li>
+    </ul>
+</div>
+
 <h1 class="title">Login</h1>
+
+@view('errors')
 
 <form method="post">
     <div class="field">

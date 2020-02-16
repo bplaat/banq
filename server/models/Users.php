@@ -1,15 +1,20 @@
 <?php
 
 class Users extends Model {
-    const FIRSTNAME_MIN_LENGTH = 2;
-    const FIRSTNAME_MAX_LENGTH = 20;
-    const LASTNAME_MIN_LENGTH = 2;
-    const LASTNAME_MAX_LENGTH = 30;
-    const USERNAME_MIN_LENGTH = 3;
-    const USERNAME_MAX_LENGTH = 20;
-    const EMAIL_MAX_LENGTH = 191;
-    const PASSWORD_MIN_LENGTH = 6;
-    const PASSWORD_MAX_LENGTH = 256;
+    const FIRSTNAME_VALIDATION = 'required|min:2|max:35';
+    const LASTNAME_VALIDATION = 'required|min:2|max:35';
+    const USERNAME_VALIDATION = 'required|min:3|max:30|unique:Users';
+    const USERNAME_EDIT_VALIDATION = 'required|min:3|max:30';
+    const EMAIL_VALIDATION = 'required|email|max:255|unique:Users';
+    const EMAIL_EDIT_VALIDATION = 'required|email|max:255';
+    const PASSWORD_VALIDATION = 'required|min:6|max:255|confirmed';
+    const ROLE_VALIDATION = 'required|int|digits_between:1,2';
+
+    public static function VERIFY_PASSWORD_VALIDATION ($key, $value) {
+        if (!password_verify($value, Auth::user()->password)) {
+            return 'The field ' . $key . ' must contain your current password';
+        }
+    }
 
     const ROLE_NORMAL = 1;
     const ROLE_ADMIN = 2;
@@ -17,35 +22,34 @@ class Users extends Model {
     public static function create () {
         return Database::query('CREATE TABLE `users` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            `firstname` VARCHAR(' . static::FIRSTNAME_MAX_LENGTH . ') NOT NULL,
-            `lastname` VARCHAR(' . static::LASTNAME_MAX_LENGTH . ') NOT NULL,
-            `username` VARCHAR(' . static::USERNAME_MAX_LENGTH . ') UNIQUE NOT NULL,
-            `email` VARCHAR(' . static::EMAIL_MAX_LENGTH . ') UNIQUE NOT NULL,
-            `password` VARCHAR(191) NOT NULL,
-            `role` TINYINT UNSIGNED NOT NULL,
-            `created_at` DATETIME NOT NULL
+            `firstname` VARCHAR(255) NOT NULL,
+            `lastname` VARCHAR(255) NOT NULL,
+            `username` VARCHAR(255) UNIQUE NOT NULL,
+            `email` VARCHAR(255) UNIQUE NOT NULL,
+            `password` VARCHAR(255) NOT NULL,
+            `role` INT UNSIGNED NOT NULL,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )');
     }
 
     public static function fill () {
-        static::insert([
+        static::createUser([
             'firstname' => 'Bastiaan',
             'lastname' => 'van der Plaat',
             'username' => 'bplaat',
             'email' => 'bastiaan.v.d.plaat@gmail.com',
             'password' => '$2y$10$Pm3Ewd1bIOldyRQudyGpR.HG7a3VpKEJgNfmswo.jhwpKtHh40FrO',
-            'role' => static::ROLE_ADMIN,
-            'created_at' => date('Y-m-d H:i:s')
+            'role' => static::ROLE_ADMIN
         ]);
 
-        static::insert([
+        static::createUser([
             'firstname' => 'Jan',
             'lastname' => 'Jansen',
             'username' => 'jan',
             'email' => 'jan.jansen@gmail.com',
             'password' => '$2y$10$Eed5f4pTWbRANwFQGchi/.j3Qi0vvdHZ6zQmGIxhOhW1eEyo2iEOq',
-            'role' => static::ROLE_NORMAL,
-            'created_at' => date('Y-m-d H:i:s')
+            'role' => static::ROLE_NORMAL
         ]);
     }
 
@@ -53,7 +57,27 @@ class Users extends Model {
         return Database::query('SELECT * FROM `users` WHERE `username` = ? OR `email` = ?', $username, $email);
     }
 
-    public static function deleteComplete ($user_id) {
+    public static function createUser ($user) {
+        static::insert($user);
+
+        $user_id = Database::lastInsertId();
+
+        Accounts::insert([
+            'name' => $user['firstname'] . '\'s Save Account',
+            'user_id' => $user_id,
+            'amount' => 50
+        ]);
+
+        Accounts::insert([
+            'name' => $user['firstname'] . '\'s Payment Account',
+            'user_id' => $user_id,
+            'amount' => 0
+        ]);
+
+        return $user_id;
+    }
+
+    public static function deleteUser ($user_id) {
         Accounts::delete([ 'user_id' => $user_id ]);
         Sessions::delete([ 'user_id' => $user_id ]);
         Users::delete($user_id);

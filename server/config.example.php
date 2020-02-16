@@ -14,5 +14,6 @@ define('DATABASE_PASSWORD', ''); // Your database password
 
 define('SESSION_COOKIE_NAME', 'banq-session');
 define('SESSION_DURATION', 60 * 60 * 24 * 356);
+define('SESSION_SHORT_COOKIE_NAME', 'banq-short-session');
 
 define('IS_MOBILE_APP', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'ml.banq.android');

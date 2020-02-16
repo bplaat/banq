@@ -1,0 +1,8 @@
+@if (isset($errors)):
+    <div class="notification is-danger">
+        <button class="delete"></button>
+        @foreach ($errors as $error):
+            <p>{{ $error }}</p>
+        @endforeach
+    </div>
+@endif

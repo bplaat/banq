@@ -1,6 +1,15 @@
 @view('header', [ 'title' => 'Settings' ])
 
+<div class="breadcrumb">
+    <ul>
+      <li><a href="/">Banq</a></li>
+      <li class="is-active"><a href="/auth/settings">Settings</a></li>
+    </ul>
+</div>
+
 <h1 class="title">Settings</h1>
+
+@view('errors')
 
 <form class="box" method="post" action="/auth/settings/change_details">
     <h2 class="title is-4">Change user details</h2>
@@ -8,23 +17,23 @@
         <div class="column">
             <div class="field">
                 <label class="label" for="firstname">First name</label>
-                <input class="input" type="text" id="firstname" name="firstname" value="{{ Auth::user()->firstname }}" required>
+                <input class="input" type="text" id="firstname" name="firstname" value="{{ old('firstname', Auth::user()->firstname) }}" required>
             </div>
         </div>
         <div class="column">
             <div class="field">
                 <label class="label" for="lastname">Last name</label>
-                <input class="input" type="text" id="lastname" name="lastname" value="{{ Auth::user()->lastname }}" required>
+                <input class="input" type="text" id="lastname" name="lastname" value="{{ old('lastname', Auth::user()->lastname) }}" required>
             </div>
         </div>
     </div>
     <div class="field">
         <label class="label" for="username">Username</label>
-        <input class="input" type="text" id="username" name="username" value="{{ Auth::user()->username }}" required>
+        <input class="input" type="text" id="username" name="username" value="{{ old('username', Auth::user()->username) }}" required>
     </div>
     <div class="field">
         <label class="label" for="email">Email address</label>
-        <input class="input" type="email" id="email" name="email" value="{{ Auth::user()->email }}" required>
+        <input class="input" type="email" id="email" name="email" value="{{ old('email', Auth::user()->email) }}" required>
     </div>
     <div class="field">
         <button class="button is-link" type="submit">Save</button>
@@ -42,8 +51,8 @@
         <input class="input" type="password" id="password" name="password" required>
     </div>
     <div class="field">
-        <label class="label" for="confirm_password">Confirm new password</label>
-        <input class="input" type="password" id="confirm_password" name="confirm_password" required>
+        <label class="label" for="password_confirmation">Confirm new password</label>
+        <input class="input" type="password" id="password_confirmation" name="password_confirmation" required>
     </div>
     <div class="field">
         <button class="button is-link" type="submit">Save</button>

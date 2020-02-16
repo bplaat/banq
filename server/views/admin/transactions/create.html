@@ -1,17 +1,28 @@
 @view('header', [ 'title' => 'Create transaction - Admin - Transactions' ])
 
+<div class="breadcrumb">
+    <ul>
+      <li><a href="/">Banq</a></li>
+      <li><a href="/admin">Admin</a></li>
+      <li><a href="/admin/transactions">Transactions</a></li>
+      <li class="is-active"><a href="/admin/transactions/create">Create</a></li>
+    </ul>
+</div>
+
 <h1 class="title">Create transaction</h1>
+
+@view('errors')
 
 <form method="post" action="/admin/transactions">
     <div class="field">
         <label class="label" for="name">Name</label>
-        <input class="input" type="text" id="name" name="name" value="Transaction at {{ date('Y-m-d H:i:s') }}" required>
+        <input class="input" type="text" id="name" name="name" value="{{ old('name', 'Transaction at ' . date('Y-m-d H:i:s')) }}" required>
     </div>
     <div class="field">
         <label class="label" for="from_account_id">From account</label>
         <select class="input" id="from_account_id" name="from_account_id" required>
             @foreach ($accounts as $account):
-                <option value="{{ $account->id }}" {{ $from_account_id == $account->id ? 'selected' : '' }}>{{ $account->name }}</option>
+                <option value="{{ $account->id }}" {{ $account->id == old('from_account_id', $from_account_id) ? 'selected' : '' }}>{{ $account->name }}</option>
             @endforeach
         </select>
     </div>
@@ -19,13 +30,13 @@
         <label class="label" for="to_account_id">To account</label>
         <select class="input" id="to_account_id" name="to_account_id" required>
             @foreach ($accounts as $account):
-                <option value="{{ $account->id }}">{{ $account->name }}</option>
+                <option value="{{ $account->id }}" {{ $account->id == old('to_account_id') ? 'selected' : '' }}>{{ $account->name }}</option>
             @endforeach
         </select>
     </div>
     <div class="field">
         <label class="label" for="amount">Amount</label>
-        <input class="input" type="number" id="amount" name="amount" required>
+        <input class="input" type="number" id="amount" name="amount" alue="{{ old('amount') }}" required>
     </div>
     <div class="field">
         <button class="button is-link" type="submit">Create transaction</button>

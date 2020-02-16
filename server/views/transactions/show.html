@@ -1,5 +1,13 @@
 @view('header', [ 'title' => $transaction->name . ' - Transactions' ])
 
+<div class="breadcrumb">
+    <ul>
+      <li><a href="/">Banq</a></li>
+      <li><a href="/transactions">Transactions</a></li>
+      <li class="is-active"><a href="/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a></li>
+    </ul>
+</div>
+
 <h1 class="title">{{ $transaction->name }}</h1>
 <p>From: <a href="/accounts/{{ $transaction->from_account_id }}">{{ $transaction->from_account->name }}</a></p>
 <p>To: <a href="/accounts/{{ $transaction->to_account_id }}">{{ $transaction->to_account->name }}</a></p>

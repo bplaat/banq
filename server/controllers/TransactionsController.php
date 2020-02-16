@@ -22,33 +22,32 @@ class TransactionsController {
     }
 
     public static function store () {
-        $from_account = Accounts::select($_POST['from_account_id'])->fetch();
-        $from_account->amount -= $_POST['amount'];
-        $to_account = Accounts::select($_POST['to_account_id'])->fetch();
-        $to_account->amount += $_POST['amount'];
+        validate([
+            'name' => Transactions::NAME_VALIDATION,
+            'from_account_id' => Transactions::FROM_ACCOUNT_ID_VALIDATION,
+            'to_account_id' => Transactions::TO_ACCOUNT_ID_VALIDATION,
+            'amount' => Transactions::AMOUNT_VALIDATION,
+            'from_account_id' => 'Transactions::RIGHT_OWNER_VALIDATION',
+            'from_account_id' => 'Transactions::ENOUGH_AMOUNT_VALIDATION'
+        ]);
 
-        if (
-            strlen($_POST['name']) >= Transactions::NAME_MIN_LENGTH &&
-            strlen($_POST['name']) <= Transactions::NAME_MAX_LENGTH &&
-            $_POST['amount'] > 0 &&
-            $_POST['from_account_id'] != $_POST['to_account_id'] &&
-            $from_account->user_id == Auth::id() &&
-            $from_account->amount >= 0
-        ) {
-            Transactions::insert([
-                'name' => $_POST['name'],
-                'from_account_id' => $_POST['from_account_id'],
-                'to_account_id' => $_POST['to_account_id'],
-                'amount' => $_POST['amount'],
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
-            $transaction_id = Database::lastInsertId();
-            Accounts::update($_POST['from_account_id'], [ 'amount' => $from_account->amount ]);
-            Accounts::update($_POST['to_account_id'], [ 'amount' => $to_account->amount ]);
-            Router::redirect('/transactions/' . $transaction_id);
-        } else {
-            Router::back();
-        }
+        $from_account = Accounts::select(request('from_account_id'))->fetch();
+        $from_account->amount -= request('amount');
+        $to_account = Accounts::select(request('to_account_id'))->fetch();
+        $to_account->amount += request('amount');
+
+        Transactions::insert([
+            'name' => request('name'),
+            'from_account_id' => request('from_account_id'),
+            'to_account_id' => request('to_account_id'),
+            'amount' => request('amount')
+        ]);
+        $transaction_id = Database::lastInsertId();
+
+        Accounts::update(request('from_account_id'), [ 'amount' => $from_account->amount ]);
+        Accounts::update(request('to_account_id'), [ 'amount' => $to_account->amount ]);
+
+        Router::redirect('/transactions/' . $transaction_id);
     }
 
     public static function show ($transaction) {

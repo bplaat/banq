@@ -11,13 +11,12 @@ class Auth {
         return $session;
     }
 
-    protected static function createSession ($user_id) {
+    public static function createSession ($user_id) {
         static::$checked = false;
         $session = static::generateSession();
         Sessions::insert([
             'session' => $session,
             'user_id' => $user_id,
-            'created_at' => date('Y-m-d H:i:s'),
             'expires_at' => date('Y-m-d H:i:s', time() + SESSION_DURATION)
         ]);
         $_COOKIE[SESSION_COOKIE_NAME] = $session;
@@ -39,25 +38,14 @@ class Auth {
             $user = $user_query->fetch();
             if (password_verify($password, $user->password)) {
                 static::createSession($user->id);
-                return true;
+                return;
             }
         }
-        return false;
-    }
 
-    function register ($username, $email, $password, $extra = []) {
-        $user_query = Users::selectByLogin($username, $email);
-        if ($user_query->rowCount() == 0) {
-            Users::insert(array_merge([
-                'username' => $username,
-                'email' => $email,
-                'password' => password_hash($password, PASSWORD_DEFAULT),
-                'created_at' => date('Y-m-d H:i:s')
-            ], $extra));
-            static::createSession(Database::lastInsertId());
-            return true;
-        }
-        return false;
+        Session::flash('errors', [
+            'Incorrect username, email or password'
+        ]);
+        Router::back();
     }
 
     public static function user () {

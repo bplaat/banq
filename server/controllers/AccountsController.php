@@ -11,22 +11,18 @@ class AccountsController {
     }
 
     public static function store () {
-        $accounts = Accounts::select([ 'user_id' => Auth::id() ]);
-        if (
-            $accounts->rowCount() < Accounts::MAX_COUNT &&
-            strlen($_POST['name']) >= Accounts::NAME_MIN_LENGTH &&
-            strlen($_POST['name']) <= Accounts::NAME_MAX_LENGTH
-        ) {
-            Accounts::insert([
-                'name' => $_POST['name'],
-                'user_id' => Auth::id(),
-                'amount' => 0,
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
-            Router::redirect('/accounts/' . Database::lastInsertId());
-        } else {
-            Router::back();
-        }
+        $_REQUEST['user_id'] = Auth::id();
+        validate([
+            'name' => Accounts::NAME_VALIDATION,
+            'user_id' => 'Accounts::MAX_COUNT_VALIDATION'
+        ]);
+
+        Accounts::insert([
+            'name' => request('name'),
+            'user_id' => Auth::id(),
+            'amount' => 0
+        ]);
+        Router::redirect('/accounts/' . Database::lastInsertId());
     }
 
     public static function show ($account) {
@@ -49,17 +45,15 @@ class AccountsController {
 
     public static function update ($account) {
         if ($account->user_id == Auth::id()) {
-            if (
-                strlen($_POST['name']) >= Accounts::NAME_MIN_LENGTH &&
-                strlen($_POST['name']) <= Accounts::NAME_MAX_LENGTH
-            ) {
-                Accounts::update($account->id, [
-                    'name' => $_POST['name']
-                ]);
-                Router::redirect('/accounts/' . $account->id);
-            } else {
-                Router::back();
-            }
+            validate([
+                'name' => Accounts::NAME_VALIDATION
+            ]);
+
+            Accounts::update($account->id, [
+                'name' => request('name')
+            ]);
+
+            Router::redirect('/accounts/' . $account->id);
         } else {
             return false;
         }

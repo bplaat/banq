@@ -1,5 +1,13 @@
 @view('header', [ 'title' => $account->name . ' - Accounts' ])
 
+<div class="breadcrumb">
+    <ul>
+      <li><a href="/">Banq</a></li>
+      <li><a href="/accounts">Accounts</a></li>
+      <li class="is-active"><a href="/accounts/{{ $account->id }}">{{ $account->name }}</a></li>
+    </ul>
+</div>
+
 <h1 class="title">{{ $account->name }}</h1>
 
 @if ($account->user_id == Auth::id()):

@@ -11,42 +11,25 @@ class AdminUsersController {
     }
 
     public static function store () {
-        $user_query = Users::selectByLogin($_POST['username'], $_POST['email']);
-        if (
-            strlen($_POST['firstname']) >= Users::FIRSTNAME_MIN_LENGTH &&
-            strlen($_POST['firstname']) <= Users::FIRSTNAME_MAX_LENGTH &&
-            strlen($_POST['lastname']) >= Users::LASTNAME_MIN_LENGTH &&
-            strlen($_POST['lastname']) <= Users::LASTNAME_MAX_LENGTH &&
-            strlen($_POST['username']) >= Users::USERNAME_MIN_LENGTH &&
-            strlen($_POST['username']) <= Users::USERNAME_MAX_LENGTH &&
-            strlen($_POST['email']) <= Users::EMAIL_MAX_LENGTH &&
-            filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) &&
-            $user_query->rowCount() == 0 &&
-            strlen($_POST['password']) >= Users::PASSWORD_MIN_LENGTH &&
-            strlen($_POST['password']) <= Users::PASSWORD_MAX_LENGTH &&
-            $_POST['password'] == $_POST['confirm_password']
-        ) {
-            Users::insert([
-                'firstname' => $_POST['firstname'],
-                'lastname' => $_POST['lastname'],
-                'username' => $_POST['username'],
-                'email' => $_POST['email'],
-                'password' => password_hash($_POST['password'], PASSWORD_DEFAULT),
-                'role' => $_POST['role'],
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
-            $user_id = Database::lastInsertId();
+        validate([
+            'firstname' => Users::FIRSTNAME_VALIDATION,
+            'lastname' => Users::LASTNAME_VALIDATION,
+            'username' => Users::USERNAME_VALIDATION,
+            'email' => Users::EMAIL_VALIDATION,
+            'password' => Users::PASSWORD_VALIDATION,
+            'role' => Users::ROLE_VALIDATION
+        ]);
 
-            Accounts::insert([
-                'name' => $_POST['firstname'] . '\'s Account',
-                'user_id' => $user_id,
-                'amount' => 0,
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
+        $user_id = Users::createUser([
+            'firstname' => request('firstname'),
+            'lastname' => request('lastname'),
+            'username' => request('username'),
+            'email' => request('email'),
+            'password' => password_hash(request('password'), PASSWORD_DEFAULT),
+            'role' => request('role')
+        ]);
 
-            Router::redirect('/admin/users/' . $user_id);
-        }
-        Router::back();
+        Router::redirect('/admin/users/' . $user_id);
     }
 
     public static function show ($user) {
@@ -59,45 +42,39 @@ class AdminUsersController {
     }
 
     public static function update ($user) {
-        if (
-            strlen($_POST['firstname']) >= Users::FIRSTNAME_MIN_LENGTH &&
-            strlen($_POST['firstname']) <= Users::FIRSTNAME_MAX_LENGTH &&
-            strlen($_POST['lastname']) >= Users::LASTNAME_MIN_LENGTH &&
-            strlen($_POST['lastname']) <= Users::LASTNAME_MAX_LENGTH &&
-            strlen($_POST['username']) >= Users::USERNAME_MIN_LENGTH &&
-            strlen($_POST['username']) <= Users::USERNAME_MAX_LENGTH &&
-            strlen($_POST['email']) <= Users::EMAIL_MAX_LENGTH &&
-            filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)
-        ) {
-            Users::update($user->id, [
-                'firstname' => $_POST['firstname'],
-                'lastname' => $_POST['lastname'],
-                'username' => $_POST['username'],
-                'email' => $_POST['email'],
-                'role' => $_POST['role']
+        validate([
+            'firstname' => Users::FIRSTNAME_VALIDATION,
+            'lastname' => Users::LASTNAME_VALIDATION,
+            'username' => Users::USERNAME_EDIT_VALIDATION,
+            'email' => Users::EMAIL_EDIT_VALIDATION,
+            'role' => Users::ROLE_VALIDATION
+        ]);
+
+        if (request('password') != '') {
+            validate([
+                'password' => Users::PASSWORD_VALIDATION,
             ]);
-
-            if ($_POST['password'] != '') {
-                if (
-                    strlen($_POST['password']) >= Users::PASSWORD_MIN_LENGTH &&
-                    strlen($_POST['password']) <= Users::PASSWORD_MAX_LENGTH &&
-                    $_POST['password'] == $_POST['confirm_password']
-                ) {
-                    Users::update($user->id, [
-                        'password' => password_hash($_POST['password'], PASSWORD_DEFAULT)
-                    ]);
-                    Router::redirect('/admin/users/' . $user->id);
-                }
-                Router::back();
-            }
-
-            Router::redirect('/admin/users/' . $user->id);
         }
-        Router::back();
+
+        Users::update($user->id, [
+            'firstname' => request('firstname'),
+            'lastname' => request('lastname'),
+            'username' => request('username'),
+            'email' => request('email'),
+            'role' => request('role')
+        ]);
+
+        if (request('password') != '') {
+            Users::update($user->id, [
+                'password' => password_hash(request('password'), PASSWORD_DEFAULT)
+            ]);
+        }
+
+        Router::redirect('/admin/users/' . $user->id);
     }
 
     public static function delete ($user) {
-        Users::deleteComplete($user->id);
+        Users::deleteUser($user->id);
         Router::redirect('/admin/users');
     }
 }

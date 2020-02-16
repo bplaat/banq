@@ -1,4 +1,4 @@
-var CACHE_NAME = 'banq-v1';
+var CACHE_NAME = 'banq-v2';
 var filesToCache = [
     '/offline',
     '/bulma.min.css',

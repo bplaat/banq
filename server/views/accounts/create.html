@@ -1,11 +1,21 @@
 @view('header', [ 'title' => 'Create account - Accounts' ])
 
+<div class="breadcrumb">
+    <ul>
+      <li><a href="/">Banq</a></li>
+      <li><a href="/accounts">Accounts</a></li>
+      <li class="is-active"><a href="/accounts/create">Create</a></li>
+    </ul>
+</div>
+
 <h1 class="title">Create account</h1>
+
+@view('errors')
 
 <form method="post" action="/accounts">
     <div class="field">
         <label class="label" for="name">Name</label>
-        <input class="input" type="text" id="name" name="name" autofocus required>
+        <input class="input" type="text" id="name" name="name" value="{{ old('name') }}" {{ !isset($errors) ? 'autofocus' : '' }} required>
     </div>
     <div class="field">
         <button class="button is-link" type="submit">Create account</button>

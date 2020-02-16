@@ -13,22 +13,20 @@ class AdminAccountsController {
     }
 
     public static function store () {
-        $accounts = Accounts::select([ 'user_id' => $_POST['user_id'] ]);
-        if (
-            $accounts->rowCount() < Accounts::MAX_COUNT &&
-            strlen($_POST['name']) >= Accounts::NAME_MIN_LENGTH &&
-            strlen($_POST['name']) <= Accounts::NAME_MAX_LENGTH
-        ) {
-            Accounts::insert([
-                'name' => $_POST['name'],
-                'user_id' => $_POST['user_id'],
-                'amount' => $_POST['amount'],
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
-            Router::redirect('/admin/accounts/' . Database::lastInsertId());
-        } else {
-            Router::back();
-        }
+        validate([
+            'name' => Accounts::NAME_VALIDATION,
+            'user_id' => Accounts::USER_ID_VALIDATION,
+            'amount' => Accounts::AMOUNT_VALIDATION,
+            'user_id' => 'Accounts::MAX_COUNT_VALIDATION'
+        ]);
+
+        Accounts::insert([
+            'name' => request('name'),
+            'user_id' => request('user_id'),
+            'amount' => request('amount')
+        ]);
+
+        Router::redirect('/admin/accounts/' . Database::lastInsertId());
     }
 
     public static function show ($account) {
@@ -47,19 +45,19 @@ class AdminAccountsController {
     }
 
     public static function update ($account) {
-        if (
-            strlen($_POST['name']) >= Accounts::NAME_MIN_LENGTH &&
-            strlen($_POST['name']) <= Accounts::NAME_MAX_LENGTH
-        ) {
-            Accounts::update($account->id, [
-                'name' => $_POST['name'],
-                'user_id' => $_POST['user_id'],
-                'amount' => $_POST['amount']
-            ]);
-            Router::redirect('/admin/accounts/' . $account->id);
-        } else {
-            Router::back();
-        }
+        validate([
+            'name' => Accounts::NAME_VALIDATION,
+            'user_id' => Accounts::USER_ID_VALIDATION,
+            'amount' => Accounts::AMOUNT_VALIDATION,
+        ]);
+
+        Accounts::update($account->id, [
+            'name' => request('name'),
+            'user_id' => request('user_id'),
+            'amount' => request('amount')
+        ]);
+
+        Router::redirect('/admin/accounts/' . $account->id);
     }
 
     public static function delete ($account) {
