@@ -32,11 +32,19 @@ class Transactions extends Model {
         )');
     }
 
-    public static function selectAll ($max) {
-        return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) ORDER BY `created_at` DESC LIMIT ?', Auth::id(), Auth::id(), $max);
+    public static function countAll () {
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', Auth::id(), Auth::id())->fetch()->count;
     }
 
-    public static function selectAllByAccount ($account_id) {
-        return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` = ? OR `to_account_id` = ? ORDER BY `created_at` DESC', $account_id, $account_id);
+    public static function selectAll ($page, $per_page) {
+        return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) ORDER BY `created_at` DESC LIMIT ?, ?', Auth::id(), Auth::id(), ($page - 1) * $per_page, $per_page);
+    }
+
+    public static function countAllByAccount ($account_id) {
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `from_account_id` = ? OR `to_account_id` = ?', $account_id, $account_id)->fetch()->count;
+    }
+
+    public static function selectAllByAccount ($account_id, $page, $per_page) {
+        return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` = ? OR `to_account_id` = ? ORDER BY `created_at` DESC LIMIT ?, ?', $account_id, $account_id, ($page - 1) * $per_page, $per_page);
     }
 }

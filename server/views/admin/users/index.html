@@ -33,4 +33,6 @@
     @endforeach
 </div>
 
+@view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+
 @view('footer')

@@ -31,6 +31,10 @@ abstract class Model {
         }
     }
 
+    public static function selectPage ($page, $per_page) {
+        return Database::query('SELECT * FROM `' . static::table() . '` LIMIT ?, ?', ($page - 1) * $per_page, $per_page);
+    }
+
     public static function insert ($values) {
         foreach ($values as $key => $value) $keys[] = '`' . $key . '`';
         return Database::query('INSERT INTO `' . static::table() . '` (' . implode(', ', $keys) . ') ' .
@@ -49,5 +53,15 @@ abstract class Model {
         if (!is_array($where)) $where = [ static::$primaryKey => $where ];
         foreach ($where as $key => $value) $wheres[] = '`' . $key . '` = ?';
         return Database::query('DELETE FROM `' . static::table() . '` WHERE ' . implode(' AND ', $wheres), ...array_values($where));
+    }
+
+    public static function count ($where = null) {
+        if (is_null($where)) {
+            return Database::query('SELECT COUNT(`' . static::$primaryKey . '`) as count FROM `' . static::table() . '`')->fetch()->count;
+        } else {
+            if (!is_array($where)) $where = [ static::$primaryKey => $where ];
+            foreach ($where as $key => $value) $wheres[] = '`' . $key . '` = ?';
+            return Database::query('SELECT COUNT(`' . static::$primaryKey . '`) as count FROM `' . static::table() . '` WHERE ' . implode(' AND ', $wheres), ...array_values($where))->fetch()->count;
+        }
     }
 }

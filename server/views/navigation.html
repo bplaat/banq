@@ -28,7 +28,7 @@
                         <a class="navbar-item" href="/accounts">Accounts</a>
                     @endif
 
-                    @$transactions = Transactions::selectAll(5)->fetchAll()
+                    @$transactions = Transactions::selectAll(1, 5)->fetchAll()
                     @if (count($transactions) > 0):
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link is-arrowless" href="/transactions">Transactions</a>

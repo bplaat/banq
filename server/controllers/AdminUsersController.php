@@ -2,8 +2,11 @@
 
 class AdminUsersController {
     public static function index () {
-        $users = Users::select()->fetchAll();
-        return view('admin.users.index', [ 'users' => $users ]);
+        $page = request('page', 1);
+        $per_page = 9;
+        $last_page = ceil(Users::count() / $per_page);
+        $users = Users::selectPage($page, $per_page)->fetchAll();
+        return view('admin.users.index', [ 'users' => $users, 'page' => $page, 'last_page' => $last_page ]);
     }
 
     public static function create () {

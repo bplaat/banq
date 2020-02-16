@@ -38,6 +38,8 @@
             </div>
         @endif
     @endforeach
+
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 @else:
     <p><i>There are no transactions yet!</i></p>
 @endif

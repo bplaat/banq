@@ -2,12 +2,15 @@
 
 class AdminTransactionsController {
     public static function index () {
-        $transactions = Transactions::select()->fetchAll();
+        $page = request('page', 1);
+        $per_page = 9;
+        $last_page = ceil(Transactions::count() / $per_page);
+        $transactions = Transactions::selectPage($page, $per_page)->fetchAll();
         foreach ($transactions as $transaction) {
             $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
             $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();
         }
-        return view('admin.transactions.index', [ 'transactions' => $transactions ]);
+        return view('admin.transactions.index', [ 'transactions' => $transactions, 'page' => $page, 'last_page' => $last_page ]);
     }
 
     public static function create () {

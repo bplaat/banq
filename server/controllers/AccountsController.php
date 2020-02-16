@@ -27,12 +27,15 @@ class AccountsController {
 
     public static function show ($account) {
         $account->user = Users::select($account->user_id)->fetch();
-        $transactions = Transactions::selectAllByAccount($account->id)->fetchAll();
+        $page = request('page', 1);
+        $per_page = 5;
+        $last_page = ceil(Transactions::countAllByAccount($account->id) / $per_page);
+        $transactions = Transactions::selectAllByAccount($account->id, $page, $per_page)->fetchAll();
         foreach ($transactions as $transaction) {
             $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
             $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();
         }
-        return view('accounts.show', [ 'account' => $account, 'transactions' => $transactions ]);
+        return view('accounts.show', [ 'account' => $account, 'transactions' => $transactions, 'page' => $page, 'last_page' => $last_page ]);
     }
 
     public static function edit ($account) {

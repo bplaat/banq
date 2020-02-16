@@ -1,0 +1,11 @@
+@if ($last_page > 1):
+    <div class="pagination is-centered">
+        <a class="pagination-previous" href="{{ $page == 1 ? '#' : '?page=' . ($page - 1) }}" {{ $page == 1 ? 'disabled' : '' }}>Previous page</a>
+        <ul class="pagination-list">
+            @for ($i = 1; $i <= $last_page; $i++):
+                <li><a class="pagination-link {{ $i == $page ? 'is-current' : '' }}" href="?page={{ $i }}">{{ $i }}</a></li>
+            @endfor
+        </ul>
+        <a class="pagination-next" href="{{ $page == $last_page ? '#' : '?page=' . ($page + 1) }}" {{ $page == $last_page ? 'disabled' : '' }}>Next page</a>
+    </div>
+@endif

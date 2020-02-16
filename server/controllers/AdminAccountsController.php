@@ -2,8 +2,11 @@
 
 class AdminAccountsController {
     public static function index () {
-        $accounts = Accounts::select()->fetchAll();
-        return view('admin.accounts.index', [ 'accounts' => $accounts ]);
+        $page = request('page', 1);
+        $per_page = 9;
+        $last_page = ceil(Accounts::count() / $per_page);
+        $accounts = Accounts::selectPage($page, $per_page)->fetchAll();
+        return view('admin.accounts.index', [ 'accounts' => $accounts, 'page' => $page, 'last_page' => $last_page ]);
     }
 
     public static function create () {
