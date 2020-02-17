@@ -1,6 +1,6 @@
 <?php
 
-if ($_SERVER['HTTP_HOST'] == 'banq.local') {
+if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'banq.local') {
     define('DEBUG', true);
 } else {
     define('DEBUG', false);

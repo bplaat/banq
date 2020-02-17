@@ -32,7 +32,7 @@ abstract class Model {
     }
 
     public static function selectPage ($page, $per_page) {
-        return Database::query('SELECT * FROM `' . static::table() . '` LIMIT ?, ?', ($page - 1) * $per_page, $per_page);
+        return Database::query('SELECT * FROM `' . static::table() . '` ORDER BY `created_at` DESC LIMIT ?, ?', ($page - 1) * $per_page, $per_page);
     }
 
     public static function insert ($values) {

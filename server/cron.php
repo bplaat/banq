@@ -1,6 +1,6 @@
 <?php
 
-if (ROOT == null) {
+if (!defined('ROOT')) {
     define('ROOT', dirname(__FILE__));
 
     spl_autoload_register(function ($class) {

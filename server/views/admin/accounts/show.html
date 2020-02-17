@@ -2,10 +2,10 @@
 
 <div class="breadcrumb">
     <ul>
-      <li><a href="/">Banq</a></li>
-      <li><a href="/admin">Admin</a></li>
-      <li><a href="/admin/accounts">Accounts</a></li>
-      <li class="is-active"><a href="/admin/accounts/{{ $account->id }}">{{ $account->name }}</a></li>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li><a href="/admin/accounts">Accounts</a></li>
+        <li class="is-active"><a href="/admin/accounts/{{ $account->id }}">{{ $account->name }}</a></li>
     </ul>
 </div>
 
@@ -23,7 +23,8 @@
 <p style="margin-bottom: 16px;">Amount: {!! format_money($account->amount) !!}</p>
 
 <div class="buttons">
-    <a class="button is-success" href="/admin/transactions/create/?from_account_id={{ $account->id }}">Pay</a>
+    <a class="button" href="/admin/transactions/create/?from_account_id={{ $account->id }}">Create transaction</a>
+    <a class="button" href="/admin/payment-links/create/?account_id={{ $account->id }}">Create payment link</a>
     <a class="button is-link" href="/admin/accounts/{{ $account->id }}/edit">Edit</a>
     <a class="button is-danger" href="/admin/accounts/{{ $account->id }}/delete">Delete</a>
 </div>

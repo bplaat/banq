@@ -27,6 +27,14 @@ if (Auth::check()) {
     Router::post('/transactions', 'TransactionsController::store');
     Router::get('/transactions/{Transactions}', 'TransactionsController::show');
 
+    // Payment links
+    Router::get('/payment-links', 'PaymentLinksController::index');
+    Router::get('/payment-links/create', 'PaymentLinksController::create');
+    Router::post('/payment-links', 'PaymentLinksController::store');
+    Router::get('/payment-links/{PaymentLinks}', 'PaymentLinksController::show');
+    Router::get('/payment-links/{PaymentLinks}/delete', 'PaymentLinksController::delete');
+    Router::get('/pay/{PaymentLinks}', 'PaymentLinksController::pay');
+
     // Settings
     Router::get('/auth/settings', 'SettingsController::showSettingsForm');
     Router::post('/auth/settings/change_details', 'SettingsController::changeDetails');
@@ -61,6 +69,13 @@ if (Auth::check()) {
         Router::get('/admin/transactions/create', 'AdminTransactionsController::create');
         Router::post('/admin/transactions', 'AdminTransactionsController::store');
         Router::get('/admin/transactions/{Transactions}', 'AdminTransactionsController::show');
+
+        // Admin payment links
+        Router::get('/admin/payment-links', 'AdminPaymentLinksController::index');
+        Router::get('/admin/payment-links/create', 'AdminPaymentLinksController::create');
+        Router::post('/admin/payment-links', 'AdminPaymentLinksController::store');
+        Router::get('/admin/payment-links/{PaymentLinks}', 'AdminPaymentLinksController::show');
+        Router::get('/admin/payment-links/{PaymentLinks}/delete', 'AdminPaymentLinksController::delete');
     }
 
     // Auth
@@ -68,6 +83,9 @@ if (Auth::check()) {
 }
 
 else {
+    // Payment links
+    Router::get('/pay/{PaymentLinks}', 'PaymentLinksController::payNoAuth');
+
     // Auth
     Router::get('/auth/login', 'AuthController::showLoginForm');
     Router::post('/auth/login', 'AuthController::login');

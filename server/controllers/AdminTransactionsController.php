@@ -27,7 +27,7 @@ class AdminTransactionsController {
             'from_account_id' => Transactions::FROM_ACCOUNT_ID_VALIDATION,
             'to_account_id' => Transactions::TO_ACCOUNT_ID_VALIDATION,
             'amount' => Transactions::AMOUNT_VALIDATION,
-            'from_account_id' => 'Transactions::ENOUGH_AMOUNT_VALIDATION'
+            'from_account_id' => 'Accounts::ENOUGH_AMOUNT_VALIDATION'
         ]);
 
         $from_account = Accounts::select(request('from_account_id'))->fetch();

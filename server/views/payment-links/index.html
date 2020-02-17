@@ -1,0 +1,32 @@
+@view('header', [ 'title' => 'Payment Links' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li class="is-active"><a href="/payment-links">Payment Links</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Payment Links</h1>
+
+<div class="buttons">
+    <a class="button is-link" href="/payment-links/create">Create</a>
+</div>
+
+@if (count($paymentLinks) > 0):
+    @foreach ($paymentLinks as $paymentLink):
+        <div class="box">
+            <h2 class="title is-4">
+                <a href="/payment-links/{{ $paymentLink->link }}">{{ $paymentLink->name }}</a>
+            </h2>
+            <p>For: <a href="/accounts/{{ $paymentLink->account_id }}">{{ $paymentLink->account->name }}</a></p>
+            <p>Amount: {!! format_money($paymentLink->amount) !!}</p>
+        </div>
+    @endforeach
+
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+@else:
+    <p><i>There are no payment links yet!</i></p>
+@endif
+
+@view('footer')

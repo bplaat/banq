@@ -20,7 +20,7 @@
                             <a class="navbar-link is-arrowless" href="/accounts">Accounts</a>
                             <div class="navbar-dropdown">
                                 @foreach ($accounts as $account):
-                                    <a class="navbar-item" href="/accounts/{{ $account->id }}">{{ cut($account->name, 35) }}</a>
+                                    <a class="navbar-item" href="/accounts/{{ $account->id }}">{{ $account->name }}</a>
                                 @endforeach
                             </div>
                         </div>
@@ -28,18 +28,32 @@
                         <a class="navbar-item" href="/accounts">Accounts</a>
                     @endif
 
-                    @$transactions = Transactions::selectAll(1, 5)->fetchAll()
+                    @$transactions = Transactions::selectAllByUser(1, 5)->fetchAll()
                     @if (count($transactions) > 0):
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link is-arrowless" href="/transactions">Transactions</a>
                             <div class="navbar-dropdown">
                                 @foreach ($transactions as $transaction):
-                                    <a class="navbar-item" href="/transactions/{{ $transaction->id }}">{{ cut($transaction->name, 35) }}</a>
+                                    <a class="navbar-item" href="/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
                                 @endforeach
                             </div>
                         </div>
                     @else:
                         <a class="navbar-item" href="/transactions">Transactions</a>
+                    @endif
+
+                    @$paymentLinks = PaymentLinks::selectAllByUser(1, 5)->fetchAll()
+                    @if (count($paymentLinks) > 0):
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link is-arrowless" href="/payment-links">Payment Links</a>
+                            <div class="navbar-dropdown">
+                                @foreach ($paymentLinks as $paymentLink):
+                                    <a class="navbar-item" href="/payment-links/{{ $paymentLink->link }}">{{ $paymentLink->name }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else:
+                        <a class="navbar-item" href="/payment-links">Payment Links</a>
                     @endif
 
                     @if (Auth::user()->role == Users::ROLE_ADMIN):
@@ -49,6 +63,7 @@
                                 <a class="navbar-item" href="/admin/users">Users</a>
                                 <a class="navbar-item" href="/admin/accounts">Accounts</a>
                                 <a class="navbar-item" href="/admin/transactions">Transactions</a>
+                                <a class="navbar-item" href="/admin/payment-links">Payment Links</a>
                             </div>
                         </div>
                     @endif

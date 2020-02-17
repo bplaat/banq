@@ -1,24 +1,10 @@
 <?php
 
 class Transactions extends Model {
-    const NAME_VALIDATION = 'required|min:3|max:35';
-    const FROM_ACCOUNT_ID_VALIDATION = 'required|int|different:to_account_id|exists:Accounts,id';
-    const TO_ACCOUNT_ID_VALIDATION = 'required|int|different:from_account_id|exists:Accounts,id';
-    const AMOUNT_VALIDATION = 'required|int|number_min:1';
-
-    public static function RIGHT_OWNER_VALIDATION ($key, $value) {
-        $account = Accounts::select($value)->fetch();
-        if ($account->user_id != Auth::id()) {
-            return 'The account \'' . $account->name . '\' is not yours';
-        }
-    }
-
-    public static function ENOUGH_AMOUNT_VALIDATION ($key, $value) {
-        $account = Accounts::select($value)->fetch();
-        if ($account->amount - request('amount') < 0) {
-            return 'The account \'' . $account->name . '\' does not have enough money for this transaction';
-        }
-    }
+    public const NAME_VALIDATION = 'required|min:3|max:35';
+    public const FROM_ACCOUNT_ID_VALIDATION = 'required|int|different:to_account_id|exists:Accounts,id';
+    public const TO_ACCOUNT_ID_VALIDATION = 'required|int|different:from_account_id|exists:Accounts,id';
+    public const AMOUNT_VALIDATION = 'required|int|number_min:1';
 
     public static function create () {
         return Database::query('CREATE TABLE `transactions` (
@@ -32,11 +18,11 @@ class Transactions extends Model {
         )');
     }
 
-    public static function countAll () {
+    public static function countAllByUser () {
         return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', Auth::id(), Auth::id())->fetch()->count;
     }
 
-    public static function selectAll ($page, $per_page) {
+    public static function selectAllByUser ($page, $per_page) {
         return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) ORDER BY `created_at` DESC LIMIT ?, ?', Auth::id(), Auth::id(), ($page - 1) * $per_page, $per_page);
     }
 

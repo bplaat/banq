@@ -1,0 +1,34 @@
+@view('header', [ 'title' => 'Payment Links - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li class="is-active"><a href="/admin/payment-links">Payment Links</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Payment Links</h1>
+
+<div class="buttons">
+    <a class="button is-link" href="/admin/payment-links/create">Create</a>
+</div>
+
+<div class="columns is-multiline">
+    @foreach ($paymentLinks as $paymentLink):
+        <div class="column is-one-third">
+            <div class="box" style="height: 100%;">
+                <h2 class="title is-4">
+                    <a href="/admin/payment-links/{{ $paymentLink->link }}">{{ $paymentLink->name }}</a>
+                </h2>
+                <p>For: <a href="/admin/accounts/{{ $paymentLink->account_id }}">{{ $paymentLink->account->name }}</a></p>
+                <p>Amount: {!! format_money($paymentLink->amount) !!}</p>
+            </div>
+        </div>
+    @endforeach
+</div>
+
+@view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+
+
+@view('footer')

@@ -4,8 +4,8 @@ class TransactionsController {
     public static function index () {
         $page = request('page', 1);
         $per_page = 5;
-        $last_page = ceil(Transactions::countAll() / $per_page);
-        $transactions = Transactions::selectAll($page, $per_page)->fetchAll();
+        $last_page = ceil(Transactions::countAllByUser() / $per_page);
+        $transactions = Transactions::selectAllByUser($page, $per_page)->fetchAll();
         foreach ($transactions as $transaction) {
             $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
             $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();
@@ -29,8 +29,8 @@ class TransactionsController {
             'from_account_id' => Transactions::FROM_ACCOUNT_ID_VALIDATION,
             'to_account_id' => Transactions::TO_ACCOUNT_ID_VALIDATION,
             'amount' => Transactions::AMOUNT_VALIDATION,
-            'from_account_id' => 'Transactions::RIGHT_OWNER_VALIDATION',
-            'from_account_id' => 'Transactions::ENOUGH_AMOUNT_VALIDATION'
+            'from_account_id' => 'Accounts::RIGHT_OWNER_VALIDATION',
+            'from_account_id' => 'Accounts::ENOUGH_AMOUNT_VALIDATION'
         ]);
 
         $from_account = Accounts::select(request('from_account_id'))->fetch();

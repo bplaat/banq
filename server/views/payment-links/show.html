@@ -1,0 +1,23 @@
+@view('header', [ 'title' => $paymentLink->name . ' - Payment Links' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/payment-links">Payment Links</a></li>
+        <li class="is-active"><a href="/payment-link/{{ $paymentLink->link }}">{{ $paymentLink->name }}</a></li>
+    </ul>
+</div>
+
+<h1 class="title">{{ $paymentLink->name }}</h1>
+<p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $paymentLink->account_id }}">{{ $paymentLink->account->name }}</a></p>
+<p style="margin-bottom: 16px;">Amount: {!! format_money($paymentLink->amount) !!}</p>
+
+@$link = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . '/pay/' . $paymentLink->link;
+<p style="margin-bottom: 16px;">Link: <a href="{{ $link }}" target="_blank"><b>{{ $link }}</b></a></p>
+
+<div class="buttons">
+    <a class="button is-danger" href="/payment-links/{{ $paymentLink->link }}/delete">Delete</a>
+</div>
+
+
+@view('footer')

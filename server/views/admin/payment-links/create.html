@@ -1,0 +1,41 @@
+@view('header', [ 'title' => 'Create payment link - Admin - Transactions' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li><a href="/admin/payment-links">Payment Links</a></li>
+        <li class="is-active"><a href="/admin/payment-links/create">Create</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Create payment link</h1>
+
+@view('errors')
+
+<form method="post" action="/admin/payment-links">
+    @view('csrf_token')
+
+    <div class="field">
+        <label class="label" for="name">Name</label>
+        <input class="input" type="text" id="name" name="name" value="{{ old('name', 'Payment link at ' . date('Y-m-d H:i:s')) }}" required>
+    </div>
+    <div class="field">
+        <label class="label" for="account_id">Account</label>
+        <select class="input" id="account_id" name="account_id" required>
+            <option value="" disabled {{ old('account_id', $account_id) == '' ? 'selected' : '' }}>Choose a account</option>
+            @foreach ($accounts as $account):
+                <option value="{{ $account->id }}" {{ $account->id == old('account_id', $account_id) ? 'selected' : '' }}>{{ $account->name }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="field">
+        <label class="label" for="amount">Amount</label>
+        <input class="input" type="number" id="amount" name="amount" value="{{ old('amount') }}" required>
+    </div>
+    <div class="field">
+        <button class="button is-link" type="submit">Create payment link</button>
+    </div>
+</form>
+
+@view('footer')
