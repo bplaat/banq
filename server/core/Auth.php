@@ -4,7 +4,7 @@ class Auth {
     protected static $checked = false, $user;
 
     protected static function generateSession () {
-        $session = md5(microtime(true) . $_SERVER['REMOTE_ADDR']);
+        $session = bin2hex(random_bytes(16));
         if (Sessions::select($session)->rowCount() == 1) {
             return static::generateSession();
         }

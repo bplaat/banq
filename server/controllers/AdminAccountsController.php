@@ -11,8 +11,7 @@ class AdminAccountsController {
 
     public static function create () {
         $users = Users::select()->fetchAll();
-        $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : '';
-        return view('admin.accounts.create', [ 'users' => $users, 'user_id' => $user_id ]);
+        return view('admin.accounts.create', [ 'users' => $users, 'user_id' => request('user_id') ]);
     }
 
     public static function store () {

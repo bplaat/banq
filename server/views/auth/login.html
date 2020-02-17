@@ -12,6 +12,8 @@
 @view('errors')
 
 <form method="post">
+    @view('csrf_token')
+
     <div class="field">
         <label class="label" for="login">Username or email address</label>
         <input class="input" type="text" id="login" name="login" autofocus required>

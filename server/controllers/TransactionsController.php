@@ -16,11 +16,10 @@ class TransactionsController {
     public static function create () {
         $from_accounts = Accounts::select([ 'user_id' => Auth::id() ])->fetchAll();
         $to_accounts = Accounts::select()->fetchAll();
-        $from_account_id = isset($_GET['from_account_id']) ? $_GET['from_account_id'] : '';
         return view('transactions.create', [
             'from_accounts'=> $from_accounts,
             'to_accounts' => $to_accounts,
-            'from_account_id' => $from_account_id
+            'from_account_id' => request('from_account_id')
         ]);
     }
 

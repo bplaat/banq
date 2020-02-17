@@ -1,0 +1,8 @@
+@if (isset($messages)):
+    <div class="notification is-success">
+        <button class="delete"></button>
+        @foreach ($messages as $message):
+            <p>{{ $message }}</p>
+        @endforeach
+    </div>
+@endif

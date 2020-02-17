@@ -1,5 +1,27 @@
 <?php
 
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['csrf_token'])) {
+    Session::flash('errors', [
+        'Your did not use the cross-site request forgery token'
+    ]);
+    Router::back();
+}
+
+if (isset($_REQUEST['csrf_token'])) {
+    if (hash_equals($_REQUEST['csrf_token'], $_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+    } else {
+        Session::flash('errors', [
+            'Your cross-site request forgery token is not valid'
+        ]);
+        Router::back();
+    }
+}
+
 function cut ($string, $length) {
     return strlen($string) > $length ? substr($string, 0, $length) . '...' : $string;
 }
@@ -96,6 +118,7 @@ function dd ($data) {
 function view ($_path, $_data = null) {
     if (!is_null($_data)) extract($_data);
     unset($_data);
+    if (is_array(Session::get('messages'))) $messages = Session::get('messages');
     if (is_array(Session::get('errors'))) $errors = Session::get('errors');
     ob_start();
     eval('unset($_path) ?>' . preg_replace(

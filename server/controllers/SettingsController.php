@@ -35,6 +35,11 @@ class SettingsController {
             'username' => request('username'),
             'email' => request('email')
         ]);
+
+        Session::flash('messages', [
+            'Your user details have changed'
+        ]);
+
         Router::redirect('/auth/settings');
     }
 
@@ -45,14 +50,24 @@ class SettingsController {
         ]);
 
         Users::update(Auth::id(), [
-            'password' => password_hash($_POST['password'], PASSWORD_DEFAULT)
+            'password' => password_hash(request('password'), PASSWORD_DEFAULT)
         ]);
+
+        Session::flash('messages', [
+            'Your password has changed'
+        ]);
+
         Router::redirect('/auth/settings');
     }
 
     public static function revokeSession ($session) {
         if ($session->user_id == Auth::id()) {
             Auth::revokeSession($session->session);
+
+            Session::flash('messages', [
+                'You have revoked a session'
+            ]);
+
             Router::redirect('/auth/settings');
         }
         Router::back();

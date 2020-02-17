@@ -13,6 +13,8 @@
 @view('errors')
 
 <form method="post" action="/transactions">
+    @view('csrf_token')
+
     <div class="field">
         <label class="label" for="name">Name</label>
         <input class="input" type="text" id="name" name="name" value="{{ old('name', 'Transaction at ' . date('Y-m-d H:i:s')) }}" required>

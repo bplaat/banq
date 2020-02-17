@@ -15,10 +15,9 @@ class AdminTransactionsController {
 
     public static function create () {
         $accounts = Accounts::select()->fetchAll();
-        $from_account_id = isset($_GET['from_account_id']) ? $_GET['from_account_id'] : '';
         return view('admin.transactions.create', [
             'accounts'=> $accounts,
-            'from_account_id' => $from_account_id
+            'from_account_id' => request('from_account_id')
         ]);
     }
 
