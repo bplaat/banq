@@ -114,6 +114,7 @@
     <div class="field">
         <label class="label" for="role">Role</label>
         <select class="input" id="role" name="role" required>
+            <option value="" disabled {{ old('role') == '' ? 'selected' : '' }}>Choose a role</option>
             <option value="{{ Users::ROLE_NORMAL }}" {{ old('role') == Users::ROLE_NORMAL ? 'selected' : '' }}>Normal</option>
             <option value="{{ Users::ROLE_ADMIN }}" {{ old('role') == Users::ROLE_ADMIN ? 'selected' : '' }}>Admin</option>
         </select>

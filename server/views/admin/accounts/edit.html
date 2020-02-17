@@ -22,6 +22,14 @@
         <input class="input" type="text" id="name" name="name" value="{{ old('name', $account->name) }}" {{ !isset($errors) ? 'autofocus' : '' }} required>
     </div>
     <div class="field">
+        <label class="label" for="type">Type</label>
+        <select class="input" id="type" name="type" required>
+            <option value="" disabled {{ old('type', $account->type) == '' ? 'selected' : '' }}>Choose a type</option>
+            <option value="{{ Accounts::TYPE_SAVE }}" {{ old('type', $account->type) == Accounts::TYPE_SAVE ? 'selected' : '' }}>Save</option>
+            <option value="{{ Accounts::TYPE_PAYMENT }}" {{ old('type', $account->type) == Accounts::TYPE_PAYMENT ? 'selected' : '' }}>Payment</option>
+        </select>
+    </div>
+    <div class="field">
         <label class="label" for="user_id">User</label>
         <select class="input" id="user_id" name="user_id" required>
             @foreach ($users as $user):

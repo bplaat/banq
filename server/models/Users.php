@@ -48,6 +48,31 @@ class Users extends Model {
     }
 
     public static function fill () {
+        // Create bank Admin
+        static::insert([
+            'firstname' => 'Banq Admin',
+            'lastname' => '',
+            'username' => 'admin',
+            'email' => 'admin@banq.ml',
+            'password' => '$2y$10$Pm3Ewd1bIOldyRQudyGpR.HG7a3VpKEJgNfmswo.jhwpKtHh40FrO',
+            'phone_number' => '+31 6 4494 1181',
+            'sex' => 'M',
+            'birth_date' => '2002-07-01',
+            'address' => 'Boschpolderstraat 27',
+            'postcode' => '2807 LJ',
+            'city' => 'Gouda',
+            'region' => 'Zuid-Holland',
+            'role' => static::ROLE_ADMIN
+        ]);
+
+        Accounts::insert([
+            'name' => 'Banq Interest Account',
+            'type' => Accounts::TYPE_SAVE,
+            'user_id' => 1,
+            'amount' => 0
+        ]);
+
+        // Create Bastiaan
         static::createUser([
             'firstname' => 'Bastiaan',
             'lastname' => 'van der Plaat',
@@ -64,22 +89,7 @@ class Users extends Model {
             'role' => static::ROLE_ADMIN
         ]);
 
-        static::createUser([
-            'firstname' => 'Jan',
-            'lastname' => 'Jansen',
-            'username' => 'jan',
-            'email' => 'jan.jansen@gmail.com',
-            'password' => password_hash('janjan', PASSWORD_DEFAULT),
-            'phone_number' => '+31 6 4494 1181',
-            'sex' => 'M',
-            'birth_date' => '2002-07-01',
-            'address' => 'Boschpolderstraat 27',
-            'postcode' => '2807 LJ',
-            'city' => 'Gouda',
-            'region' => 'Zuid-Holland',
-            'role' => static::ROLE_NORMAL
-        ]);
-
+        // Create Deniz
         static::createUser([
             'firstname' => 'Deniz',
             'lastname' => 'Kahriman ',
@@ -96,6 +106,7 @@ class Users extends Model {
             'role' => static::ROLE_ADMIN
         ]);
 
+        // Create Don
         static::createUser([
             'firstname' => 'Don',
             'lastname' => 'Luijendijk ',
@@ -111,6 +122,23 @@ class Users extends Model {
             'region' => 'Zuid-Holland',
             'role' => static::ROLE_ADMIN
         ]);
+
+        // Create Jan
+        static::createUser([
+            'firstname' => 'Jan',
+            'lastname' => 'Jansen',
+            'username' => 'jan',
+            'email' => 'jan.jansen@gmail.com',
+            'password' => password_hash('janjan', PASSWORD_DEFAULT),
+            'phone_number' => '+31 6 4494 1181',
+            'sex' => 'M',
+            'birth_date' => '2002-07-01',
+            'address' => 'Boschpolderstraat 27',
+            'postcode' => '2807 LJ',
+            'city' => 'Gouda',
+            'region' => 'Zuid-Holland',
+            'role' => static::ROLE_NORMAL
+        ]);
     }
 
     public static function selectByLogin ($username, $email) {
@@ -124,12 +152,14 @@ class Users extends Model {
 
         Accounts::insert([
             'name' => $user['firstname'] . '\'s Save Account',
+            'type' => Accounts::TYPE_SAVE,
             'user_id' => $user_id,
             'amount' => 50
         ]);
 
         Accounts::insert([
             'name' => $user['firstname'] . '\'s Payment Account',
+            'type' => Accounts::TYPE_PAYMENT,
             'user_id' => $user_id,
             'amount' => 0
         ]);

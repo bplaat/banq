@@ -32,7 +32,7 @@
             <h2 class="title is-4">
                 <a href="/admin/accounts/{{ $account->id }}">{{ $account->name }}</a>
             </h2>
-            <p>Amount: <b>&euro; {{ $account->amount }}</b></p>
+            <p>Amount: {!! format_money($account->amount) !!}</p>
         </div>
     @endforeach
 @else:

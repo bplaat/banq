@@ -1,8 +1,12 @@
 <?php
 
 class Accounts extends Model {
+    const TYPE_SAVE = 1;
+    const TYPE_PAYMENT = 2;
+
     const MAX_COUNT = 6;
     const NAME_VALIDATION = 'required|min:3|max:35';
+    const TYPE_VALIDATION = 'required|int|number_between:1,2';
     const USER_ID_VALIDATION = 'required|int|exits:User,id';
     const AMOUNT_VALIDATION = 'required|int|number_min:0';
 
@@ -16,6 +20,7 @@ class Accounts extends Model {
         return Database::query('CREATE TABLE `accounts` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             `name` VARCHAR(255) NOT NULL,
+            `type` INT UNSIGNED NOT NULL,
             `user_id` INT UNSIGNED NOT NULL,
             `amount` BIGINT UNSIGNED NOT NULL,
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

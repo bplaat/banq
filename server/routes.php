@@ -3,6 +3,14 @@
 Router::get('/', 'PagesController::index');
 Router::get('/offline', 'PagesController::offline');
 
+if (DEBUG) {
+    // Debug cron
+    Router::get('/debug/cron', function () {
+        require_once ROOT . '/cron.php';
+        return 'Cron job run successfull';
+    });
+}
+
 if (Auth::check()) {
     // Accounts
     Router::get('/accounts', 'AccountsController::index');

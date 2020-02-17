@@ -1,5 +1,9 @@
 <?php
 
+function format_money ($money) {
+    return '<b>&euro; ' . number_format($money, 0, ',', '.') . '</b>';
+}
+
 function cut ($string, $length) {
     return strlen($string) > $length ? substr($string, 0, $length) . '...' : $string;
 }
@@ -44,6 +48,9 @@ function validate ($values) {
                 }
                 if ($parts[0] == 'url' && !filter_var($string, FILTER_VALIDATE_URL)) {
                     $errors[] = 'The ' . $key . ' field must be an url';
+                }
+                if ($parts[0] == 'date' && strtotime($string) == false) {
+                    $errors[] = 'The ' . $key . ' field must be an date';
                 }
                 if ($parts[0] == 'number_min' && $string < $args[0]) {
                     $errors[] = 'The ' . $key . ' field must be at least ' . $args[0] . ' or higher';

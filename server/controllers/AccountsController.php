@@ -14,11 +14,13 @@ class AccountsController {
         $_REQUEST['user_id'] = Auth::id();
         validate([
             'name' => Accounts::NAME_VALIDATION,
+            'type' => Accounts::TYPE_VALIDATION,
             'user_id' => 'Accounts::MAX_COUNT_VALIDATION'
         ]);
 
         Accounts::insert([
             'name' => request('name'),
+            'type' => request('type'),
             'user_id' => Auth::id(),
             'amount' => 0
         ]);
@@ -49,11 +51,13 @@ class AccountsController {
     public static function update ($account) {
         if ($account->user_id == Auth::id()) {
             validate([
-                'name' => Accounts::NAME_VALIDATION
+                'name' => Accounts::NAME_VALIDATION,
+                'type' => Accounts::TYPE_VALIDATION
             ]);
 
             Accounts::update($account->id, [
-                'name' => request('name')
+                'name' => request('name'),
+                'type' => request('type')
             ]);
 
             Router::redirect('/accounts/' . $account->id);

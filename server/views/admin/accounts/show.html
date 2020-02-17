@@ -11,7 +11,16 @@
 
 <h1 class="title">{{ $account->name }}</h1>
 
-<p style="margin-bottom: 16px;">Amount: <b>&euro; {{ $account->amount }}</b></p>
+<p style="margin-bottom: 16px;">
+    @if ($account->type == Accounts::TYPE_SAVE):
+        <span class="tag is-success">SAVE ACCOUNT</span>
+    @endif
+    @if ($account->type == Accounts::TYPE_PAYMENT):
+        <span class="tag is-info">PAYMENT ACCOUNT</span>
+    @endif
+</p>
+
+<p style="margin-bottom: 16px;">Amount: {!! format_money($account->amount) !!}</p>
 
 <div class="buttons">
     <a class="button is-success" href="/admin/transactions/create/?from_account_id={{ $account->id }}">Pay</a>
@@ -29,7 +38,7 @@
                     <a class="has-text-white" href="/admin/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
                 </h2>
                 <p>From: <a class="has-text-white" href="/admin/accounts/{{ $transaction->from_account_id }}">{{ $transaction->from_account->name }}</a></p>
-                <p>Amount: <b>&euro; {{ $transaction->amount }}</b></p>
+                <p>Amount: {!! format_money($transaction->amount) !!}</p>
                 <p>Send at: <i>{{ $transaction->created_at }}</i></p>
             </div>
         @endif
@@ -39,11 +48,13 @@
                     <a class="has-text-white" href="/admin/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
                 </h2>
                 <p>To: <a class="has-text-white" href="/admin/accounts/{{ $transaction->to_account_id }}">{{ $transaction->to_account->name }}</a></p>
-                <p>Amount: <b>&euro; {{ $transaction->amount }}</b></p>
+                <p>Amount: {!! format_money($transaction->amount) !!}</p>
                 <p>Send at: <i>{{ $transaction->created_at }}</i></p>
             </div>
         @endif
     @endforeach
+
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 @else:
     <p><i>There are no transactions yet!</i></p>
 @endif

@@ -18,8 +18,14 @@
         <div class="box">
             <h2 class="title is-4">
                 <a href="/accounts/{{ $account->id }}">{{ $account->name }}</a>
+                @if ($account->type == Accounts::TYPE_SAVE):
+                     <span class="tag is-success" style="margin-left: 16px;">SAVE ACCOUNT</span>
+                @endif
+                @if ($account->type == Accounts::TYPE_PAYMENT):
+                    <span class="tag is-info" style="margin-left: 16px;">PAYMENT ACCOUNT</span>
+                @endif
             </h2>
-            <p>Amount: <b>&euro; {{ $account->amount }}</b></p>
+            <p>Amount: {!! format_money($account->amount) !!}</p>
         </div>
     @endforeach
 @else:
