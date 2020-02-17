@@ -8,10 +8,10 @@ if (Auth::check()) {
     Router::get('/accounts', 'AccountsController::index');
     Router::get('/accounts/create', 'AccountsController::create');
     Router::post('/accounts', 'AccountsController::store');
+    Router::get('/accounts/{Accounts}', 'AccountsController::show');
     Router::get('/accounts/{Accounts}/edit', 'AccountsController::edit');
     Router::post('/accounts/{Accounts}', 'AccountsController::update');
     Router::get('/accounts/{Accounts}/delete', 'AccountsController::delete');
-    Router::get('/accounts/{Accounts}', 'AccountsController::show');
 
     // Transactions
     Router::get('/transactions', 'TransactionsController::index');
@@ -34,19 +34,19 @@ if (Auth::check()) {
         Router::get('/admin/users', 'AdminUsersController::index');
         Router::get('/admin/users/create', 'AdminUsersController::create');
         Router::post('/admin/users', 'AdminUsersController::store');
+        Router::get('/admin/users/{Users}', 'AdminUsersController::show');
         Router::get('/admin/users/{Users}/edit', 'AdminUsersController::edit');
         Router::post('/admin/users/{Users}', 'AdminUsersController::update');
         Router::get('/admin/users/{Users}/delete', 'AdminUsersController::delete');
-        Router::get('/admin/users/{Users}', 'AdminUsersController::show');
 
         // Admin accounts
         Router::get('/admin/accounts', 'AdminAccountsController::index');
         Router::get('/admin/accounts/create', 'AdminAccountsController::create');
         Router::post('/admin/accounts', 'AdminAccountsController::store');
+        Router::get('/admin/accounts/{Accounts}', 'AdminAccountsController::show');
         Router::get('/admin/accounts/{Accounts}/edit', 'AdminAccountsController::edit');
         Router::post('/admin/accounts/{Accounts}', 'AdminAccountsController::update');
         Router::get('/admin/accounts/{Accounts}/delete', 'AdminAccountsController::delete');
-        Router::get('/admin/accounts/{Accounts}', 'AdminAccountsController::show');
 
         // Admin transactions
         Router::get('/admin/transactions', 'AdminTransactionsController::index');

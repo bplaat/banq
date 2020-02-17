@@ -45,6 +45,71 @@
         <input class="input" type="password" id="password_confirmation" name="password_confirmation" required>
     </div>
     <div class="field">
+        <label class="label" for="phone_number">Phone number</label>
+        <input class="input" type="tel" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" required>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label" for="sex">Sex</label>
+                <select class="input" id="sex" name="sex" required>
+                    <option value="" disabled {{ old('sex') == '' ? 'selected' : '' }}>Choose a sex</option>
+                    <option value="M" {{ old('sex') == 'M' ? 'selected' : '' }}>Male</option>
+                    <option value="F" {{ old('sex') == 'F' ? 'selected' : '' }}>Female</option>
+                    <option value="X" {{ old('sex') == 'X' ? 'selected' : '' }}>Complicated / other</option>
+                </select>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label" for="birth_date">Birth date</label>
+                <input class="input" type="date" id="birth_date" name="birth_date" value="{{ old('birth_date') }}" required>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label" for="address">Address (street with house number)</label>
+                <input class="input" type="text" id="address" name="address" value="{{ old('address') }}" required>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label" for="postcode">Postcode</label>
+                <input class="input" type="text" id="postcode" name="postcode" value="{{ old('postcode') }}" required>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label" for="city">City</label>
+                <input class="input" type="text" id="city" name="city" value="{{ old('city') }}" required>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label" for="region">Region</label>
+                <select class="input" id="region" name="region" required>
+                    <option value="" disabled {{ old('region') == '' ? 'selected' : '' }}>Choose a region</option>
+                    <option value="Drenthe" {{ old('region') == 'Drenthe' ? 'selected' : '' }}>Drenthe</option>
+                    <option value="Flevoland" {{ old('region') == 'Flevoland' ? 'selected' : '' }}>Flevoland</option>
+                    <option value="Friesland" {{ old('region') == 'Friesland' ? 'selected' : '' }}>Friesland</option>
+                    <option value="Gelderland" {{ old('region') == 'Gelderland' ? 'selected' : '' }}>Gelderland</option>
+                    <option value="Groningen" {{ old('region') == 'Groningen' ? 'selected' : '' }}>Groningen</option>
+                    <option value="Limburg" {{ old('region') == 'Limburg' ? 'selected' : '' }}>Limburg</option>
+                    <option value="Noord-Brabant" {{ old('region') == 'Noord-Brabant' ? 'selected' : '' }}>Noord-Brabant</option>
+                    <option value="Noord-Holland" {{ old('region') == 'Noord-Holland' ? 'selected' : '' }}>Noord-Holland</option>
+                    <option value="Overijssel" {{ old('region') == 'Overijssel' ? 'selected' : '' }}>Overijssel</option>
+                    <option value="Utrecht" {{ old('region') == 'Utrecht' ? 'selected' : '' }}>Utrecht</option>
+                    <option value="Zeeland" {{ old('region') == 'Zeeland' ? 'selected' : '' }}>Zeeland</option>
+                    <option value="Zuid-Holland" {{ old('region') == 'Zuid-Holland' ? 'selected' : '' }}>Zuid-Holland</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="field">
         <button class="button is-link" type="submit">Register</button>
     </div>
 </form>

@@ -20,7 +20,14 @@ class AuthController {
             'lastname' => Users::LASTNAME_VALIDATION,
             'username' => Users::USERNAME_VALIDATION,
             'email' => Users::EMAIL_VALIDATION,
-            'password' => Users::PASSWORD_VALIDATION
+            'password' => Users::PASSWORD_VALIDATION,
+            'phone_number' => USERS::PHONE_NUMBER_VALIDATION,
+            'sex' => USERS::SEX_VALIDATION,
+            'birth_date' => USERS::BIRTH_DATE_VALIDATION,
+            'address' => USERS::ADDRESS_VALIDATION,
+            'postcode' => USERS::POSTCODE_VALIDATION,
+            'city' => USERS::CITY_VALIDATION,
+            'region' => USERS::REGION_VALIDATION
         ]);
 
         $user_id = Users::createUser([

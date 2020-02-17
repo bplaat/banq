@@ -20,6 +20,13 @@ class AdminUsersController {
             'username' => Users::USERNAME_VALIDATION,
             'email' => Users::EMAIL_VALIDATION,
             'password' => Users::PASSWORD_VALIDATION,
+            'phone_number' => USERS::PHONE_NUMBER_VALIDATION,
+            'sex' => USERS::SEX_VALIDATION,
+            'birth_date' => USERS::BIRTH_DATE_VALIDATION,
+            'address' => USERS::ADDRESS_VALIDATION,
+            'postcode' => USERS::POSTCODE_VALIDATION,
+            'city' => USERS::CITY_VALIDATION,
+            'region' => USERS::REGION_VALIDATION,
             'role' => Users::ROLE_VALIDATION
         ]);
 
@@ -29,6 +36,13 @@ class AdminUsersController {
             'username' => request('username'),
             'email' => request('email'),
             'password' => password_hash(request('password'), PASSWORD_DEFAULT),
+            'phone_number' => request('phone_number'),
+            'sex' => request('sex'),
+            'birth_date' => request('birth_date'),
+            'address' => request('address'),
+            'postcode' => request('postcode'),
+            'city' => request('city'),
+            'region' => request('region'),
             'role' => request('role')
         ]);
 
@@ -50,6 +64,13 @@ class AdminUsersController {
             'lastname' => Users::LASTNAME_VALIDATION,
             'username' => Users::USERNAME_EDIT_VALIDATION,
             'email' => Users::EMAIL_EDIT_VALIDATION,
+            'phone_number' => USERS::PHONE_NUMBER_VALIDATION,
+            'sex' => USERS::SEX_VALIDATION,
+            'birth_date' => USERS::BIRTH_DATE_VALIDATION,
+            'address' => USERS::ADDRESS_VALIDATION,
+            'postcode' => USERS::POSTCODE_VALIDATION,
+            'city' => USERS::CITY_VALIDATION,
+            'region' => USERS::REGION_VALIDATION,
             'role' => Users::ROLE_VALIDATION
         ]);
 
@@ -64,6 +85,13 @@ class AdminUsersController {
             'lastname' => request('lastname'),
             'username' => request('username'),
             'email' => request('email'),
+            'phone_number' => request('phone_number'),
+            'sex' => request('sex'),
+            'birth_date' => request('birth_date'),
+            'address' => request('address'),
+            'postcode' => request('postcode'),
+            'city' => request('city'),
+            'region' => request('region'),
             'role' => request('role')
         ]);
 
