@@ -1,11 +1,13 @@
 <?php
 
-if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'banq.local') {
-    define('DEBUG', true);
-} else {
-    define('DEBUG', false);
-    $_SERVER['HTTP_HOST'] = 'banq.ml';
-    $_SERVER['HTTPS'] = 'on';
+if (isset($_SERVER['HTTP_HOST'])) {
+    if ($_SERVER['HTTP_HOST'] == 'banq.local') {
+        define('DEBUG', true);
+    } else {
+        define('DEBUG', false);
+        $_SERVER['HTTP_HOST'] = 'banq.ml';
+        $_SERVER['HTTPS'] = 'on';
+    }
 }
 
 define('DATABASE_DSN', 'mysql:host=127.0.0.1;dbname=banq');

@@ -1,21 +1,21 @@
 <?php
 
 class Users extends Model {
-    public const FIRSTNAME_VALIDATION = 'required|min:2|max:35';
-    public const LASTNAME_VALIDATION = 'required|min:2|max:35';
-    public const USERNAME_VALIDATION = 'required|min:3|max:30|unique:Users';
-    public const USERNAME_EDIT_VALIDATION = 'required|min:3|max:30';
-    public const EMAIL_VALIDATION = 'required|email|max:255|unique:Users';
-    public const EMAIL_EDIT_VALIDATION = 'required|email|max:255';
-    public const PASSWORD_VALIDATION = 'required|min:6|max:255|confirmed';
-    public const PHONE_NUMBER_VALIDATION = 'required|min:6|max:32';
-    public const SEX_VALIDATION = 'required|size:1';
-    public const BIRTH_DATE_VALIDATION = 'required|date';
-    public const ADDRESS_VALIDATION = 'required|min:3|max:255';
-    public const POSTCODE_VALIDATION = 'required|min:6|max:32';
-    public const CITY_VALIDATION = 'required|min:2|max:255';
-    public const REGION_VALIDATION = 'required|min:2|max:255';
-    public const ROLE_VALIDATION = 'required|int|number_between:1,2';
+    const FIRSTNAME_VALIDATION = 'required|min:2|max:35';
+    const LASTNAME_VALIDATION = 'required|min:2|max:35';
+    const USERNAME_VALIDATION = 'required|min:3|max:30|unique:Users';
+    const USERNAME_EDIT_VALIDATION = 'required|min:3|max:30';
+    const EMAIL_VALIDATION = 'required|email|max:255|unique:Users';
+    const EMAIL_EDIT_VALIDATION = 'required|email|max:255';
+    const PASSWORD_VALIDATION = 'required|min:6|max:255|confirmed';
+    const PHONE_NUMBER_VALIDATION = 'required|min:6|max:32';
+    const SEX_VALIDATION = 'required|size:1';
+    const BIRTH_DATE_VALIDATION = 'required|date';
+    const ADDRESS_VALIDATION = 'required|min:3|max:255';
+    const POSTCODE_VALIDATION = 'required|min:6|max:32';
+    const CITY_VALIDATION = 'required|min:2|max:255';
+    const REGION_VALIDATION = 'required|min:2|max:255';
+    const ROLE_VALIDATION = 'required|int|number_between:1,2';
 
     public static function VERIFY_PASSWORD_VALIDATION ($key, $value) {
         if (!password_verify($value, Auth::user()->password)) {
@@ -23,8 +23,8 @@ class Users extends Model {
         }
     }
 
-    public const ROLE_NORMAL = 1;
-    public const ROLE_ADMIN = 2;
+    const ROLE_NORMAL = 1;
+    const ROLE_ADMIN = 2;
 
     public static function create () {
         return Database::query('CREATE TABLE `users` (

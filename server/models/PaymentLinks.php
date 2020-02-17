@@ -4,9 +4,9 @@ class PaymentLinks extends Model {
     protected static $table = 'payment_links';
     protected static $primaryKey = 'link';
 
-    public const NAME_VALIDATION = 'required|min:3|max:35';
-    public const ACCOUNT_ID_VALIDATION = 'required|int|exists:Accounts,id';
-    public const AMOUNT_VALIDATION = 'required|int|number_min:1';
+    const NAME_VALIDATION = 'required|min:3|max:35';
+    const ACCOUNT_ID_VALIDATION = 'required|int|exists:Accounts,id';
+    const AMOUNT_VALIDATION = 'required|int|number_min:1';
 
     public static function create () {
         return Database::query('CREATE TABLE `payment_links` (

@@ -16,8 +16,32 @@
 <p style="margin-bottom: 16px;">Link: <a href="{{ $link }}" target="_blank"><b>{{ $link }}</b></a></p>
 
 <div class="buttons">
+    <button id="share-button" class="button is-success" style="display: none;">Share link</button>
+    <button id="copy-button" class="button is-success" style="display: none;">Copy link</button>
     <a class="button is-danger" href="/payment-links/{{ $paymentLink->link }}/delete">Delete</a>
 </div>
 
+<script>
+var paymentLink = JSON.parse('{!! json_encode([ "link" => $link, "name" => $paymentLink->name, "amount" => $paymentLink->amount, "account_name" => $paymentLink->account->name ], JSON_HEX_APOS) !!}');
+if ('share' in navigator) {
+    var shareButton = document.getElementById('share-button');
+    shareButton.style.display = 'inline-block';
+    shareButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        navigator.share({
+            title: 'Payment link from Banq',
+            text: 'Pay \u20AC' + paymentLink.amount + ' for \'' + paymentLink.name + '\' to \'' + paymentLink.account_name + '\' via Banq',
+            url: paymentLink.link
+        });
+    });
+} else if ('clipboard' in navigator) {
+    var copyButton = document.getElementById('copy-button');
+    copyButton.style.display = 'inline-block';
+    copyButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        navigator.clipboard.writeText(paymentLink.link);
+    });
+}
+</script>
 
 @view('footer')

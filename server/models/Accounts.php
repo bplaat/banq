@@ -1,14 +1,14 @@
 <?php
 
 class Accounts extends Model {
-    public const TYPE_SAVE = 1;
-    public const TYPE_PAYMENT = 2;
+    const TYPE_SAVE = 1;
+    const TYPE_PAYMENT = 2;
 
-    public const MAX_COUNT = 6;
-    public const NAME_VALIDATION = 'required|min:3|max:35';
-    public const TYPE_VALIDATION = 'required|int|number_between:1,2';
-    public const USER_ID_VALIDATION = 'required|int|exits:User,id';
-    public const AMOUNT_VALIDATION = 'required|int|number_min:0';
+    const MAX_COUNT = 6;
+    const NAME_VALIDATION = 'required|min:3|max:35';
+    const TYPE_VALIDATION = 'required|int|number_between:1,2';
+    const USER_ID_VALIDATION = 'required|int|exits:User,id';
+    const AMOUNT_VALIDATION = 'required|int|number_min:0';
 
     public static function MAX_COUNT_VALIDATION ($key, $value) {
         if (static::select([ $key => $value ])->rowCount() >= static::MAX_COUNT) {
