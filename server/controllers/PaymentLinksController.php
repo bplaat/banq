@@ -42,6 +42,7 @@ class PaymentLinksController {
 
     public static function show ($paymentLink) {
         $paymentLink->account = Accounts::select($paymentLink->account_id)->fetch();
+        $paymentLink->absolute_link = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . '/pay/' . $paymentLink->link;
         if ($paymentLink->account->user_id == Auth::id()) {
             return view('payment-links.show', [ 'paymentLink' => $paymentLink ]);
         } else {

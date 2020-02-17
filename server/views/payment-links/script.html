@@ -1,0 +1,29 @@
+<script>
+var paymentLink = JSON.parse('{!! json_encode([ "link" => $paymentLink->absolute_link, "name" => $paymentLink->name, "amount" => $paymentLink->amount, "account_name" => $paymentLink->account->name ], JSON_HEX_APOS) !!}');
+if (typeof Android != 'undefined' && 'share' in Android) {
+    var shareButton = document.getElementById('share-button');
+    shareButton.style.display = 'inline-block';
+    shareButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        Android.share('Pay \u20AC' + paymentLink.amount + ' for \'' + paymentLink.name + '\' to \'' + paymentLink.account_name + '\' via Banq ' + paymentLink.link);
+    });
+} else if ('share' in navigator) {
+    var shareButton = document.getElementById('share-button');
+    shareButton.style.display = 'inline-block';
+    shareButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        navigator.share({
+            title: 'Payment link from Banq',
+            text: 'Pay \u20AC' + paymentLink.amount + ' for \'' + paymentLink.name + '\' to \'' + paymentLink.account_name + '\' via Banq',
+            url: paymentLink.link
+        });
+    });
+} else if ('clipboard' in navigator) {
+    var copyButton = document.getElementById('copy-button');
+    copyButton.style.display = 'inline-block';
+    copyButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        navigator.clipboard.writeText(paymentLink.link);
+    });
+}
+</script>

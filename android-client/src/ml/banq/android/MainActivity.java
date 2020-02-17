@@ -2,14 +2,10 @@ package ml.banq.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 
 public class MainActivity extends Activity {
@@ -25,36 +21,12 @@ public class MainActivity extends Activity {
         webView = new WebView(this);
         setContentView(webView);
 
+        webView.addJavascriptInterface(new WebAppInterface(this), "Android");
+
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
-        webView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return handleUri(Uri.parse(url));
-            }
-
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return handleUri(request.getUrl());
-            }
-
-            private boolean handleUri(Uri uri) {
-                if (uri.getScheme().equals("https") && uri.getHost().equals("banq.ml")) {
-                    return false;
-                } else {
-                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                    return true;
-                }
-            }
-
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                if (Build.VERSION.SDK_INT >= 21) {
-                    CookieManager.getInstance().flush();
-                } else {
-                    CookieSyncManager.getInstance().sync();
-                }
-            }
-        });
+        webView.setWebViewClient(new CustomWebViewClient(this));
 
         Intent intent = getIntent();
         if (intent.getAction() == Intent.ACTION_VIEW) {
