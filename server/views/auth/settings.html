@@ -69,7 +69,7 @@
     @foreach ($active_sessions as $session):
         <div class="box">
             <h1 class="title is-5">
-                <a href="https://ipinfo.io/{{ $session->ip }}" target="_blank">{{ $session->ip }}</a> using {{ $session->browser }} {{ $session->version }} on {{ $session->platform }}
+                <a href="https://ipinfo.io/{{ $session->ip }}" target="_blank" rel="noreferrer">{{ $session->ip }}</a> using {{ $session->browser }} {{ $session->version }} on {{ $session->platform }}
                 @if ($session->session == $_COOKIE[SESSION_COOKIE_NAME]):
                     <div class="tag is-link" style="margin-left: 16px;">Current session</div>
                 @endif

@@ -27,7 +27,7 @@ function parse_user_agent( $u_agent = null ) {
     if (IS_MOBILE_APP) {
         return [
             'browser' => 'Android app',
-            'version' => '1.0',
+            'version' => '1.1',
             'platform' => 'Android'
         ];
     }

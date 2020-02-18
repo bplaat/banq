@@ -12,7 +12,7 @@
 <p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $paymentLink->account_id }}">{{ $paymentLink->account->name }}</a></p>
 <p style="margin-bottom: 16px;">Amount: {!! format_money($paymentLink->amount) !!}</p>
 
-<p style="margin-bottom: 16px;">Link: <a href="{{ $paymentLink->absolute_link }}" target="_blank"><b>{{ $paymentLink->absolute_link }}</b></a></p>
+<p style="margin-bottom: 16px;">Link: <a href="{{ $paymentLink->absolute_link }}" target="_blank" rel="noreferrer"><b>{{ $paymentLink->absolute_link }}</b></a></p>
 
 <div class="buttons">
     <button id="share-button" class="button is-success" style="display: none;">Share link</button>

@@ -1,7 +1,11 @@
 <?php
 
+function format_money_number ($money) {
+    return number_format($money, 0, ',', '.');
+}
+
 function format_money ($money) {
-    return '<b>&euro; ' . number_format($money, 0, ',', '.') . '</b>';
+    return '<b>&euro; ' . format_money_number($money) . '</b>';
 }
 
 function cut ($string, $length) {
