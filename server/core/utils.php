@@ -1,7 +1,11 @@
 <?php
 
+function parse_money_number ($string) {
+    return round(floatval($string) * 100);
+}
+
 function format_money_number ($money) {
-    return number_format($money, 0, ',', '.');
+    return number_format($money / 100, 2);
 }
 
 function format_money ($money) {

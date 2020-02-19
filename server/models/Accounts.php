@@ -8,7 +8,7 @@ class Accounts extends Model {
     const NAME_VALIDATION = 'required|min:3|max:35';
     const TYPE_VALIDATION = 'required|int|number_between:1,2';
     const USER_ID_VALIDATION = 'required|int|exits:User,id';
-    const AMOUNT_VALIDATION = 'required|int|number_min:0';
+    const AMOUNT_VALIDATION = 'required|float|number_min:0';
 
     public static function MAX_COUNT_VALIDATION ($key, $value) {
         if (static::select([ $key => $value ])->rowCount() >= static::MAX_COUNT) {
@@ -25,7 +25,8 @@ class Accounts extends Model {
 
     public static function ENOUGH_AMOUNT_VALIDATION ($key, $value) {
         $account = Accounts::select($value)->fetch();
-        if ($account->amount - request('amount') < 0) {
+        $amount = parse_money_number(request('amount'));
+        if ($account->amount - $amount < 0) {
             return 'The account \'' . $account->name . '\' does not have enough money for this transaction';
         }
     }

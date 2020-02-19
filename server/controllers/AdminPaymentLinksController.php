@@ -28,12 +28,13 @@ class AdminPaymentLinksController {
         ]);
 
         $link = PaymentLinks::generateLink();
+        $amount = parse_money_number(request('amount'));
 
         PaymentLinks::insert([
             'name' => request('name'),
             'link' => $link,
             'account_id' => request('account_id'),
-            'amount' => request('amount')
+            'amount' => $amount
         ]);
 
         Router::redirect('/admin/payment-links/' . $link);

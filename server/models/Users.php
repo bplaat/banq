@@ -154,7 +154,7 @@ class Users extends Model {
             'name' => $user['firstname'] . '\'s Save Account',
             'type' => Accounts::TYPE_SAVE,
             'user_id' => $user_id,
-            'amount' => 50
+            'amount' => 5000
         ]);
 
         Accounts::insert([

@@ -33,16 +33,18 @@ class TransactionsController {
             'from_account_id' => 'Accounts::ENOUGH_AMOUNT_VALIDATION'
         ]);
 
+        $amount = parse_money_number(request('amount'));
+
         $from_account = Accounts::select(request('from_account_id'))->fetch();
-        $from_account->amount -= request('amount');
+        $from_account->amount -= $amount;
         $to_account = Accounts::select(request('to_account_id'))->fetch();
-        $to_account->amount += request('amount');
+        $to_account->amount += $amount;
 
         Transactions::insert([
             'name' => request('name'),
             'from_account_id' => request('from_account_id'),
             'to_account_id' => request('to_account_id'),
-            'amount' => request('amount')
+            'amount' => $amount
         ]);
         $transaction_id = Database::lastInsertId();
 

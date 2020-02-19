@@ -4,7 +4,7 @@ class Transactions extends Model {
     const NAME_VALIDATION = 'required|min:3|max:35';
     const FROM_ACCOUNT_ID_VALIDATION = 'required|int|different:to_account_id|exists:Accounts,id';
     const TO_ACCOUNT_ID_VALIDATION = 'required|int|different:from_account_id|exists:Accounts,id';
-    const AMOUNT_VALIDATION = 'required|int|number_min:1';
+    const AMOUNT_VALIDATION = 'required|float|number_min:0.01';
 
     public static function create () {
         return Database::query('CREATE TABLE `transactions` (

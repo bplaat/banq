@@ -23,11 +23,13 @@ class AdminAccountsController {
             'user_id' => 'Accounts::MAX_COUNT_VALIDATION'
         ]);
 
+        $amount = parse_money_number(request('amount'));
+
         Accounts::insert([
             'name' => request('name'),
             'type' => request('type'),
             'user_id' => request('user_id'),
-            'amount' => request('amount')
+            'amount' => $amount
         ]);
 
         Router::redirect('/admin/accounts/' . Database::lastInsertId());
@@ -43,7 +45,7 @@ class AdminAccountsController {
             $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
             $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();
         }
-        return view('admin.accounts.show', [ 'account' => $account, 'transactions' => $transactions ]);
+        return view('admin.accounts.show', [ 'account' => $account, 'transactions' => $transactions, 'page' => $page, 'last_page' => $page ]);
     }
 
     public static function edit ($account) {
@@ -59,11 +61,13 @@ class AdminAccountsController {
             'amount' => Accounts::AMOUNT_VALIDATION,
         ]);
 
+        $amount = parse_money_number(request('amount'));
+
         Accounts::update($account->id, [
             'name' => request('name'),
             'type' => request('type'),
             'user_id' => request('user_id'),
-            'amount' => request('amount')
+            'amount' => $amount
         ]);
 
         Router::redirect('/admin/accounts/' . $account->id);

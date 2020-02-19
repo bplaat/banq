@@ -6,7 +6,7 @@ class PaymentLinks extends Model {
 
     const NAME_VALIDATION = 'required|min:3|max:35';
     const ACCOUNT_ID_VALIDATION = 'required|int|exists:Accounts,id';
-    const AMOUNT_VALIDATION = 'required|int|number_min:1';
+    const AMOUNT_VALIDATION = 'required|float|number_min:0.01';
 
     public static function create () {
         return Database::query('CREATE TABLE `payment_links` (
