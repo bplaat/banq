@@ -1,0 +1,40 @@
+@view('header', [ 'title' => 'Pay ' . $paymentLink->name . ' - Payment Links' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li class="is-active"><a href="/pay/{{ $paymentLink->link }}">Pay {{ $paymentLink->name }}</a></li>
+    </ul>
+</div>
+
+<h1 class="title">{{ $paymentLink->name }}</h1>
+<p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $paymentLink->account_id }}">{{ $paymentLink->account->name }}</a></p>
+<p style="margin-bottom: 16px;">Amount: {!! format_money($paymentLink->amount) !!}</p>
+
+@if (Auth::check()):
+    @view('errors')
+
+    <form method="post" action="/pay/{{ $paymentLink->link }}">
+        @view('csrf_token')
+
+        <div class="field">
+            <label class="label" for="from_account_id">From account</label>
+            <select class="input" id="from_account_id" name="from_account_id" required>
+                @foreach ($from_accounts as $account):
+                    <option value="{{ $account->id }}" {{ $account->id == old('from_account_id', $from_account_id) ? 'selected' : '' }}>{{ $account->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="field">
+            <button class="button is-link" type="submit">Pay</button>
+        </div>
+    </form>
+@else:
+    <p style="margin-bottom: 16px;">Login or register to Banq to pay this payment link:</p>
+    <div class="buttons">
+        <a class="button is-link" href="/auth/login">Login</a>
+        <a class="button" href="/auth/register">Register</a>
+    </div>
+@endif
+
+@view('footer')

@@ -42,6 +42,11 @@ if (DEBUG) {
         }
         Router::redirect('/');
     });
+
+    Router::get('/debug/cron', function () {
+        require_once ROOT . '/cron.php';
+        return 'Cron job run successfull';
+    });
 }
 
 require_once ROOT . '/routes.php';

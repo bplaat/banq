@@ -61,10 +61,43 @@ class PaymentLinksController {
     }
 
     public static function pay ($paymentLink) {
-        return 'Comming soon...';
+        $paymentLink->account = Accounts::select($paymentLink->account_id)->fetch();
+        if (Auth::check()) {
+            $from_accounts = Accounts::select([ 'user_id' => Auth::id() ])->fetchAll();
+            return view('payment-links.pay', [
+                'paymentLink' => $paymentLink,
+                'from_accounts' => $from_accounts,
+                'from_account_id' => request('from_account_id')
+            ]);
+        } else {
+            return view('payment-links.pay', [ 'paymentLink' => $paymentLink ]);
+        }
     }
 
-    public static function payNoAuth ($paymentLink) {
-        return 'Comming soon...';
+    public static function processPayment ($paymentLink) {
+        $_REQUEST['to_account_id'] = $paymentLink->account_id;
+        validate([
+            'from_account_id' => Transactions::FROM_ACCOUNT_ID_VALIDATION,
+            'from_account_id' => 'Accounts::RIGHT_OWNER_VALIDATION',
+            'from_account_id' => 'Accounts::ENOUGH_AMOUNT_VALIDATION'
+        ]);
+
+        $from_account = Accounts::select(request('from_account_id'))->fetch();
+        $from_account->amount -= $paymentLink->amount;
+        $to_account = Accounts::select($paymentLink->account_id)->fetch();
+        $to_account->amount += $paymentLink->amount;
+
+        Transactions::insert([
+            'name' => $paymentLink->name,
+            'from_account_id' => request('from_account_id'),
+            'to_account_id' => $paymentLink->account_id,
+            'amount' => $paymentLink->amount
+        ]);
+        $transaction_id = Database::lastInsertId();
+
+        Accounts::update(request('from_account_id'), [ 'amount' => $from_account->amount ]);
+        Accounts::update($paymentLink->account_id, [ 'amount' => $to_account->amount ]);
+
+        Router::redirect('/transactions/' . $transaction_id);
     }
 }

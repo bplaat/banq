@@ -1,15 +1,11 @@
 <?php
 
+// Default pages
 Router::get('/', 'PagesController::index');
 Router::get('/offline', 'PagesController::offline');
 
-if (DEBUG) {
-    // Debug cron
-    Router::get('/debug/cron', function () {
-        require_once ROOT . '/cron.php';
-        return 'Cron job run successfull';
-    });
-}
+// Payment links
+Router::get('/pay/{PaymentLinks}', 'PaymentLinksController::pay');
 
 if (Auth::check()) {
     // Accounts
@@ -33,7 +29,7 @@ if (Auth::check()) {
     Router::post('/payment-links', 'PaymentLinksController::store');
     Router::get('/payment-links/{PaymentLinks}', 'PaymentLinksController::show');
     Router::get('/payment-links/{PaymentLinks}/delete', 'PaymentLinksController::delete');
-    Router::get('/pay/{PaymentLinks}', 'PaymentLinksController::pay');
+    Router::post('/pay/{PaymentLinks}', 'PaymentLinksController::processPayment');
 
     // Settings
     Router::get('/auth/settings', 'SettingsController::showSettingsForm');
@@ -83,8 +79,6 @@ if (Auth::check()) {
 }
 
 else {
-    // Payment links
-    Router::get('/pay/{PaymentLinks}', 'PaymentLinksController::payNoAuth');
 
     // Auth
     Router::get('/auth/login', 'AuthController::showLoginForm');
