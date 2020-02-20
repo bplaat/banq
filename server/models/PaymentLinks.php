@@ -5,7 +5,8 @@ class PaymentLinks extends Model {
     protected static $primaryKey = 'link';
 
     const NAME_VALIDATION = 'required|min:3|max:35';
-    const ACCOUNT_ID_VALIDATION = 'required|int|exists:Accounts,id';
+    const ACCOUNT_ID_VALIDATION = 'required|int|exists:Accounts,id|@Accounts::RIGHT_OWNER_VALIDATION|@Accounts::ONLY_PAYMENT_VALIDATION';
+    const ACCOUNT_ID_ADMIN_VALIDATION = 'required|int|exists:Accounts,id|@Accounts::ONLY_PAYMENT_VALIDATION';
     const AMOUNT_VALIDATION = 'required|float|number_min:0.01';
 
     public static function create () {

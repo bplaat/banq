@@ -16,6 +16,7 @@ define('DATABASE_PASSWORD', ''); // Your database password
 
 define('SESSION_COOKIE_NAME', 'banq-session');
 define('SESSION_DURATION', 60 * 60 * 24 * 356);
+define('SESSION_UPDATE_DURATION', 60);
 define('SESSION_SHORT_COOKIE_NAME', 'banq-short-session');
 
 define('INTEREST_RATE', 1);

@@ -32,14 +32,14 @@ function validate ($values) {
     $errors = Session::get('errors', []);
     foreach ($values as $key => $value) {
         $string = request($key);
-        if (is_callable($value)) {
-            $error = call_user_func($value, $key, $string);
-            if (is_string($error)) {
-                $errors[] = $error;
-            }
-        } else {
-            $rules = explode('|', $value);
-            foreach ($rules as $rule) {
+        $rules = explode('|', $value);
+        foreach ($rules as $rule) {
+            if (substr($rule, 0, 1) == '@') {
+                $error = call_user_func(substr($rule, 1), $key, $string);
+                if (is_string($error)) {
+                    $errors[] = $error;
+                }
+            } else {
                 $parts = explode(':', $rule);
                 $args = isset($parts[1]) ? explode(',', $parts[1]) : [];
                 if ($parts[0] == 'required' && $string == '') {

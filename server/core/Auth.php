@@ -28,6 +28,17 @@ class Auth {
         setcookie(SESSION_COOKIE_NAME, $session, time() + SESSION_DURATION, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']), true);
     }
 
+    public static function updateSession () {
+        $user_agent = parse_user_agent();
+        Sessions::update($_COOKIE[SESSION_COOKIE_NAME], [
+            'ip' => get_ip(),
+            'browser' => $user_agent['browser'],
+            'version' => $user_agent['version'],
+            'platform' => $user_agent['platform'],
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+    }
+
     public static function revokeSession ($session) {
         static::$checked = false;
         Sessions::update($session, [ 'expires_at' => date('Y-m-d H:i:s') ]);
@@ -62,6 +73,9 @@ class Auth {
                     $session = $session_query->fetch();
                     if (strtotime($session->expires_at) > time()) {
                         static::$user = Users::select($session->user_id)->fetch();
+                        if (strtotime($session->updated_at) + SESSION_UPDATE_DURATION < time()) {
+                            Auth::updateSession();
+                        }
                     } else {
                         static::revokeSession($session->session);
                     }

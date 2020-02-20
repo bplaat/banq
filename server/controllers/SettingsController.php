@@ -2,22 +2,8 @@
 
 class SettingsController {
     public static function showSettingsForm() {
-        $user_agent = parse_user_agent();
-        Sessions::update($_COOKIE[SESSION_COOKIE_NAME], [
-            'ip' => get_ip(),
-            'browser' => $user_agent['browser'],
-            'version' => $user_agent['version'],
-            'platform' => $user_agent['platform'],
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
-
-        $sessions = Sessions::select([ 'user_id' => Auth::id() ])->fetchAll();
-        $active_sessions = [];
-        foreach ($sessions as $session) {
-            if (strtotime($session->expires_at) > time()) {
-                $active_sessions[] = $session;
-            }
-        }
+        Auth::updateSession();
+        $active_sessions = Sessions::selectAllActiveByUser(Auth::id())->fetchAll();
         echo view('auth.settings', [ 'active_sessions' => $active_sessions ]);
     }
 
@@ -26,14 +12,28 @@ class SettingsController {
             'firstname' => Users::FIRSTNAME_VALIDATION,
             'lastname' => Users::LASTNAME_VALIDATION,
             'username' => Users::USERNAME_EDIT_VALIDATION,
-            'email' => Users::EMAIL_EDIT_VALIDATION
+            'email' => Users::EMAIL_EDIT_VALIDATION,
+            'phone_number' => USERS::PHONE_NUMBER_VALIDATION,
+            'sex' => USERS::SEX_VALIDATION,
+            'birth_date' => USERS::BIRTH_DATE_VALIDATION,
+            'address' => USERS::ADDRESS_VALIDATION,
+            'postcode' => USERS::POSTCODE_VALIDATION,
+            'city' => USERS::CITY_VALIDATION,
+            'region' => USERS::REGION_VALIDATION
         ]);
 
         Users::update(Auth::id(), [
             'firstname' => request('firstname'),
             'lastname' => request('lastname'),
             'username' => request('username'),
-            'email' => request('email')
+            'email' => request('email'),
+            'phone_number' => request('phone_number'),
+            'sex' => request('sex'),
+            'birth_date' => request('birth_date'),
+            'address' => request('address'),
+            'postcode' => request('postcode'),
+            'city' => request('city'),
+            'region' => request('region')
         ]);
 
         Session::flash('messages', [
@@ -45,7 +45,7 @@ class SettingsController {
 
     public static function changePassword () {
         validate([
-            'old_password' => 'Users::VERIFY_PASSWORD_VALIDATION',
+            'old_password' => Users::OLD_PASSWORD_VALIDATION,
             'password' => Users::PASSWORD_VALIDATION
         ]);
 
@@ -69,8 +69,9 @@ class SettingsController {
             ]);
 
             Router::redirect('/auth/settings');
+        } else {
+            return false;
         }
-        Router::back();
     }
 
     public static function deleteUser () {

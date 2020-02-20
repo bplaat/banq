@@ -17,4 +17,8 @@ class Sessions extends Model {
             `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )');
     }
+
+    public static function selectAllActiveByUser ($user_id) {
+        return Database::query('SELECT * FROM `sessions` WHERE `user_id` = ? AND `expires_at` > NOW() ORDER BY `updated_at` DESC', $user_id);
+    }
 }

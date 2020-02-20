@@ -13,7 +13,7 @@ class AdminPaymentLinksController {
     }
 
     public static function create () {
-        $accounts = Accounts::select()->fetchAll();
+        $accounts = Accounts::select([ 'type' => Accounts::TYPE_PAYMENT ])->fetchAll();
         return view('admin.payment-links.create', [
             'accounts' => $accounts,
             'account_id' => request('account_id')
@@ -23,7 +23,7 @@ class AdminPaymentLinksController {
     public static function store () {
         validate([
             'name' => PaymentLinks::NAME_VALIDATION,
-            'account_id' => PaymentLinks::ACCOUNT_ID_VALIDATION,
+            'account_id' => PaymentLinks::ACCOUNT_ID_ADMIN_VALIDATION,
             'amount' => PaymentLinks::AMOUNT_VALIDATION
         ]);
 

@@ -7,8 +7,15 @@ class Accounts extends Model {
     const MAX_COUNT = 6;
     const NAME_VALIDATION = 'required|min:3|max:35';
     const TYPE_VALIDATION = 'required|int|number_between:1,2';
-    const USER_ID_VALIDATION = 'required|int|exits:User,id';
+    const USER_ID_VALIDATION = 'required|int|exits:User,id|@Accounts::MAX_COUNT_VALIDATION';
     const AMOUNT_VALIDATION = 'required|float|number_min:0';
+
+    public static function ONLY_PAYMENT_VALIDATION ($key, $value) {
+        $account = static::select($value)->fetch();
+        if ($account->type != static::TYPE_PAYMENT) {
+            return 'The account \'' . $account->name . '\' is not a payment account';
+        }
+    }
 
     public static function MAX_COUNT_VALIDATION ($key, $value) {
         if (static::select([ $key => $value ])->rowCount() >= static::MAX_COUNT) {
@@ -17,14 +24,14 @@ class Accounts extends Model {
     }
 
     public static function RIGHT_OWNER_VALIDATION ($key, $value) {
-        $account = Accounts::select($value)->fetch();
+        $account = static::select($value)->fetch();
         if ($account->user_id != Auth::id()) {
             return 'The account \'' . $account->name . '\' is not yours';
         }
     }
 
     public static function ENOUGH_AMOUNT_VALIDATION ($key, $value) {
-        $account = Accounts::select($value)->fetch();
+        $account = static::select($value)->fetch();
         $amount = parse_money_number(request('amount'));
         if ($account->amount - $amount < 0) {
             return 'The account \'' . $account->name . '\' does not have enough money for this transaction';

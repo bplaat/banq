@@ -24,10 +24,9 @@ class AdminTransactionsController {
     public static function store () {
         validate([
             'name' => Transactions::NAME_VALIDATION,
-            'from_account_id' => Transactions::FROM_ACCOUNT_ID_VALIDATION,
+            'from_account_id' => Transactions::FROM_ACCOUNT_ID_ADMIN_VALIDATION,
             'to_account_id' => Transactions::TO_ACCOUNT_ID_VALIDATION,
-            'amount' => Transactions::AMOUNT_VALIDATION,
-            'from_account_id' => 'Accounts::ENOUGH_AMOUNT_VALIDATION'
+            'amount' => Transactions::AMOUNT_VALIDATION
         ]);
 
         $amount = parse_money_number(request('amount'));

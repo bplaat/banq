@@ -7,6 +7,7 @@ class Users extends Model {
     const USERNAME_EDIT_VALIDATION = 'required|min:3|max:30';
     const EMAIL_VALIDATION = 'required|email|max:255|unique:Users';
     const EMAIL_EDIT_VALIDATION = 'required|email|max:255';
+    const OLD_PASSWORD_VALIDATION = '@Users::VERIFY_PASSWORD_VALIDATION';
     const PASSWORD_VALIDATION = 'required|min:6|max:255|confirmed';
     const PHONE_NUMBER_VALIDATION = 'required|min:6|max:32';
     const SEX_VALIDATION = 'required|size:1';

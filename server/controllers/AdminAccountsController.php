@@ -19,8 +19,7 @@ class AdminAccountsController {
             'name' => Accounts::NAME_VALIDATION,
             'type' => Accounts::TYPE_VALIDATION,
             'user_id' => Accounts::USER_ID_VALIDATION,
-            'amount' => Accounts::AMOUNT_VALIDATION,
-            'user_id' => 'Accounts::MAX_COUNT_VALIDATION'
+            'amount' => Accounts::AMOUNT_VALIDATION
         ]);
 
         $amount = parse_money_number(request('amount'));

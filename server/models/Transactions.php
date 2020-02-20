@@ -2,7 +2,8 @@
 
 class Transactions extends Model {
     const NAME_VALIDATION = 'required|min:3|max:35';
-    const FROM_ACCOUNT_ID_VALIDATION = 'required|int|different:to_account_id|exists:Accounts,id';
+    const FROM_ACCOUNT_ID_VALIDATION = 'required|int|different:to_account_id|exists:Accounts,id|@Accounts::RIGHT_OWNER_VALIDATION|@Accounts::ENOUGH_AMOUNT_VALIDATION';
+    const FROM_ACCOUNT_ID_ADMIN_VALIDATION = 'required|int|different:to_account_id|exists:Accounts,id|@Accounts::ENOUGH_AMOUNT_VALIDATION';
     const TO_ACCOUNT_ID_VALIDATION = 'required|int|different:from_account_id|exists:Accounts,id';
     const AMOUNT_VALIDATION = 'required|float|number_min:0.01';
 

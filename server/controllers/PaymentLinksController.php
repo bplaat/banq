@@ -13,7 +13,7 @@ class PaymentLinksController {
     }
 
     public static function create () {
-        $accounts = Accounts::select([ 'user_id' => Auth::id() ])->fetchAll();
+        $accounts = Accounts::select([ 'user_id' => Auth::id(), 'type' => Accounts::TYPE_PAYMENT ])->fetchAll();
         return view('payment-links.create', [
             'accounts' => $accounts,
             'account_id' => request('account_id')
@@ -24,8 +24,7 @@ class PaymentLinksController {
         validate([
             'name' => PaymentLinks::NAME_VALIDATION,
             'account_id' => PaymentLinks::ACCOUNT_ID_VALIDATION,
-            'amount' => PaymentLinks::AMOUNT_VALIDATION,
-            'account_id' => 'Accounts::RIGHT_OWNER_VALIDATION'
+            'amount' => PaymentLinks::AMOUNT_VALIDATION
         ]);
 
         $link = PaymentLinks::generateLink();
@@ -64,7 +63,7 @@ class PaymentLinksController {
     public static function pay ($paymentLink) {
         $paymentLink->account = Accounts::select($paymentLink->account_id)->fetch();
         if (Auth::check()) {
-            $from_accounts = Accounts::select([ 'user_id' => Auth::id() ])->fetchAll();
+            $from_accounts = Accounts::select([ 'user_id' => Auth::id(), 'type' => Accounts::TYPE_PAYMENT ])->fetchAll();
             return view('payment-links.pay', [
                 'paymentLink' => $paymentLink,
                 'from_accounts' => $from_accounts,
@@ -79,8 +78,6 @@ class PaymentLinksController {
         $_REQUEST['to_account_id'] = $paymentLink->account_id;
         validate([
             'from_account_id' => Transactions::FROM_ACCOUNT_ID_VALIDATION,
-            'from_account_id' => 'Accounts::RIGHT_OWNER_VALIDATION',
-            'from_account_id' => 'Accounts::ENOUGH_AMOUNT_VALIDATION'
         ]);
 
         $from_account = Accounts::select(request('from_account_id'))->fetch();

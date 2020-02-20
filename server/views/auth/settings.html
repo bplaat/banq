@@ -39,6 +39,71 @@
         <input class="input" type="email" id="email" name="email" value="{{ old('email', Auth::user()->email) }}" required>
     </div>
     <div class="field">
+        <label class="label" for="phone_number">Phone number</label>
+        <input class="input" type="tel" id="phone_number" name="phone_number" value="{{ old('phone_number', Auth::user()->phone_number) }}" required>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label" for="sex">Sex</label>
+                <select class="input" id="sex" name="sex" required>
+                    <option value="" disabled {{ old('sex', Auth::user()->sex) == '' ? 'selected' : '' }}>Choose a sex</option>
+                    <option value="M" {{ old('sex', Auth::user()->sex) == 'M' ? 'selected' : '' }}>Male</option>
+                    <option value="F" {{ old('sex', Auth::user()->sex) == 'F' ? 'selected' : '' }}>Female</option>
+                    <option value="X" {{ old('sex', Auth::user()->sex) == 'X' ? 'selected' : '' }}>Complicated / other</option>
+                </select>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label" for="birth_date">Birth date</label>
+                <input class="input" type="date" id="birth_date" name="birth_date" value="{{ old('birth_date', Auth::user()->birth_date) }}" required>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label" for="address">Address (street with house number)</label>
+                <input class="input" type="text" id="address" name="address" value="{{ old('address', Auth::user()->address) }}" required>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label" for="postcode">Postcode</label>
+                <input class="input" type="text" id="postcode" name="postcode" value="{{ old('postcode', Auth::user()->postcode) }}" required>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label" for="city">City</label>
+                <input class="input" type="text" id="city" name="city" value="{{ old('city', Auth::user()->city) }}" required>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label" for="region">Region</label>
+                <select class="input" id="region" name="region" required>
+                    <option value="" disabled {{ old('region', Auth::user()->region) == '' ? 'selected' : '' }}>Choose a region</option>
+                    <option value="Drenthe" {{ old('region', Auth::user()->region) == 'Drenthe' ? 'selected' : '' }}>Drenthe</option>
+                    <option value="Flevoland" {{ old('region', Auth::user()->region) == 'Flevoland' ? 'selected' : '' }}>Flevoland</option>
+                    <option value="Friesland" {{ old('region', Auth::user()->region) == 'Friesland' ? 'selected' : '' }}>Friesland</option>
+                    <option value="Gelderland" {{ old('region', Auth::user()->region) == 'Gelderland' ? 'selected' : '' }}>Gelderland</option>
+                    <option value="Groningen" {{ old('region', Auth::user()->region) == 'Groningen' ? 'selected' : '' }}>Groningen</option>
+                    <option value="Limburg" {{ old('region', Auth::user()->region) == 'Limburg' ? 'selected' : '' }}>Limburg</option>
+                    <option value="Noord-Brabant" {{ old('region', Auth::user()->region) == 'Noord-Brabant' ? 'selected' : '' }}>Noord-Brabant</option>
+                    <option value="Noord-Holland" {{ old('region', Auth::user()->region) == 'Noord-Holland' ? 'selected' : '' }}>Noord-Holland</option>
+                    <option value="Overijssel" {{ old('region', Auth::user()->region) == 'Overijssel' ? 'selected' : '' }}>Overijssel</option>
+                    <option value="Utrecht" {{ old('region', Auth::user()->region) == 'Utrecht' ? 'selected' : '' }}>Utrecht</option>
+                    <option value="Zeeland" {{ old('region', Auth::user()->region) == 'Zeeland' ? 'selected' : '' }}>Zeeland</option>
+                    <option value="Zuid-Holland" {{ old('region', Auth::user()->region) == 'Zuid-Holland' ? 'selected' : '' }}>Zuid-Holland</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="field">
         <button class="button is-link" type="submit">Save</button>
     </div>
 </form>
