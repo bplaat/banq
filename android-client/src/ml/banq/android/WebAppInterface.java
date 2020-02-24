@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.webkit.JavascriptInterface;
 
 public class WebAppInterface {
-    Context context;
+    private Context context;
 
     WebAppInterface(Context context) {
+        // We save the context of the activity to call some function which needs the context
         this.context = context;
     }
 
+    // Shows a native share sheed where you can choose an Android app to share the text given
     @JavascriptInterface
     public void share(String text) {
         Intent intent = new Intent();
