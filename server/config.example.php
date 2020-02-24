@@ -1,18 +1,12 @@
 <?php
 
-if (isset($_SERVER['HTTP_HOST'])) {
-    if ($_SERVER['HTTP_HOST'] == 'banq.local') {
-        define('DEBUG', true);
-    } else {
-        define('DEBUG', false);
-        $_SERVER['HTTP_HOST'] = 'banq.ml';
-        $_SERVER['HTTPS'] = 'on';
-    }
-}
+define('APP_NAME', 'Banq');
+define('APP_VERSION', '0.1');
+define('APP_DEBUG', isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'banq.local');
 
 define('DATABASE_DSN', 'mysql:host=127.0.0.1;dbname=banq');
 define('DATABASE_USER', 'banq');
-define('DATABASE_PASSWORD', ''); // Your database password
+define('DATABASE_PASSWORD', 'banq');
 
 define('SESSION_COOKIE_NAME', 'banq-session');
 define('SESSION_DURATION', 60 * 60 * 24 * 356);

@@ -19,9 +19,12 @@ require_once ROOT . '/config.php';
 
 Session::init();
 
+require_once ROOT . '/core/parse_user_agent.php';
+require_once ROOT . '/core/validate.php';
+require_once ROOT . '/core/view.php';
 require_once ROOT . '/core/utils.php';
 
-if (DEBUG) {
+if (APP_DEBUG) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
@@ -29,24 +32,8 @@ if (DEBUG) {
 
 Database::connect(DATABASE_DSN, DATABASE_USER, DATABASE_PASSWORD);
 
-if (DEBUG) {
-    Router::get('/debug/migrate', function () {
-        $paths = glob(ROOT . '/models/*');
-        foreach ($paths as $path) {
-            $class = pathinfo($path, PATHINFO_FILENAME);
-            call_user_func($class . '::drop');
-            call_user_func($class . '::create');
-            if (method_exists($class, 'fill')) {
-                call_user_func($class . '::fill');
-            }
-        }
-        Router::redirect('/');
-    });
-
-    Router::get('/debug/cron', function () {
-        require_once ROOT . '/cron.php';
-        return 'Cron job run successfull';
-    });
+if (APP_DEBUG) {
+    require_once ROOT . '/core/debug_routes.php';
 }
 
 require_once ROOT . '/routes.php';

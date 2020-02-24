@@ -1,8 +1,8 @@
-var CACHE_NAME = 'banq-v3';
+var CACHE_NAME = '{{ strtolower(APP_NAME) }}-v{{ APP_VERSION }}';
 var filesToCache = [
     '/offline',
     '/bulma.min.css',
-    '/script.js',
+    '/script.min.js',
     '/images/icon-16.png',
     '/images/icon-32.png',
     '/images/icon-192.png'

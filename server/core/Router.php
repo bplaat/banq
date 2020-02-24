@@ -13,6 +13,23 @@ class Router {
         static::match(['get', 'post'], $route, $callback);
     }
 
+    protected static function handleResponse ($response) {
+        if (is_null($response)) {
+            exit;
+        }
+
+        if (is_string($response)) {
+            echo $response;
+            exit;
+        }
+
+        if (is_array($response) || is_object($response)) {
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit;
+        }
+    }
+
     public static function match ($methods, $route, $callback) {
         $path = rtrim(preg_replace('#/+#', '/', strtok($_SERVER['REQUEST_URI'], '?')), '/');
         if ($path == '') $path = '/';
@@ -35,36 +52,12 @@ class Router {
                 }
             }
 
-            $response = call_user_func_array($callback, $values);
-            if (is_null($response)) {
-                exit;
-            }
-            if (is_string($response)) {
-                echo $response;
-                exit;
-            }
-            if (is_array($response) || is_object($response)) {
-                header('Content-Type: application/json');
-                echo json_encode($response);
-                exit;
-            }
+            static::handleResponse(call_user_func_array($callback, $values));
         }
     }
 
     public static function fallback ($callback) {
-        $response = call_user_func($callback);
-        if (is_null($response)) {
-            exit;
-        }
-        if (is_string($response)) {
-            echo $response;
-            exit;
-        }
-        if (is_array($response) || is_object($response)) {
-            header('Content-Type: application/json');
-            echo json_encode($response);
-            exit;
-        }
+        static::handleResponse(call_user_func($callback));
     }
 
     public static function redirect ($route) {
