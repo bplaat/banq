@@ -1,17 +1,22 @@
 <?php
 
-// Register the autoloaders
+// The directories to be autoloaded
+$autoload_folders = [ ROOT . '/core', ROOT . '/models', ROOT . '/controllers' ];
+$controller_files = glob(ROOT . '/controllers/*');
+foreach ($controller_files as $file) {
+    if (is_dir($file)) $autoload_folders[] = $file;
+}
+
+// Register the autoloader
 spl_autoload_register(function ($class) {
-    $file = ROOT . '/core/' . $class . '.php';
-    if (file_exists($file)) require_once $file;
-});
-spl_autoload_register(function ($class) {
-    $file = ROOT . '/controllers/' . $class . '.php';
-    if (file_exists($file)) require_once $file;
-});
-spl_autoload_register(function ($class) {
-    $file = ROOT . '/models/' . $class . '.php';
-    if (file_exists($file)) require_once $file;
+    global $autoload_folders;
+    foreach ($autoload_folders as $folder) {
+        $path = $folder . '/' . $class . '.php';
+        if (file_exists($path)) {
+            require_once $path;
+            return;
+        }
+    }
 });
 
 // Load the config
