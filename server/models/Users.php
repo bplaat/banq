@@ -1,6 +1,7 @@
 <?php
 
 class Users extends Model {
+    // The validation rules for all the fields
     const FIRSTNAME_VALIDATION = 'required|min:2|max:35';
     const LASTNAME_VALIDATION = 'required|min:2|max:35';
     const USERNAME_VALIDATION = 'required|min:3|max:30|unique:Users';
@@ -18,15 +19,18 @@ class Users extends Model {
     const REGION_VALIDATION = 'required|min:2|max:255';
     const ROLE_VALIDATION = 'required|int|number_between:1,2';
 
+    // The custom validation which checks and old password
     public static function VERIFY_PASSWORD_VALIDATION ($key, $value) {
         if (!password_verify($value, Auth::user()->password)) {
             return 'The field ' . $key . ' must contain your current password';
         }
     }
 
+    // The user roles
     const ROLE_NORMAL = 1;
     const ROLE_ADMIN = 2;
 
+    // The users create table function
     public static function create () {
         return Database::query('CREATE TABLE `users` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -48,8 +52,9 @@ class Users extends Model {
         )');
     }
 
+    // The user model fill table function
     public static function fill () {
-        // Create bank Admin
+        // Create Banq admin user
         static::insert([
             'firstname' => 'Banq Admin',
             'lastname' => '',
@@ -66,6 +71,7 @@ class Users extends Model {
             'role' => static::ROLE_ADMIN
         ]);
 
+        // Create Banq interest account
         Accounts::insert([
             'name' => 'Banq Interest Account',
             'type' => Accounts::TYPE_SAVE,
@@ -73,7 +79,7 @@ class Users extends Model {
             'amount' => 0
         ]);
 
-        // Create Bastiaan
+        // Create Bastiaan admin user
         static::createUser([
             'firstname' => 'Bastiaan',
             'lastname' => 'van der Plaat',
@@ -90,7 +96,7 @@ class Users extends Model {
             'role' => static::ROLE_ADMIN
         ]);
 
-        // Create Deniz
+        // Create Deniz admin user
         static::createUser([
             'firstname' => 'Deniz',
             'lastname' => 'Kahriman ',
@@ -107,7 +113,7 @@ class Users extends Model {
             'role' => static::ROLE_ADMIN
         ]);
 
-        // Create Don
+        // Create Don admin user
         static::createUser([
             'firstname' => 'Don',
             'lastname' => 'Luijendijk ',
@@ -124,7 +130,7 @@ class Users extends Model {
             'role' => static::ROLE_ADMIN
         ]);
 
-        // Create Jan
+        // Create Jan (test) user
         static::createUser([
             'firstname' => 'Jan',
             'lastname' => 'Jansen',
@@ -142,15 +148,20 @@ class Users extends Model {
         ]);
     }
 
+    // A custom query function to select a user by username or email
     public static function selectByLogin ($username, $email) {
         return Database::query('SELECT * FROM `users` WHERE `username` = ? OR `email` = ?', $username, $email);
     }
 
+    // A function to create a user and two standart accounts
     public static function createUser ($user) {
+        // Insert the user in the users table
         static::insert($user);
 
+        // Get the new user id
         $user_id = Database::lastInsertId();
 
+        // Create a new users save account
         Accounts::insert([
             'name' => $user['firstname'] . '\'s Save Account',
             'type' => Accounts::TYPE_SAVE,
@@ -158,6 +169,7 @@ class Users extends Model {
             'amount' => 5000
         ]);
 
+        // Create a new users payment account
         Accounts::insert([
             'name' => $user['firstname'] . '\'s Payment Account',
             'type' => Accounts::TYPE_PAYMENT,
@@ -165,12 +177,19 @@ class Users extends Model {
             'amount' => 0
         ]);
 
+        // Return the new users id
         return $user_id;
     }
 
+    // A function to delete a user and all it dependencies
     public static function deleteUser ($user_id) {
+        // Delete all the accounts of the user
         Accounts::delete([ 'user_id' => $user_id ]);
+
+        // Delete all the sessions of the user
         Sessions::delete([ 'user_id' => $user_id ]);
+
+        // Delete the user
         Users::delete($user_id);
     }
 }

@@ -19,6 +19,7 @@
         <label class="label" for="name">Name</label>
         <input class="input" type="text" id="name" name="name" value="{{ old('name') }}" {{ !isset($errors) ? 'autofocus' : '' }} required>
     </div>
+
     <div class="field">
         <label class="label" for="type">Type</label>
         <select class="input" id="type" name="type" required>
@@ -27,6 +28,7 @@
             <option value="{{ Accounts::TYPE_PAYMENT }}" {{ old('type') == Accounts::TYPE_PAYMENT ? 'selected' : '' }}>Payment</option>
         </select>
     </div>
+
     <div class="field">
         <button class="button is-link" type="submit">Create account</button>
     </div>

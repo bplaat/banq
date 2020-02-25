@@ -19,6 +19,8 @@ The framework uses the Model–view–controller design pattern:
 
 - A **view** is a special HTML file which is actually a PHP file, but where a simple translation is made by a few regular expressions, this ensures that you can write much nicer template code that remains legible. The view took the data from the controller and turns it into an HTML page that is then sent back to the user.
 
+- A **resource** are CSS or JavaScript files where you can use the special PHP view template language and which are compiled / minified by going to the route `/debug/compile`.
+
 ## The view template language
 In the view / template HTML files you can use a special PHP syntax, here below are some examples:
 

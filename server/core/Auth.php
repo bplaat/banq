@@ -3,6 +3,7 @@
 class Auth {
     protected static $checked = false, $user;
 
+    // A function that generates a new session key
     protected static function generateSession () {
         $session = bin2hex(random_bytes(16));
         if (Sessions::select($session)->rowCount() == 1) {
@@ -11,6 +12,7 @@ class Auth {
         return $session;
     }
 
+    // A function thtat creates a new session for a user
     public static function createSession ($user_id) {
         static::$checked = false;
         $session = static::generateSession();
@@ -28,6 +30,7 @@ class Auth {
         setcookie(SESSION_COOKIE_NAME, $session, time() + SESSION_DURATION, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']), true);
     }
 
+    // A function that updates a session with user agent data
     public static function updateSession () {
         $user_agent = parse_user_agent();
         Sessions::update($_COOKIE[SESSION_COOKIE_NAME], [
@@ -39,15 +42,17 @@ class Auth {
         ]);
     }
 
+    // A function that revokes a session
     public static function revokeSession ($session) {
-        static::$checked = false;
         Sessions::update($session, [ 'expires_at' => date('Y-m-d H:i:s') ]);
         if ($_COOKIE[SESSION_COOKIE_NAME] == $session) {
+            static::$checked = false;
             unset($_COOKIE[SESSION_COOKIE_NAME]);
             setcookie(SESSION_COOKIE_NAME, '', time() - 3600, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']), true);
         }
     }
 
+    // A function that trys to login for a user
     public static function login ($login, $password) {
         $user_query = Users::selectByLogin($login, $login);
         if ($user_query->rowCount() == 1) {
@@ -64,6 +69,7 @@ class Auth {
         Router::back();
     }
 
+    // A function that returns the authed user
     public static function user () {
         if (!static::$checked) {
             static::$checked = true;
@@ -85,10 +91,12 @@ class Auth {
         return static::$user;
     }
 
+    // A wrapper function that checks if a user is logged in
     public static function check () {
         return static::user() != null;
     }
 
+    // A wrapper function that fives the id of the authed user
     public static function id () {
         return static::user()->id;
     }

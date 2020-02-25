@@ -21,6 +21,7 @@
         <label class="label" for="name">Name</label>
         <input class="input" type="text" id="name" name="name" value="{{ old('name', $account->name) }}" {{ !isset($errors) ? 'autofocus' : '' }} required>
     </div>
+
     <div class="field">
         <label class="label" for="type">Type</label>
         <select class="input" id="type" name="type" required>
@@ -29,6 +30,7 @@
             <option value="{{ Accounts::TYPE_PAYMENT }}" {{ old('type', $account->type) == Accounts::TYPE_PAYMENT ? 'selected' : '' }}>Payment</option>
         </select>
     </div>
+
     <div class="field">
         <label class="label" for="user_id">User</label>
         <select class="input" id="user_id" name="user_id" required>
@@ -37,10 +39,12 @@
             @endforeach
         </select>
     </div>
+
     <div class="field">
         <label class="label" for="amount">Amount</label>
         <input class="input" type="number" id="amount" name="amount" step="0.01" value="{{ old('amount', $account->amount / 100) }}" required>
     </div>
+
     <div class="field">
         <button class="button is-link" type="submit">Edit account</button>
     </div>

@@ -1,14 +1,17 @@
 <?php
 
 class PaymentLinks extends Model {
+    // Set the table and primary key of this model
     protected static $table = 'payment_links';
     protected static $primaryKey = 'link';
 
+    // The table fields validation rules
     const NAME_VALIDATION = 'required|min:3|max:35';
     const ACCOUNT_ID_VALIDATION = 'required|int|exists:Accounts,id|@Accounts::RIGHT_OWNER_VALIDATION|@Accounts::ONLY_PAYMENT_VALIDATION';
     const ACCOUNT_ID_ADMIN_VALIDATION = 'required|int|exists:Accounts,id|@Accounts::ONLY_PAYMENT_VALIDATION';
     const AMOUNT_VALIDATION = 'required|float|number_min:0.01';
 
+    // The payment links create table function
     public static function create () {
         return Database::query('CREATE TABLE `payment_links` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -21,6 +24,7 @@ class PaymentLinks extends Model {
         )');
     }
 
+    // A function that generates a short unqiue id for a payment link
     public static function generateLink () {
         $link = '';
         for ($i = 0; $i < 10; $i++) {
@@ -32,10 +36,12 @@ class PaymentLinks extends Model {
         return $link;
     }
 
+    // A custom query function which counts all the payment links of a user
     public static function countAllByUser () {
         return Database::query('SELECT COUNT(`id`) as `count` FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', Auth::id())->fetch()->count;
     }
 
+    // A custom query function which selects all the payment links of a user by page
     public static function selectAllByUser ($page, $per_page) {
         return Database::query('SELECT * FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) ORDER BY `created_at` DESC LIMIT ?, ?', Auth::id(), ($page - 1) * $per_page, $per_page);
     }

@@ -1,19 +1,32 @@
 <?php
 
 class AdminUsersController {
+    // The admin users index page
     public static function index () {
+        // The pagination vars
         $page = request('page', 1);
         $per_page = 9;
         $last_page = ceil(Users::count() / $per_page);
+
+        // Select all the users by page
         $users = Users::selectPage($page, $per_page)->fetchAll();
-        return view('admin.users.index', [ 'users' => $users, 'page' => $page, 'last_page' => $last_page ]);
+
+        // Give all data to the view
+        return view('admin.users.index', [
+            'users' => $users,
+            'page' => $page,
+            'last_page' => $last_page
+        ]);
     }
 
+    // The admin users create page
     public static function create () {
         return view('admin.users.create');
     }
 
+    // The admin users store page
     public static function store () {
+        // Validate the user input fields
         validate([
             'firstname' => Users::FIRSTNAME_VALIDATION,
             'lastname' => Users::LASTNAME_VALIDATION,
@@ -30,6 +43,7 @@ class AdminUsersController {
             'role' => Users::ROLE_VALIDATION
         ]);
 
+        // Create the user
         $user_id = Users::createUser([
             'firstname' => request('firstname'),
             'lastname' => request('lastname'),
@@ -46,19 +60,27 @@ class AdminUsersController {
             'role' => request('role')
         ]);
 
+        // Redirect to the new users show page
         Router::redirect('/admin/users/' . $user_id);
     }
 
+    // The admin users show page
     public static function show ($user) {
         $accounts = Accounts::select([ 'user_id' => $user->id ])->fetchAll();
-        return view('admin.users.show', [ 'user' => $user, 'accounts' => $accounts ]);
+        return view('admin.users.show', [
+            'user' => $user,
+            'accounts' => $accounts
+        ]);
     }
 
+    // The admin users edit page
     public static function edit ($user) {
         return view('admin.users.edit', [ 'user' => $user ]);
     }
 
+    // The admin users update page
     public static function update ($user) {
+        // Validate the user input fields
         validate([
             'firstname' => Users::FIRSTNAME_VALIDATION,
             'lastname' => Users::LASTNAME_VALIDATION,
@@ -74,12 +96,14 @@ class AdminUsersController {
             'role' => Users::ROLE_VALIDATION
         ]);
 
+        // Check the password if providate
         if (request('password') != '') {
             validate([
                 'password' => Users::PASSWORD_VALIDATION,
             ]);
         }
 
+        // Update the user details
         Users::update($user->id, [
             'firstname' => request('firstname'),
             'lastname' => request('lastname'),
@@ -95,15 +119,18 @@ class AdminUsersController {
             'role' => request('role')
         ]);
 
+        // If the password if provided
         if (request('password') != '') {
             Users::update($user->id, [
                 'password' => password_hash(request('password'), PASSWORD_DEFAULT)
             ]);
         }
 
+        // Redirect to the users show page
         Router::redirect('/admin/users/' . $user->id);
     }
 
+    // The admin users delete page
     public static function delete ($user) {
         Users::deleteUser($user->id);
         Router::redirect('/admin/users');

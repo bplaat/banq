@@ -1,17 +1,21 @@
 <?php
 
+// A wrapper function to get a request var or a default
 function request ($key, $default = '') {
     return isset($_REQUEST[$key]) ? $_REQUEST[$key] : $default;
 }
 
+// Flash all the request as old variables
 foreach ($_REQUEST as $key => $value) {
     Session::flash('old_' . $key, $value);
 }
 
+// A wrapper function to get a old request var
 function old ($key, $default = '') {
     return Session::get('old_' . $key, $default);
 }
 
+// A function to validate in input request vars which generates errors
 function validate ($values) {
     $errors = Session::get('errors', []);
     foreach ($values as $key => $value) {

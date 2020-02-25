@@ -79,7 +79,6 @@ if (Auth::check()) {
 }
 
 else {
-
     // Auth
     Router::get('/auth/login', 'AuthController::showLoginForm');
     Router::post('/auth/login', 'AuthController::login');

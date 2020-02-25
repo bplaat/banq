@@ -43,6 +43,7 @@
                 <p>Send at: <i>{{ $transaction->created_at }}</i></p>
             </div>
         @endif
+
         @if ($transaction->from_account_id == $account->id):
             <div class="box has-text-white has-background-danger">
                 <h2 class="title is-4">

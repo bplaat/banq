@@ -19,6 +19,7 @@
         <label class="label" for="name">Name</label>
         <input class="input" type="text" id="name" name="name" value="{{ old('name', 'Payment link at ' . date('Y-m-d H:i:s')) }}" required>
     </div>
+
     <div class="field">
         <label class="label" for="account_id">Account</label>
         <select class="input" id="account_id" name="account_id" required>
@@ -28,10 +29,12 @@
             @endforeach
         </select>
     </div>
+
     <div class="field">
         <label class="label" for="amount">Amount</label>
         <input class="input" type="number" id="amount" name="amount" step="0.01" value="{{ old('amount') }}" required>
     </div>
+
     <div class="field">
         <button class="button is-link" type="submit">Create payment link</button>
     </div>

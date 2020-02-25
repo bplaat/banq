@@ -1,3 +1,4 @@
+# Redirect all the non file urls to the index.php
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [L]

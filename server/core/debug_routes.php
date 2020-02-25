@@ -1,5 +1,6 @@
 <?php
 
+// A function that minifies CSS data
 function minify_css ($data){
     $curl = curl_init();
     curl_setopt_array($curl, [
@@ -14,6 +15,7 @@ function minify_css ($data){
     return $minified_data;
 }
 
+// A function that minifies JavaScript data
 function minify_js ($data) {
     $curl = curl_init();
     curl_setopt_array($curl, [
@@ -28,6 +30,7 @@ function minify_js ($data) {
     return $minified_data;
 }
 
+// This routes minifies all the resources from the resources folder
 Router::get('/debug/compile', function () {
     $paths = glob(ROOT . '/resources/*');
     foreach ($paths as $path) {
@@ -48,6 +51,7 @@ Router::get('/debug/compile', function () {
     return 'All resources are compiled successfull';
 });
 
+// This route migrates the database by deleting all models and recreating them
 Router::get('/debug/migrate', function () {
     $paths = glob(ROOT . '/models/*');
     foreach ($paths as $path) {
@@ -61,6 +65,7 @@ Router::get('/debug/migrate', function () {
     return 'Database migration run successfull';
 });
 
+// This route runs the cron job direct for testing
 Router::get('/debug/cron', function () {
     require_once ROOT . '/cron.php';
     return 'Cron job run successfull';

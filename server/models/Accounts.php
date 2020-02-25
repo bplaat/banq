@@ -1,15 +1,13 @@
 <?php
 
 class Accounts extends Model {
-    const TYPE_SAVE = 1;
-    const TYPE_PAYMENT = 2;
-
-    const MAX_COUNT = 6;
+    // The table fields validation rules
     const NAME_VALIDATION = 'required|min:3|max:35';
     const TYPE_VALIDATION = 'required|int|number_between:1,2';
     const USER_ID_VALIDATION = 'required|int|exits:User,id|@Accounts::MAX_COUNT_VALIDATION';
     const AMOUNT_VALIDATION = 'required|float|number_min:0';
 
+    // A custom validation rule which checks if the account is a payment account
     public static function ONLY_PAYMENT_VALIDATION ($key, $value) {
         $account = static::select($value)->fetch();
         if ($account->type != static::TYPE_PAYMENT) {
@@ -17,12 +15,15 @@ class Accounts extends Model {
         }
     }
 
+    // A custom validation rule which checks that you can max create sum amount of accounts
+    const MAX_COUNT = 6;
     public static function MAX_COUNT_VALIDATION ($key, $value) {
         if (static::select([ $key => $value ])->rowCount() >= static::MAX_COUNT) {
             return 'You can create a maximum of ' . static::MAX_COUNT . ' accounts';
         }
     }
 
+    // A custom validation rule which checks if the account is from the authed user
     public static function RIGHT_OWNER_VALIDATION ($key, $value) {
         $account = static::select($value)->fetch();
         if ($account->user_id != Auth::id()) {
@@ -30,6 +31,7 @@ class Accounts extends Model {
         }
     }
 
+    // A custom validation rule which checks if the account has enough money for the transaction
     public static function ENOUGH_AMOUNT_VALIDATION ($key, $value) {
         $account = static::select($value)->fetch();
         $amount = parse_money_number(request('amount'));
@@ -38,6 +40,11 @@ class Accounts extends Model {
         }
     }
 
+    // The account types
+    const TYPE_SAVE = 1;
+    const TYPE_PAYMENT = 2;
+
+    // The accounts create table function
     public static function create () {
         return Database::query('CREATE TABLE `accounts` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

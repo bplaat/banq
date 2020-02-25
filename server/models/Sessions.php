@@ -1,8 +1,10 @@
 <?php
 
 class Sessions extends Model {
+    // Make the primary key in the model the session field
     protected static $primaryKey = 'session';
 
+    // The sessions create table function
     public static function create () {
         Database::query('CREATE TABLE `sessions` (
             `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -18,6 +20,7 @@ class Sessions extends Model {
         )');
     }
 
+    // A custom query function which selects all the active session by user
     public static function selectAllActiveByUser ($user_id) {
         return Database::query('SELECT * FROM `sessions` WHERE `user_id` = ? AND `expires_at` > NOW() ORDER BY `updated_at` DESC', $user_id);
     }
