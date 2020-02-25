@@ -17,8 +17,8 @@ class Router {
         static::match(['get', 'post'], $route, $callback);
     }
 
-    // A protected function which handles the response return by the callback
-    protected static function handleResponse ($response) {
+    // A function which handles the response return by the callback
+    public static function handleResponse ($response) {
         // Stop running when nothing is returned
         if (is_null($response)) {
             exit;

@@ -5,7 +5,7 @@
         <li><a href="/">Banq</a></li>
         <li><a href="/admin">Admin</a></li>
         <li><a href="/admin/payment-links">Payment Links</a></li>
-        <li class="is-active"><a href="/admin/payment-link/{{ $paymentLink->link }}">{{ $paymentLink->name }}</a></li>
+        <li class="is-active"><a href="/admin/payment-link/{{ $paymentLink->id }}">{{ $paymentLink->name }}</a></li>
     </ul>
 </div>
 
@@ -18,7 +18,7 @@
 <div class="buttons">
     <button id="share-button" class="button is-success" style="display: none;">Share link</button>
     <button id="copy-button" class="button is-success" style="display: none;">Copy link</button>
-    <a class="button is-danger" href="/admin/payment-links/{{ $paymentLink->link }}/delete">Delete</a>
+    <a class="button is-danger" href="/admin/payment-links/{{ $paymentLink->id }}/delete">Delete</a>
 </div>
 
 @view('payment-links.script', [ 'paymentLink' => $paymentLink ])

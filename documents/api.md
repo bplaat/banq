@@ -52,6 +52,19 @@ Create a new user
 - `username` The users username
 - `email` The users email
 - `password` The users password
+- `phone_number` The users phone number
+- `sex` The users gender
+    - **M**: The user is male
+    - **F**: The user is female
+    - **X**: The user is of another gender or it is complicated
+- `birth_date` The users birth date
+- `address` The users address
+- `postcode` The users post code
+- `city` The city the user lives in
+- `region` The region the user lives in
+- `role` The role the user has
+    - **1**: A normal user
+    - **2**: A admin user
 
 ### /api/users/{user_id}/edit
 Edit a user with new information
@@ -59,7 +72,20 @@ Edit a user with new information
 - `lastname` The users lastname
 - `username` The users username
 - `email` The users email
-- `password` The users password
+- `password` The users password (*optional*)
+- `phone_number` The users phone number
+- `sex` The users gender
+    - **M**: The user is male
+    - **F**: The user is female
+    - **X**: The user is of another gender or it is complicated
+- `birth_date` The users birth date
+- `address` The users address
+- `postcode` The users post code
+- `city` The city the user lives in
+- `region` The region the user lives in
+- `role` The role the user has
+    - **1**: A normal user
+    - **2**: A admin user
 
 ### /api/users/{user_id}/delete
 Delete a user
@@ -127,7 +153,7 @@ Get some information about all payment links (paged)
 Search for payment links (paged)
 - `q` search query
 
-### /api/payment-links/{link}
+### /api/payment-links/{payment_link_id}
 Get information about a single payment link
 
 ### /api/payment-links/create

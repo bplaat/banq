@@ -40,19 +40,16 @@ class AdminPaymentLinksController {
             'amount' => PaymentLinks::AMOUNT_VALIDATION
         ]);
 
-        // Generate a payment link link
-        $link = PaymentLinks::generateLink();
-
         // Insert the payment link to the database
         PaymentLinks::insert([
             'name' => request('name'),
-            'link' => $link,
+            'link' => PaymentLinks::generateLink(),
             'account_id' => request('account_id'),
             'amount' => parse_money_number(request('amount'))
         ]);
 
         // Redirect to the new payment link show page
-        Router::redirect('/admin/payment-links/' . $link);
+        Router::redirect('/admin/payment-links/' . Database::lastInsertId());
     }
 
     // The payment links show page
@@ -64,7 +61,7 @@ class AdminPaymentLinksController {
 
     // The payment links delete page
     public static function delete ($paymentLink) {
-        PaymentLinks::delete($paymentLink->link);
+        PaymentLinks::delete($paymentLink->id);
         Router::redirect('/admin/payment-links');
     }
 }

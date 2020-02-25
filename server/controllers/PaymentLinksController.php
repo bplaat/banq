@@ -40,19 +40,16 @@ class PaymentLinksController {
             'amount' => PaymentLinks::AMOUNT_VALIDATION
         ]);
 
-        // Generate a new payment link link
-        $link = PaymentLinks::generateLink();
-
         // Insert the new payment link to the database
         PaymentLinks::insert([
             'name' => request('name'),
-            'link' => $link,
+            'link' => PaymentLinks::generateLink(),
             'account_id' => request('account_id'),
             'amount' => parse_money_number(request('amount'))
         ]);
 
         // Redirect to the new payment link show page
-        Router::redirect('/payment-links/' . $link);
+        Router::redirect('/payment-links/' . Database::lastInsertId());
     }
 
     // The payment links show page
@@ -73,7 +70,7 @@ class PaymentLinksController {
         // Check if the payment link is from authed user
         $paymentLink->account = Accounts::select($paymentLink->account_id)->fetch();
         if ($paymentLink->account->user_id == Auth::id()) {
-            PaymentLinks::delete($paymentLink->link);
+            PaymentLinks::delete($paymentLink->id);
             Router::redirect('/payment-links');
         } else {
             // Else return 404 page
@@ -82,8 +79,12 @@ class PaymentLinksController {
     }
 
     // The payment link pay page
-    public static function pay ($paymentLink) {
+    public static function pay ($link) {
+        // Select the payment link by the link provided and select its account
+        $paymentLink = PaymentLinks::select([ 'link' => $link ])->fetch();
         $paymentLink->account = Accounts::select($paymentLink->account_id)->fetch();
+
+        // Check if the user is authed then fetch his payment accounts
         if (Auth::check()) {
             $from_accounts = Accounts::select([ 'user_id' => Auth::id(), 'type' => Accounts::TYPE_PAYMENT ])->fetchAll();
             return view('payment-links.pay', [
@@ -97,7 +98,10 @@ class PaymentLinksController {
     }
 
     // The payment link process payment page
-    public static function processPayment ($paymentLink) {
+    public static function processPayment ($link) {
+        // Select the payment link by the link provided
+        $paymentLink = PaymentLinks::select([ 'link' => $link ])->fetch();
+
         // Validate the user input
         $_REQUEST['to_account_id'] = $paymentLink->account_id;
         validate([

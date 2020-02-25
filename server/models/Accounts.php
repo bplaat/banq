@@ -10,7 +10,7 @@ class Accounts extends Model {
     // A custom validation rule which checks if the account is a payment account
     public static function ONLY_PAYMENT_VALIDATION ($key, $value) {
         $account = static::select($value)->fetch();
-        if ($account->type != static::TYPE_PAYMENT) {
+        if ($account != null && $account->type != static::TYPE_PAYMENT) {
             return 'The account \'' . $account->name . '\' is not a payment account';
         }
     }
@@ -26,7 +26,7 @@ class Accounts extends Model {
     // A custom validation rule which checks if the account is from the authed user
     public static function RIGHT_OWNER_VALIDATION ($key, $value) {
         $account = static::select($value)->fetch();
-        if ($account->user_id != Auth::id()) {
+        if ($account != null && $account->user_id != Auth::id()) {
             return 'The account \'' . $account->name . '\' is not yours';
         }
     }
@@ -35,7 +35,7 @@ class Accounts extends Model {
     public static function ENOUGH_AMOUNT_VALIDATION ($key, $value) {
         $account = static::select($value)->fetch();
         $amount = parse_money_number(request('amount'));
-        if ($account->amount - $amount < 0) {
+        if ($account != null && $account->amount - $amount < 0) {
             return 'The account \'' . $account->name . '\' does not have enough money for this transaction';
         }
     }

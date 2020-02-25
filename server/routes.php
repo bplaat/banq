@@ -5,7 +5,7 @@ Router::get('/', 'PagesController::index');
 Router::get('/offline', 'PagesController::offline');
 
 // Payment links
-Router::get('/pay/{PaymentLinks}', 'PaymentLinksController::pay');
+Router::get('/pay/{link}', 'PaymentLinksController::pay');
 
 if (Auth::check()) {
     // Accounts
@@ -29,7 +29,7 @@ if (Auth::check()) {
     Router::post('/payment-links', 'PaymentLinksController::store');
     Router::get('/payment-links/{PaymentLinks}', 'PaymentLinksController::show');
     Router::get('/payment-links/{PaymentLinks}/delete', 'PaymentLinksController::delete');
-    Router::post('/pay/{PaymentLinks}', 'PaymentLinksController::processPayment');
+    Router::post('/pay/{link}', 'PaymentLinksController::processPayment');
 
     // Settings
     Router::get('/auth/settings', 'SettingsController::showSettingsForm');

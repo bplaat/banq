@@ -47,8 +47,25 @@ class ApiPaymentLinksController {
 
     // The API payment links create route
     public static function create () {
+        // Validate the input vars
+        api_validate([
+            'name' => PaymentLinks::NAME_VALIDATION,
+            'account_id' => PaymentLinks::ACCOUNT_ID_ADMIN_VALIDATION,
+            'amount' => PaymentLinks::AMOUNT_VALIDATION
+        ]);
+
+        // Insert the payment link to the database
+        PaymentLinks::insert([
+            'name' => request('name'),
+            'link' => PaymentLinks::generateLink(),
+            'account_id' => request('account_id'),
+            'amount' => parse_money_number(request('amount'))
+        ]);
+
+        // Return a confirmation message
         return [
-            'message' => 'Comming soon...'
+            'message' => 'The payment link has been created successfully',
+            'payment_link_id' => Database::lastInsertId()
         ];
     }
 

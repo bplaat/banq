@@ -1,9 +1,8 @@
 <?php
 
 class PaymentLinks extends Model {
-    // Set the table and primary key of this model
+    // Set the table name of this model
     protected static $table = 'payment_links';
-    protected static $primaryKey = 'link';
 
     // The table fields validation rules
     const NAME_VALIDATION = 'required|min:3|max:35';

@@ -47,8 +47,21 @@ class ApiDevicesController {
 
     // The API devices create route
     public static function create () {
+        // Validate the user input
+        api_validate([
+            'name' => Devices::NAME_VALIDATION
+        ]);
+
+        // Insert the device to the database
+        Devices::insert([
+            'name' => request('name'),
+            'key' => Devices::generateKey()
+        ]);
+
+        // Return a confirmation message
         return [
-            'message' => 'Comming soon...'
+            'message' => 'The device has been created successfully',
+            'device_id' => Database::lastInsertId()
         ];
     }
 
@@ -59,15 +72,30 @@ class ApiDevicesController {
 
     // The API devices edit route
     public static function edit ($device) {
+        // Validate the user input
+        api_validate([
+            'name' => Devices::NAME_VALIDATION
+        ]);
+
+        // Update the device in the database
+        Devices::update($device->id, [
+            'name' => request('name')
+        ]);
+
+        // Return a confirmation message
         return [
-            'message' => 'Comming soon...'
+            'message' => 'The device has been edited successfully'
         ];
     }
 
     // The API devices delete route
     public static function delete ($device) {
+        // Delete the device
+        Devices::delete($device->id);
+
+        // Return a confirmation message
         return [
-            'message' => 'Comming soon...'
+            'message' => 'The device has been deleted successfully'
         ];
     }
 }

@@ -17,7 +17,7 @@
     @foreach ($paymentLinks as $paymentLink):
         <div class="box">
             <h2 class="title is-4">
-                <a href="/payment-links/{{ $paymentLink->link }}">{{ $paymentLink->name }}</a>
+                <a href="/payment-links/{{ $paymentLink->id }}">{{ $paymentLink->name }}</a>
             </h2>
             <p>For: <a href="/accounts/{{ $paymentLink->account_id }}">{{ $paymentLink->account->name }}</a></p>
             <p>Amount: {!! format_money($paymentLink->amount) !!}</p>

@@ -15,9 +15,9 @@ function old ($key, $default = '') {
     return Session::get('old_' . $key, $default);
 }
 
-// A function to validate in input request vars which generates errors
-function validate ($values) {
-    $errors = Session::get('errors', []);
+// A function that validates the input and returns the errors
+function validate_errors ($values) {
+    $errors = [];
     foreach ($values as $key => $value) {
         $string = request($key);
         $rules = explode('|', $value);
@@ -84,8 +84,22 @@ function validate ($values) {
             }
         }
     }
+    return $errors;
+}
+
+// A function that validates the input request vars and flashes the generates errors
+function validate ($values) {
+    $errors = validate_errors($values);
     if (count($errors) > 0) {
         Session::flash('errors', $errors);
         Router::back();
+    }
+}
+
+// A function that validates the input request vars and returns the generates errors
+function api_validate ($values) {
+    $errors = validate_errors($values);
+    if (count($errors) > 0) {
+        Router::handleResponse([ 'errors' => $errors ]);
     }
 }

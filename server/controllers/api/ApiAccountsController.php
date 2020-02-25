@@ -12,9 +12,6 @@ class ApiAccountsController {
 
         // Select all the accounts by page
         $accounts = Accounts::selectPage($page, $limit)->fetchAll();
-        foreach ($accounts as $account) {
-            unset($account->key);
-        }
 
         // Return the data as JSON
         return [
@@ -38,9 +35,6 @@ class ApiAccountsController {
 
         // Select all the accounts by page
         $accounts = Accounts::searchPage($q, $page, $limit)->fetchAll();
-        foreach ($accounts as $account) {
-            unset($account->key);
-        }
 
         // Return the data as JSON
         return [
@@ -53,28 +47,66 @@ class ApiAccountsController {
 
     // The API accounts create route
     public static function create () {
+        // Validate the user input
+        api_validate([
+            'name' => Accounts::NAME_VALIDATION,
+            'type' => Accounts::TYPE_VALIDATION,
+            'user_id' => Accounts::USER_ID_VALIDATION,
+            'amount' => Accounts::AMOUNT_VALIDATION
+        ]);
+
+        // Insert the account to the database
+        Accounts::insert([
+            'name' => request('name'),
+            'type' => request('type'),
+            'user_id' => request('user_id'),
+            'amount' => parse_money_number(request('amount'))
+        ]);
+
+        // Return a confirmation message
         return [
-            'message' => 'Comming soon...'
+            'message' => 'The account has been created successfully',
+            'account_id' => Database::lastInsertId()
         ];
     }
 
     // The API accounts show route
     public static function show ($account) {
-        unset($account->key);
         return $account;
     }
 
     // The API accounts edit route
     public static function edit ($account) {
+        // Validate the user input
+        api_validate([
+            'name' => Accounts::NAME_VALIDATION,
+            'type' => Accounts::TYPE_VALIDATION,
+            'user_id' => Accounts::USER_ID_VALIDATION,
+            'amount' => Accounts::AMOUNT_VALIDATION,
+        ]);
+
+        // Update the account in the database
+        Accounts::update($account->id, [
+            'name' => request('name'),
+            'type' => request('type'),
+            'user_id' => request('user_id'),
+            'amount' => parse_money_number(request('amount'))
+        ]);
+
+        // Return a confirmation message
         return [
-            'message' => 'Comming soon...'
+            'message' => 'The account has been edited successfully'
         ];
     }
 
     // The API accounts delete route
     public static function delete ($account) {
+        // Delete the account
+        Accounts::delete($user->id);
+
+        // Return a confirmation message
         return [
-            'message' => 'Comming soon...'
+            'message' => 'The account has been deleted successfully'
         ];
     }
 }

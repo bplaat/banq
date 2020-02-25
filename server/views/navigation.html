@@ -49,7 +49,7 @@
                             <a class="navbar-link is-arrowless" href="/payment-links">Payment Links</a>
                             <div class="navbar-dropdown">
                                 @foreach ($paymentLinks as $paymentLink):
-                                    <a class="navbar-item" href="/payment-links/{{ $paymentLink->link }}">{{ $paymentLink->name }}</a>
+                                    <a class="navbar-item" href="/payment-links/{{ $paymentLink->id }}">{{ $paymentLink->name }}</a>
                                 @endforeach
                             </div>
                         </div>
