@@ -4,19 +4,26 @@ class AdminPaymentLinksController {
     // The admin payment links index page
     public static function index () {
         // The pagination vars
-        $page = request('page', 1);
+        $page = get_page();
         $per_page = 9;
-        $last_page = ceil(PaymentLinks::count() / $per_page);
 
-        // Select all the payment links and there accounts
-        $paymentLinks = PaymentLinks::selectPage($page, $per_page)->fetchAll();
-        foreach ($paymentLinks as $paymentLink) {
-            $paymentLink->account = Accounts::select($paymentLink->account_id)->fetch();
+        // Check if search query is given
+        if (request('q') != '') {
+            $last_page = ceil(PaymentLinks::searchCount(request('q')) / $per_page);
+            $payment_links = PaymentLinks::searchPage(request('q'), $page, $per_page)->fetchAll();
+        } else {
+            $last_page = ceil(PaymentLinks::count() / $per_page);
+            $payment_links = PaymentLinks::selectPage($page, $per_page)->fetchAll();
+        }
+
+        // Select the account of every payment link
+        foreach ($payment_links as $payment_link) {
+            $payment_link->account = Accounts::select($payment_link->account_id)->fetch();
         }
 
         // Give all the data to the view
         return view('admin.payment-links.index', [
-            'paymentLinks' => $paymentLinks,
+            'payment_links' => $payment_links,
             'page' => $page,
             'last_page' => $last_page
         ]);
@@ -53,15 +60,15 @@ class AdminPaymentLinksController {
     }
 
     // The payment links show page
-    public static function show ($paymentLink) {
-        $paymentLink->account = Accounts::select($paymentLink->account_id)->fetch();
-        $paymentLink->absolute_link = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . '/pay/' . $paymentLink->link;
-        return view('admin.payment-links.show', [ 'paymentLink' => $paymentLink ]);
+    public static function show ($payment_link) {
+        $payment_link->account = Accounts::select($payment_link->account_id)->fetch();
+        $payment_link->absolute_link = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . '/pay/' . $payment_link->link;
+        return view('admin.payment-links.show', [ 'payment_link' => $payment_link ]);
     }
 
     // The payment links delete page
-    public static function delete ($paymentLink) {
-        PaymentLinks::delete($paymentLink->id);
+    public static function delete ($payment_link) {
+        PaymentLinks::delete($payment_link->id);
         Router::redirect('/admin/payment-links');
     }
 }

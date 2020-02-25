@@ -1,5 +1,18 @@
 <?php
 
+// A function that gets the page number
+function get_page () {
+    return (int)request('page', 1);
+}
+
+// A function that gets the limit number
+function get_limit () {
+    $limit = (int)request('limit', 20);
+    if ($limit < 0) $limit = 1;
+    if ($limit > 50) $limit = 50;
+    return $limit;
+}
+
 // A function that parse input money amount
 function parse_money_number ($string) {
     return round(floatval($string) * 100);

@@ -3,13 +3,20 @@
 class AdminAccountsController {
     // The admin accounts index page
     public static function index () {
-        // The pagination variables
-        $page = request('page', 1);
+        // The pagination vars
+        $page = get_page();
         $per_page = 9;
-        $last_page = ceil(Accounts::count() / $per_page);
 
-        // Select all the accounts and give them to the view
-        $accounts = Accounts::selectPage($page, $per_page)->fetchAll();
+        // Check if search query is given
+        if (request('q') != '') {
+            $last_page = ceil(Accounts::searchCount(request('q')) / $per_page);
+            $accounts = Accounts::searchPage(request('q'), $page, $per_page)->fetchAll();
+        } else {
+            $last_page = ceil(Accounts::count() / $per_page);
+            $accounts = Accounts::selectPage($page, $per_page)->fetchAll();
+        }
+
+        // Give the data to the view
         return view('admin.accounts.index', [
             'accounts' => $accounts,
             'page' => $page,
@@ -54,7 +61,7 @@ class AdminAccountsController {
         $account->user = Users::select($account->user_id)->fetch();
 
         // The pagination vars
-        $page = request('page', 1);
+        $page = get_page();
         $per_page = 5;
         $last_page = ceil(Transactions::countAllByAccount($account->id) / $per_page);
 

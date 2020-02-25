@@ -3,13 +3,20 @@
 class AdminDevicesController {
     // The admin devices index page
     public static function index () {
-        // The pagination variables
-        $page = request('page', 1);
+        // The pagination vars
+        $page = get_page();
         $per_page = 9;
-        $last_page = ceil(Devices::count() / $per_page);
 
-        // Select all the devices and give them to the view
-        $devices = Devices::selectPage($page, $per_page)->fetchAll();
+        // Check if search query is given
+        if (request('q') != '') {
+            $last_page = ceil(Devices::searchCount(request('q')) / $per_page);
+            $devices = Devices::searchPage(request('q'), $page, $per_page)->fetchAll();
+        } else {
+            $last_page = ceil(Devices::count() / $per_page);
+            $devices = Devices::selectPage($page, $per_page)->fetchAll();
+        }
+
+        // Give the data to the view
         return view('admin.devices.index', [
             'devices' => $devices,
             'page' => $page,
@@ -24,7 +31,7 @@ class AdminDevicesController {
 
     // The admin devices store page
     public static function store () {
-        // Validate the user input
+        // Validate the device input
         validate([
             'name' => Devices::NAME_VALIDATION
         ]);
@@ -52,7 +59,7 @@ class AdminDevicesController {
 
     // The admin devices update page
     public static function update ($device) {
-        // Validate the user input
+        // Validate the device input
         validate([
             'name' => Devices::NAME_VALIDATION
         ]);

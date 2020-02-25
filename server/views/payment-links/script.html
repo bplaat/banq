@@ -1,5 +1,5 @@
 <script>
-var paymentLink = JSON.parse('{!! json_encode([ "link" => $paymentLink->absolute_link, "name" => $paymentLink->name, "amount" => format_money_number($paymentLink->amount), "account_name" => $paymentLink->account->name ], JSON_HEX_APOS) !!}');
+var paymentLink = JSON.parse('{!! json_encode([ "link" => $payment_link->absolute_link, "name" => $payment_link->name, "amount" => format_money_number($payment_link->amount), "account_name" => $payment_link->account->name ], JSON_HEX_APOS) !!}');
 
 if (typeof Android != 'undefined' && 'share' in Android) {
     var shareButton = document.getElementById('share-button');

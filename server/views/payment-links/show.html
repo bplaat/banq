@@ -1,25 +1,25 @@
-@view('header', [ 'title' => $paymentLink->name . ' - Payment Links' ])
+@view('header', [ 'title' => $payment_link->name . ' - Payment Links' ])
 
 <div class="breadcrumb">
     <ul>
         <li><a href="/">Banq</a></li>
         <li><a href="/payment-links">Payment Links</a></li>
-        <li class="is-active"><a href="/payment-link/{{ $paymentLink->id }}">{{ $paymentLink->name }}</a></li>
+        <li class="is-active"><a href="/payment-link/{{ $payment_link->id }}">{{ $payment_link->name }}</a></li>
     </ul>
 </div>
 
-<h1 class="title">{{ $paymentLink->name }}</h1>
-<p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $paymentLink->account_id }}">{{ $paymentLink->account->name }}</a></p>
-<p style="margin-bottom: 16px;">Amount: {!! format_money($paymentLink->amount) !!}</p>
+<h1 class="title">{{ $payment_link->name }}</h1>
+<p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $payment_link->account_id }}">{{ $payment_link->account->name }}</a></p>
+<p style="margin-bottom: 16px;">Amount: {!! format_money($payment_link->amount) !!}</p>
 
-<p style="margin-bottom: 16px;">Link: <a href="{{ $paymentLink->absolute_link }}" target="_blank" rel="noreferrer"><b>{{ $paymentLink->absolute_link }}</b></a></p>
+<p style="margin-bottom: 16px;">Link: <a href="{{ $payment_link->absolute_link }}" target="_blank" rel="noreferrer"><b>{{ $payment_link->absolute_link }}</b></a></p>
 
 <div class="buttons">
     <button id="share-button" class="button is-success" style="display: none;">Share link</button>
     <button id="copy-button" class="button is-success" style="display: none;">Copy link</button>
-    <a class="button is-danger" href="/payment-links/{{ $paymentLink->id }}/delete">Delete</a>
+    <a class="button is-danger" href="/payment-links/{{ $payment_link->id }}/delete">Delete</a>
 </div>
 
-@view('payment-links.script', [ 'paymentLink' => $paymentLink ])
+@view('payment-links.script', [ 'payment_link' => $payment_link ])
 
 @view('footer')

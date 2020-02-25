@@ -4,10 +4,8 @@ class ApiAccountsController {
     // The API accounts index route
     public static function index () {
         // The pagination vars
-        $page = request('page', 1);
-        $limit = (int)request('limit', 20);
-        if ($limit < 0) $limit = 1;
-        if ($limit > 50) $limit = 50;
+        $page = get_page();
+        $limit = get_limit();
         $count = Accounts::count();
 
         // Select all the accounts by page
@@ -27,10 +25,8 @@ class ApiAccountsController {
         $q = request('q', '');
 
         // The pagination vars
-        $page = request('page', 1);
-        $limit = (int)request('limit', 20);
-        if ($limit < 0) $limit = 1;
-        if ($limit > 50) $limit = 50;
+        $page = get_page();
+        $limit = get_limit();
         $count = Accounts::searchCount($q);
 
         // Select all the accounts by page

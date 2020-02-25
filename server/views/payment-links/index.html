@@ -13,20 +13,20 @@
     <a class="button is-link" href="/payment-links/create">Create</a>
 </div>
 
-@if (count($paymentLinks) > 0):
-    @foreach ($paymentLinks as $paymentLink):
+@if (count($payment_links) > 0):
+    @foreach ($payment_links as $payment_link):
         <div class="box">
             <h2 class="title is-4">
-                <a href="/payment-links/{{ $paymentLink->id }}">{{ $paymentLink->name }}</a>
+                <a href="/payment-links/{{ $payment_link->id }}">{{ $payment_link->name }}</a>
             </h2>
-            <p>For: <a href="/accounts/{{ $paymentLink->account_id }}">{{ $paymentLink->account->name }}</a></p>
-            <p>Amount: {!! format_money($paymentLink->amount) !!}</p>
+            <p>For: <a href="/accounts/{{ $payment_link->account_id }}">{{ $payment_link->account->name }}</a></p>
+            <p>Amount: {!! format_money($payment_link->amount) !!}</p>
         </div>
     @endforeach
 
     @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 @else:
-    <p><i>There are no payment links yet!</i></p>
+    <p><i>There are no payment links found</i></p>
 @endif
 
 @view('footer')

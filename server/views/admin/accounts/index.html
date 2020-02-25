@@ -10,31 +10,49 @@
 
 <h1 class="title">Accounts</h1>
 
-<div class="buttons">
-    <a class="button is-link" href="/admin/accounts/create">Create</a>
-</div>
-
-<div class="columns is-multiline">
-    @foreach ($accounts as $account):
-        <div class="column is-one-third">
-            <div class="box" style="height: 100%;">
-                <h2 class="title is-4">
-                    <a href="/admin/accounts/{{ $account->id }}">{{ $account->name }}</a>
-                </h2>
-                <p>
-                    Amount: {!! format_money($account->amount) !!}
-
-                    @if ($account->type == Accounts::TYPE_SAVE):
-                        <span class="tag is-success" style="margin-left: 16px;">SAVE ACCOUNT</span>
-                    @endif
-                    @if ($account->type == Accounts::TYPE_PAYMENT):
-                        <span class="tag is-info" style="margin-left: 16px;">PAYMENT ACCOUNT</span>
-                    @endif
-                </p>
+<div class="columns">
+    <div class="column">
+        <div class="buttons">
+            <a class="button is-link" href="/admin/accounts/create">Create</a>
+        </div>
+    </div>
+    <form class="column" method="get">
+        <div class="field has-addons">
+            <div class="control" style="width: 100%;">
+                <input class="input" type="text" id="q" name="q" placeholder="Search..." value="{{ request('q') }}">
+            </div>
+            <div class="control">
+                <button class="button is-link" type="submit">Search</button>
             </div>
         </div>
-    @endforeach
+    </form>
 </div>
+
+@if (count($accounts) > 0):
+    <div class="columns is-multiline">
+        @foreach ($accounts as $account):
+            <div class="column is-one-third">
+                <div class="box" style="height: 100%;">
+                    <h2 class="title is-4">
+                        <a href="/admin/accounts/{{ $account->id }}">{{ $account->name }}</a>
+                    </h2>
+                    <p>
+                        Amount: {!! format_money($account->amount) !!}
+
+                        @if ($account->type == Accounts::TYPE_SAVE):
+                            <span class="tag is-success" style="margin-left: 16px;">SAVE ACCOUNT</span>
+                        @endif
+                        @if ($account->type == Accounts::TYPE_PAYMENT):
+                            <span class="tag is-info" style="margin-left: 16px;">PAYMENT ACCOUNT</span>
+                        @endif
+                    </p>
+                </div>
+            </div>
+        @endforeach
+    </div>
+@else:
+    <p><i>There are no accounts found</i></p>
+@endif
 
 @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 

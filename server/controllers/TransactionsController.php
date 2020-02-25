@@ -4,7 +4,7 @@ class TransactionsController {
     // The transactions index page
     public static function index () {
         // The pagination vars
-        $page = request('page', 1);
+        $page = get_page();
         $per_page = 5;
         $last_page = ceil(Transactions::countAllByUser() / $per_page);
 

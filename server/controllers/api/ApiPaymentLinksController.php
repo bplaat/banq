@@ -4,21 +4,19 @@ class ApiPaymentLinksController {
     // The API payment links index route
     public static function index () {
         // The pagination vars
-        $page = request('page', 1);
-        $limit = (int)request('limit', 20);
-        if ($limit < 0) $limit = 1;
-        if ($limit > 50) $limit = 50;
+        $page = get_page();
+        $limit = get_limit();
         $count = PaymentLinks::count();
 
         // Select all the payment links by page
-        $paymentLinks = PaymentLinks::selectPage($page, $limit)->fetchAll();
+        $payment_links = PaymentLinks::selectPage($page, $limit)->fetchAll();
 
         // Return the data as JSON
         return [
             'page' => $page,
             'limit' => $limit,
             'count' => $count,
-            'paymentLinks' => $paymentLinks
+            'payment_links' => $payment_links
         ];
     }
 
@@ -27,21 +25,19 @@ class ApiPaymentLinksController {
         $q = request('q', '');
 
         // The pagination vars
-        $page = request('page', 1);
-        $limit = (int)request('limit', 20);
-        if ($limit < 0) $limit = 1;
-        if ($limit > 50) $limit = 50;
+        $page = get_page();
+        $limit = get_limit();
         $count = PaymentLinks::searchCount($q);
 
         // Select all the payment links by page
-        $paymentLinks = PaymentLinks::searchPage($q, $page, $limit)->fetchAll();
+        $payment_links = PaymentLinks::searchPage($q, $page, $limit)->fetchAll();
 
         // Return the data as JSON
         return [
             'page' => $page,
             'limit' => $limit,
             'count' => $count,
-            'paymentLinks' => $paymentLinks
+            'payment_links' => $payment_links
         ];
     }
 

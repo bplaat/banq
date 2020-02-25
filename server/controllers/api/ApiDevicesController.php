@@ -4,10 +4,8 @@ class ApiDevicesController {
     // The API devices index route
     public static function index () {
         // The pagination vars
-        $page = request('page', 1);
-        $limit = (int)request('limit', 20);
-        if ($limit < 0) $limit = 1;
-        if ($limit > 50) $limit = 50;
+        $page = get_page();
+        $limit = get_limit();
         $count = Devices::count();
 
         // Select all the devices by page
@@ -27,10 +25,8 @@ class ApiDevicesController {
         $q = request('q', '');
 
         // The pagination vars
-        $page = request('page', 1);
-        $limit = (int)request('limit', 20);
-        if ($limit < 0) $limit = 1;
-        if ($limit > 50) $limit = 50;
+        $page = get_page();
+        $limit = get_limit();
         $count = Devices::searchCount($q);
 
         // Select all the devices by page

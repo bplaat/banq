@@ -10,23 +10,41 @@
 
 <h1 class="title">Payment Links</h1>
 
-<div class="buttons">
-    <a class="button is-link" href="/admin/payment-links/create">Create</a>
-</div>
-
-<div class="columns is-multiline">
-    @foreach ($paymentLinks as $paymentLink):
-        <div class="column is-one-third">
-            <div class="box" style="height: 100%;">
-                <h2 class="title is-4">
-                    <a href="/admin/payment-links/{{ $paymentLink->id }}">{{ $paymentLink->name }}</a>
-                </h2>
-                <p>For: <a href="/admin/accounts/{{ $paymentLink->account_id }}">{{ $paymentLink->account->name }}</a></p>
-                <p>Amount: {!! format_money($paymentLink->amount) !!}</p>
+<div class="columns">
+    <div class="column">
+        <div class="buttons">
+            <a class="button is-link" href="/admin/payment-links/create">Create</a>
+        </div>
+    </div>
+    <form class="column" method="get">
+        <div class="field has-addons">
+            <div class="control" style="width: 100%;">
+                <input class="input" type="text" id="q" name="q" placeholder="Search..." value="{{ request('q') }}">
+            </div>
+            <div class="control">
+                <button class="button is-link" type="submit">Search</button>
             </div>
         </div>
-    @endforeach
+    </form>
 </div>
+
+@if (count($payment_links) > 0):
+    <div class="columns is-multiline">
+        @foreach ($payment_links as $payment_link):
+            <div class="column is-one-third">
+                <div class="box" style="height: 100%;">
+                    <h2 class="title is-4">
+                        <a href="/admin/payment-links/{{ $payment_link->id }}">{{ $payment_link->name }}</a>
+                    </h2>
+                    <p>For: <a href="/admin/accounts/{{ $payment_link->account_id }}">{{ $payment_link->account->name }}</a></p>
+                    <p>Amount: {!! format_money($payment_link->amount) !!}</p>
+                </div>
+            </div>
+        @endforeach
+    </div>
+@else:
+    <p><i>There are no payment links found</i></p>
+@endif
 
 @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 

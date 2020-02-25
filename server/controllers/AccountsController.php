@@ -41,7 +41,7 @@ class AccountsController {
         $account->user = Users::select($account->user_id)->fetch();
 
         // Pagination variables
-        $page = request('page', 1);
+        $page = get_page();
         $per_page = 5;
         $last_page = ceil(Transactions::countAllByAccount($account->id) / $per_page);
 

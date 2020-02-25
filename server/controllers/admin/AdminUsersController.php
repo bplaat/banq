@@ -4,12 +4,17 @@ class AdminUsersController {
     // The admin users index page
     public static function index () {
         // The pagination vars
-        $page = request('page', 1);
+        $page = get_page();
         $per_page = 9;
-        $last_page = ceil(Users::count() / $per_page);
 
-        // Select all the users by page
-        $users = Users::selectPage($page, $per_page)->fetchAll();
+        // Check if search query is given
+        if (request('q') != '') {
+            $last_page = ceil(Users::searchCount(request('q')) / $per_page);
+            $users = Users::searchPage(request('q'), $page, $per_page)->fetchAll();
+        } else {
+            $last_page = ceil(Users::count() / $per_page);
+            $users = Users::selectPage($page, $per_page)->fetchAll();
+        }
 
         // Give all data to the view
         return view('admin.users.index', [

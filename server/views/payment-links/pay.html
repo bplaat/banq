@@ -1,22 +1,22 @@
-@view('header', [ 'title' => 'Pay ' . $paymentLink->name . ' - Payment Links' ])
+@view('header', [ 'title' => 'Pay ' . $payment_link->name . ' - Payment Links' ])
 
 <div class="breadcrumb">
     <ul>
         <li><a href="/">Banq</a></li>
-        <li class="is-active"><a href="/pay/{{ $paymentLink->link }}">Pay {{ $paymentLink->name }}</a></li>
+        <li class="is-active"><a href="/pay/{{ $payment_link->link }}">Pay {{ $payment_link->name }}</a></li>
     </ul>
 </div>
 
-<h1 class="title">{{ $paymentLink->name }}</h1>
-<p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $paymentLink->account_id }}">{{ $paymentLink->account->name }}</a></p>
-<p style="margin-bottom: 16px;">Amount: {!! format_money($paymentLink->amount) !!}</p>
+<h1 class="title">{{ $payment_link->name }}</h1>
+<p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $payment_link->account_id }}">{{ $payment_link->account->name }}</a></p>
+<p style="margin-bottom: 16px;">Amount: {!! format_money($payment_link->amount) !!}</p>
 
-@if ($paymentLink->account->user_id == Auth::check()):
+@if ($payment_link->account->user_id == Auth::check()):
     <p><b>You can't pay your own payment links!</b></p>
 @elseif (Auth::check()):
     @view('errors')
 
-    <form method="post" action="/pay/{{ $paymentLink->link }}">
+    <form method="post" action="/pay/{{ $payment_link->link }}">
         @view('csrf_token')
 
         <div class="field">

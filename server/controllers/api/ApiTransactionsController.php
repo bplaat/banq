@@ -4,10 +4,8 @@ class ApiTransactionsController {
     // The API transactions index route
     public static function index () {
         // The pagination vars
-        $page = request('page', 1);
-        $limit = (int)request('limit', 20);
-        if ($limit < 0) $limit = 1;
-        if ($limit > 50) $limit = 50;
+        $page = get_page();
+        $limit = get_limit();
         $count = Transactions::count();
 
         // Select all the transactions by page
@@ -27,10 +25,8 @@ class ApiTransactionsController {
         $q = request('q', '');
 
         // The pagination vars
-        $page = request('page', 1);
-        $limit = (int)request('limit', 20);
-        if ($limit < 0) $limit = 1;
-        if ($limit > 50) $limit = 50;
+        $page = get_page();
+        $limit = get_limit();
         $count = Transactions::searchCount($q);
 
         // Select all the transactions by page
