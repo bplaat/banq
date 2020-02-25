@@ -153,7 +153,19 @@ class Users extends Model {
         return Database::query('SELECT * FROM `users` WHERE `username` = ? OR `email` = ?', $username, $email);
     }
 
-    // A function to create a user and two standart accounts
+    // A custom query search count function
+    public static function searchCount ($q) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `users` WHERE `firstname` LIKE ? OR `lastname` LIKE ? OR `username` LIKE ? OR `email` LIKE ?', $q, $q, $q, $q)->fetch()->count;
+    }
+
+    // A custom query search select function
+    public static function searchPage ($q, $page, $per_page) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT * FROM `users` WHERE `firstname` LIKE ? OR `lastname` LIKE ? OR `username` LIKE ? OR `email` LIKE ? LIMIT ?, ?', $q, $q, $q, $q, ($page - 1) * $per_page, $per_page);
+    }
+
+    // A function to create a user and two standard accounts
     public static function createUser ($user) {
         // Insert the user in the users table
         static::insert($user);

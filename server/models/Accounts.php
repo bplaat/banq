@@ -56,4 +56,16 @@ class Accounts extends Model {
             `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )');
     }
+
+    // A custom query search count function
+    public static function searchCount ($q) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `accounts` WHERE `name` LIKE ?', $q)->fetch()->count;
+    }
+
+    // A custom query search select function
+    public static function searchPage ($q, $page, $per_page) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT * FROM `accounts` WHERE `name` LIKE ? LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
+    }
 }

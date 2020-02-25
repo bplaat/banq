@@ -20,6 +20,15 @@ class Sessions extends Model {
         )');
     }
 
+    // A function that generates a new session key
+    public static function generateSession () {
+        $session = bin2hex(random_bytes(16));
+        if (static::select($session)->rowCount() == 1) {
+            return static::generateSession();
+        }
+        return $session;
+    }
+
     // A custom query function which selects all the active session by user
     public static function selectAllActiveByUser ($user_id) {
         return Database::query('SELECT * FROM `sessions` WHERE `user_id` = ? AND `expires_at` > NOW() ORDER BY `updated_at` DESC', $user_id);

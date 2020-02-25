@@ -45,4 +45,16 @@ class PaymentLinks extends Model {
     public static function selectAllByUser ($page, $per_page) {
         return Database::query('SELECT * FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) ORDER BY `created_at` DESC LIMIT ?, ?', Auth::id(), ($page - 1) * $per_page, $per_page);
     }
+
+    // A custom query search count function
+    public static function searchCount ($q) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `payment_links` WHERE `name` LIKE ?', $q)->fetch()->count;
+    }
+
+    // A custom query search select function
+    public static function searchPage ($q, $page, $per_page) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT * FROM `payment_links` WHERE `name` LIKE ? LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
+    }
 }

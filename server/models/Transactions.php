@@ -40,4 +40,16 @@ class Transactions extends Model {
     public static function selectAllByAccount ($account_id, $page, $per_page) {
         return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` = ? OR `to_account_id` = ? ORDER BY `created_at` DESC LIMIT ?, ?', $account_id, $account_id, ($page - 1) * $per_page, $per_page);
     }
+
+    // A custom query search count function
+    public static function searchCount ($q) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `name` LIKE ?', $q)->fetch()->count;
+    }
+
+    // A custom query search select function
+    public static function searchPage ($q, $page, $per_page) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT * FROM `transactions` WHERE `name` LIKE ? LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
+    }
 }

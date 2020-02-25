@@ -1,0 +1,36 @@
+@view('header', [ 'title' => 'Devices - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li class="is-active"><a href="/admin/devices">Devices</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Devices</h1>
+
+<div class="buttons">
+    <a class="button is-link" href="/admin/devices/create">Create</a>
+</div>
+
+@if (count($devices) > 0):
+    <div class="columns is-multiline">
+        @foreach ($devices as $device):
+            <div class="column is-one-third">
+                <div class="box" style="height: 100%;">
+                    <h2 class="title is-4">
+                        <a href="/admin/devices/{{ $device->id }}">{{ $device->name }}</a>
+                    </h2>
+                    <p><span class="tag is-info">{{ $device->key }}</span></p>
+                </div>
+            </div>
+        @endforeach
+    </div>
+@else:
+    <p><i>There are no devices yet!</i></p>
+@endif
+
+@view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+
+@view('footer')

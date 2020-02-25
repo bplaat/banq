@@ -3,19 +3,10 @@
 class Auth {
     protected static $checked = false, $user;
 
-    // A function that generates a new session key
-    protected static function generateSession () {
-        $session = bin2hex(random_bytes(16));
-        if (Sessions::select($session)->rowCount() == 1) {
-            return static::generateSession();
-        }
-        return $session;
-    }
-
     // A function thtat creates a new session for a user
     public static function createSession ($user_id) {
         static::$checked = false;
-        $session = static::generateSession();
+        $session = Sessions::generateSession();
         $user_agent = parse_user_agent();
         Sessions::insert([
             'session' => $session,

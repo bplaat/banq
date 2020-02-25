@@ -1,0 +1,30 @@
+@view('header', [ 'title' => 'Edit device - Devices - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li><a href="/admin/devices">Devices</a></li>
+        <li><a href="/admin/devices/{{ $device->id }}">{{ $device->name }}</a></li>
+        <li class="is-active"><a href="/admin/devices/{{ $device->id }}/edit">Edit</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Edit device</h1>
+
+@view('errors')
+
+<form method="post" action="/admin/devices/{{ $device->id }}">
+    @view('csrf_token')
+
+    <div class="field">
+        <label class="label" for="name">Name</label>
+        <input class="input" type="text" id="name" name="name" value="{{ old('name', $device->name) }}" {{ !isset($errors) ? 'autofocus' : '' }} required>
+    </div>
+
+    <div class="field">
+        <button class="button is-link" type="submit">Edit device</button>
+    </div>
+</form>
+
+@view('footer')

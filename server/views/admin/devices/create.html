@@ -1,0 +1,29 @@
+@view('header', [ 'title' => 'Create device - Devices - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li><a href="/admin/devices">Devices</a></li>
+        <li class="is-active"><a href="/admin/devices/create">Create</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Create device</h1>
+
+@view('errors')
+
+<form method="post" action="/admin/devices">
+    @view('csrf_token')
+
+    <div class="field">
+        <label class="label" for="name">Name</label>
+        <input class="input" type="text" id="name" name="name" value="{{ old('name') }}" {{ !isset($errors) ? 'autofocus' : '' }} required>
+    </div>
+
+    <div class="field">
+        <button class="button is-link" type="submit">Create device</button>
+    </div>
+</form>
+
+@view('footer')

@@ -2,7 +2,7 @@
 
 // The framework abstract model class
 abstract class Model {
-    // The standart primary key field is the id field
+    // The standard primary key field is the id field
     protected static $primaryKey = 'id';
 
     // A function whichs returns the table name

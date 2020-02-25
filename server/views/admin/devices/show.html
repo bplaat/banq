@@ -1,0 +1,20 @@
+@view('header', [ 'title' => $device->name . ' - Devices - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li><a href="/admin/devices">Devices</a></li>
+        <li class="is-active"><a href="/admin/devices/{{ $device->id }}">{{ $device->name }}</a></li>
+    </ul>
+</div>
+
+<h1 class="title">{{ $device->name }}</h1>
+<p style="margin-bottom: 16px;"><span class="tag is-info">{{ $device->key }}</span></p>
+
+<div class="buttons">
+    <a class="button is-link" href="/admin/devices/{{ $device->id }}/edit">Edit</a>
+    <a class="button is-danger" href="/admin/devices/{{ $device->id }}/delete">Delete</a>
+</div>
+
+@view('footer')

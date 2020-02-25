@@ -42,6 +42,15 @@ if (Auth::check()) {
     if (Auth::user()->role == Users::ROLE_ADMIN) {
         Router::get('/admin', 'AdminController::index');
 
+        // Admin devices
+        Router::get('/admin/devices', 'AdminDevicesController::index');
+        Router::get('/admin/devices/create', 'AdminDevicesController::create');
+        Router::post('/admin/devices', 'AdminDevicesController::store');
+        Router::get('/admin/devices/{Devices}', 'AdminDevicesController::show');
+        Router::get('/admin/devices/{Devices}/edit', 'AdminDevicesController::edit');
+        Router::post('/admin/devices/{Devices}', 'AdminDevicesController::update');
+        Router::get('/admin/devices/{Devices}/delete', 'AdminDevicesController::delete');
+
         // Admin users
         Router::get('/admin/users', 'AdminUsersController::index');
         Router::get('/admin/users/create', 'AdminUsersController::create');
@@ -85,6 +94,60 @@ else {
     Router::get('/auth/register', 'AuthController::showRegisterForm');
     Router::post('/auth/register', 'AuthController::register');
 }
+
+// API
+Router::any('/api(.*)', function () {
+    header('Access-Control-Allow-Origin: *');
+
+    // Check the api key
+    if (APP_DEBUG || Devices::select([ 'key' => request('key') ])->rowCount() == 1) {
+        // API devices
+        Router::any('/api/devices', 'ApiDevicesController::index');
+        Router::any('/api/devices/search', 'ApiDevicesController::search');
+        Router::any('/api/devices/create', 'ApiDevicesController::create');
+        Router::any('/api/devices/{Devices}', 'ApiDevicesController::show');
+        Router::any('/api/devices/{Devices}/edit', 'ApiDevicesController::edit');
+        Router::any('/api/devices/{Devices}/delete', 'ApiDevicesController::delete');
+
+        // API users
+        Router::any('/api/users', 'ApiUsersController::index');
+        Router::any('/api/users/search', 'ApiUsersController::search');
+        Router::any('/api/users/create', 'ApiUsersController::create');
+        Router::any('/api/users/{Users}', 'ApiUsersController::show');
+        Router::any('/api/users/{Users}/edit', 'ApiUsersController::edit');
+        Router::any('/api/users/{Users}/delete', 'ApiUsersController::delete');
+
+        // API accounts
+        Router::any('/api/accounts', 'ApiAccountsController::index');
+        Router::any('/api/accounts/search', 'ApiAccountsController::search');
+        Router::any('/api/accounts/create', 'ApiAccountsController::create');
+        Router::any('/api/accounts/{Accounts}', 'ApiAccountsController::show');
+        Router::any('/api/accounts/{Accounts}/edit', 'ApiAccountsController::edit');
+        Router::any('/api/accounts/{Accounts}/delete', 'ApiAccountsController::delete');
+
+        // API transactions
+        Router::any('/api/transactions', 'ApiTransactionsController::index');
+        Router::any('/api/transactions/search', 'ApiTransactionsController::search');
+        Router::any('/api/transactions/create', 'ApiTransactionsController::create');
+        Router::any('/api/transactions/{Transactions}', 'ApiTransactionsController::show');
+
+        // API payment links
+        Router::any('/api/payment-links', 'ApiPaymentLinksController::index');
+        Router::any('/api/payment-links/search', 'ApiPaymentLinksController::search');
+        Router::any('/api/payment-links/create', 'ApiPaymentLinksController::create');
+        Router::any('/api/payment-links/{PaymentLinks}', 'ApiPaymentLinksController::show');
+    }
+
+    // If invalid return standard message
+    else {
+        http_response_code(403);
+        return [
+            'message' => 'Wrong API key'
+        ];
+    }
+
+    return false;
+});
 
 // 404 Not found
 Router::fallback('PagesController::notFound');
