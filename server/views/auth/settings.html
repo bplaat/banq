@@ -152,7 +152,7 @@
                 @endif
             </h1>
             <p style="margin-bottom: 16px;">Created on {{ $session->created_at }}, last used on {{ $session->updated_at }} and expires on {{ $session->expires_at }}</p>
-            <p><a class="button is-danger" href="/auth/settings/revoke_session/{{ $session->session }}">Revoke session</a></p>
+            <p><a class="button is-danger" href="/auth/sessions/{{ $session->id }}/revoke">Revoke session</a></p>
         </div>
     @endforeach
 </div>

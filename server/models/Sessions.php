@@ -1,9 +1,6 @@
 <?php
 
 class Sessions extends Model {
-    // Make the primary key in the model the session field
-    protected static $primaryKey = 'session';
-
     // The sessions create table function
     public static function create () {
         Database::query('CREATE TABLE `sessions` (

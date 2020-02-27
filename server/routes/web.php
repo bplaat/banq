@@ -38,7 +38,7 @@ if (Auth::check()) {
     Router::get('/auth/settings', 'SettingsController::showSettingsForm');
     Router::post('/auth/settings/change_details', 'SettingsController::changeDetails');
     Router::post('/auth/settings/change_password', 'SettingsController::changePassword');
-    Router::get('/auth/settings/revoke_session/{Sessions}', 'SettingsController::revokeSession');
+    Router::get('/auth/sessions/{Sessions}/revoke', 'SettingsController::revokeSession');
     Router::get('/auth/settings/delete', 'SettingsController::deleteUser');
 
     // Admin

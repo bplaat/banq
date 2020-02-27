@@ -78,7 +78,7 @@ Deleted the authed user
 ## /api/sessions
 Get all the authed user sessions
 
-## /api/sessions/{session}/revoke
+## /api/sessions/{session_id}/revoke
 Revoke an authed user session
 
 ---
@@ -318,5 +318,5 @@ Delete a payment link
 ## /api/admin/sessions
 Get all the users sessions
 
-## /api/admin/sessions/{session}/revoke
+## /api/admin/sessions/{session_id}/revoke
 Revoke an user session

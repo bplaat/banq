@@ -4,7 +4,7 @@
 
 // The app constants
 define('APP_NAME', 'Banq');
-define('APP_VERSION', '0.1');
+define('APP_VERSION', '0.2');
 define('APP_DEBUG', isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'banq.local');
 
 // The database constants

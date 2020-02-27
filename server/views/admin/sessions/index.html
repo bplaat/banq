@@ -16,8 +16,8 @@
             <div class="column is-one-third">
                 <div class="box" style="height: 100%;">
                     <h1 class="title is-5">
-                        <a href="/admin/sessions/{{ $session->session }}">{{ $session->user->username }} via {{ $session->ip }}</a>
-                        @if (strtotime($session->expires_at) < time()):
+                        <a href="/admin/sessions/{{ $session->id }}">{{ $session->user->username }} via {{ $session->ip }}</a>
+                        @if (strtotime($session->expires_at) <= time()):
                             <div class="tag is-link" style="margin-left: 8px;">EXPIRED</div>
                         @endif
                     </h1>

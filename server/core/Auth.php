@@ -37,7 +37,9 @@ class Auth {
     public static function updateSession () {
         $session = static::$useCookie ? $_COOKIE[SESSION_COOKIE_NAME] : request('session');
         $user_agent = parse_user_agent();
-        Sessions::update($session, [
+        Sessions::update([
+            'session' => $session
+        ], [
             'ip' => get_ip(),
             'browser' => $user_agent['browser'],
             'version' => $user_agent['version'],
@@ -49,7 +51,11 @@ class Auth {
     // A function that revokes a session
     public static function revokeSession ($session) {
         static::$checked = false;
-        Sessions::update($session, [ 'expires_at' => date('Y-m-d H:i:s') ]);
+        Sessions::update([
+            'session' => $session
+        ], [
+            'expires_at' => date('Y-m-d H:i:s')
+        ]);
         if (static::$useCookie && $_COOKIE[SESSION_COOKIE_NAME] == $session) {
             unset($_COOKIE[SESSION_COOKIE_NAME]);
             setcookie(SESSION_COOKIE_NAME, '', time() - 3600, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']), true);
@@ -80,7 +86,7 @@ class Auth {
             // Check the session cookie for the website
             if (static::$useCookie) {
                 if (isset($_COOKIE[SESSION_COOKIE_NAME])) {
-                    $session_query = Sessions::select($_COOKIE[SESSION_COOKIE_NAME]);
+                    $session_query = Sessions::select([ 'session' => $_COOKIE[SESSION_COOKIE_NAME] ]);
                     if ($session_query->rowCount() == 1) {
                         $session = $session_query->fetch();
                         if (strtotime($session->expires_at) > time()) {
@@ -98,7 +104,7 @@ class Auth {
             // Check the session request var for the API
             else {
                 if (request('session') != '') {
-                    $session_query = Sessions::select(request('session'));
+                    $session_query = Sessions::select([ 'session' => request('session') ]);
                     if ($session_query->rowCount() == 1) {
                         $session = $session_query->fetch();
                         if (strtotime($session->expires_at) > time()) {
@@ -107,7 +113,11 @@ class Auth {
                                 Auth::updateSession();
                             }
                         } else {
-                            Sessions::update(request('session'), [ 'expires_at' => date('Y-m-d H:i:s') ]);
+                            Sessions::update([
+                                'session' => request('session')
+                            ], [
+                                'expires_at' => date('Y-m-d H:i:s')
+                            ]);
                         }
                     }
                 }
