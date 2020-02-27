@@ -29,8 +29,18 @@ class Sessions extends Model {
         return $session;
     }
 
-    // A custom query function which selects all the active session by user
-    public static function selectAllActiveByUser ($user_id) {
+    // A custom query function paged select active sessions by user
+    public static function activeSelectPageByUser ($user_id) {
         return Database::query('SELECT * FROM `sessions` WHERE `user_id` = ? AND `expires_at` > NOW() ORDER BY `updated_at` DESC', $user_id);
+    }
+
+    // A custom query function count sessions by user
+    public static function countByUser ($user_id) {
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `sessions` WHERE `user_id` = ?', $user_id)->fetch()->count;
+    }
+
+    // A custom query function paged select sessions by user
+    public static function selectPageByUser ($user_id, $page, $per_page) {
+        return Database::query('SELECT * FROM `sessions` WHERE `user_id` = ? ORDER BY `created_at` DESC LIMIT ?, ?', $user_id, ($page - 1) * $per_page, $per_page);
     }
 }

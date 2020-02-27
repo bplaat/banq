@@ -6,10 +6,10 @@ class PaymentLinksController {
         // The pagination vars
         $page = get_page();
         $per_page = 5;
-        $last_page = ceil(PaymentLinks::countAllByUser() / $per_page);
+        $last_page = ceil(PaymentLinks::countByUser(Auth::id()) / $per_page);
 
         // Select all the payment links by user and there accounts
-        $payment_links = PaymentLinks::selectAllByUser($page, $per_page)->fetchAll();
+        $payment_links = PaymentLinks::selectPageByUser(Auth::id(), $page, $per_page)->fetchAll();
         foreach ($payment_links as $payment_link) {
             $payment_link->account = Accounts::select($payment_link->account_id)->fetch();
         }

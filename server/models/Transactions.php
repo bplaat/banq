@@ -21,35 +21,47 @@ class Transactions extends Model {
         )');
     }
 
-    // A custom query function which counts all the transaction of a user
-    public static function countAllByUser () {
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', Auth::id(), Auth::id())->fetch()->count;
+    // A custom query function count transactions by user
+    public static function countByUser ($user_id) {
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', $user_id, $user_id)->fetch()->count;
     }
 
-    // A custom query function which select all the transaction of a user by page
-    public static function selectAllByUser ($page, $per_page) {
-        return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) ORDER BY `created_at` DESC LIMIT ?, ?', Auth::id(), Auth::id(), ($page - 1) * $per_page, $per_page);
+    // A custom query function paged select transactions by user
+    public static function selectPageByUser ($user_id, $page, $per_page) {
+        return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) ORDER BY `created_at` DESC LIMIT ?, ?', $user_id, $user_id, ($page - 1) * $per_page, $per_page);
     }
 
-    // A custom query function which counts all the transactions of a account
-    public static function countAllByAccount ($account_id) {
+    // A custom query function count transactions by account
+    public static function countByAccount ($account_id) {
         return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `from_account_id` = ? OR `to_account_id` = ?', $account_id, $account_id)->fetch()->count;
     }
 
-    // A custom query function which select all the transactions of account by page
-    public static function selectAllByAccount ($account_id, $page, $per_page) {
+    // A custom query function paged select transactions by acount
+    public static function selectPageByAccount ($account_id, $page, $per_page) {
         return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` = ? OR `to_account_id` = ? ORDER BY `created_at` DESC LIMIT ?, ?', $account_id, $account_id, ($page - 1) * $per_page, $per_page);
     }
 
-    // A custom query search count function
+    // A custom query function count transactions by search query
     public static function searchCount ($q) {
         $q = '%' . $q . '%';
         return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `name` LIKE ?', $q)->fetch()->count;
     }
 
-    // A custom query search select function
-    public static function searchPage ($q, $page, $per_page) {
+    // A custom query function paged select by search query
+    public static function searchSelectPage ($q, $page, $per_page) {
         $q = '%' . $q . '%';
         return Database::query('SELECT * FROM `transactions` WHERE `name` LIKE ? LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
+    }
+
+    // A custom query function count transactions by user by search query
+    public static function searchCountByUser ($user_id, $q) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) AND `name` LIKE ?', $user_id, $q)->fetch()->count;
+    }
+
+    // A custom query function paged select by by user search query
+    public static function searchSelectPageByUser ($user_id, $q, $page, $per_page) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) AND `name` LIKE ? LIMIT ?, ?', $user_id, $q, ($page - 1) * $per_page, $per_page);
     }
 }

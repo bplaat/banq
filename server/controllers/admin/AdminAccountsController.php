@@ -10,7 +10,7 @@ class AdminAccountsController {
         // Check if search query is given
         if (request('q') != '') {
             $last_page = ceil(Accounts::searchCount(request('q')) / $per_page);
-            $accounts = Accounts::searchPage(request('q'), $page, $per_page)->fetchAll();
+            $accounts = Accounts::searchSelectPage(request('q'), $page, $per_page)->fetchAll();
         } else {
             $last_page = ceil(Accounts::count() / $per_page);
             $accounts = Accounts::selectPage($page, $per_page)->fetchAll();
@@ -63,10 +63,10 @@ class AdminAccountsController {
         // The pagination vars
         $page = get_page();
         $per_page = 5;
-        $last_page = ceil(Transactions::countAllByAccount($account->id) / $per_page);
+        $last_page = ceil(Transactions::countByAccount($account->id) / $per_page);
 
         // Select all the transactions of the account and there accounts
-        $transactions = Transactions::selectAllByAccount($account->id, $page, $per_page)->fetchAll();
+        $transactions = Transactions::selectPageByAccount($account->id, $page, $per_page)->fetchAll();
         foreach ($transactions as $transaction) {
             $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
             $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();

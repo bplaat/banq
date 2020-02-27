@@ -148,19 +148,19 @@ class Users extends Model {
         ]);
     }
 
-    // A custom query function to select a user by username or email
+    // A custom query function select user by username or email
     public static function selectByLogin ($username, $email) {
         return Database::query('SELECT * FROM `users` WHERE `username` = ? OR `email` = ?', $username, $email);
     }
 
-    // A custom query search count function
+    // A custom query function count users by search query
     public static function searchCount ($q) {
         $q = '%' . $q . '%';
         return Database::query('SELECT COUNT(`id`) as `count` FROM `users` WHERE `firstname` LIKE ? OR `lastname` LIKE ? OR `username` LIKE ? OR `email` LIKE ?', $q, $q, $q, $q)->fetch()->count;
     }
 
-    // A custom query search select function
-    public static function searchPage ($q, $page, $per_page) {
+    // A custom query function paged select users by search query
+    public static function searchSelectPage ($q, $page, $per_page) {
         $q = '%' . $q . '%';
         return Database::query('SELECT * FROM `users` WHERE `firstname` LIKE ? OR `lastname` LIKE ? OR `username` LIKE ? OR `email` LIKE ? LIMIT ?, ?', $q, $q, $q, $q, ($page - 1) * $per_page, $per_page);
     }

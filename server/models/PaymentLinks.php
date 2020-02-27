@@ -35,25 +35,37 @@ class PaymentLinks extends Model {
         return $link;
     }
 
-    // A custom query function which counts all the payment links of a user
-    public static function countAllByUser () {
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', Auth::id())->fetch()->count;
+    // A custom query function count payment links by user
+    public static function countByUser ($user_id) {
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', $user_id)->fetch()->count;
     }
 
-    // A custom query function which selects all the payment links of a user by page
-    public static function selectAllByUser ($page, $per_page) {
-        return Database::query('SELECT * FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) ORDER BY `created_at` DESC LIMIT ?, ?', Auth::id(), ($page - 1) * $per_page, $per_page);
+    // A custom query function paged select payment links by user
+    public static function selectPageByUser ($user_id, $page, $per_page) {
+        return Database::query('SELECT * FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) ORDER BY `created_at` DESC LIMIT ?, ?', $user_id, ($page - 1) * $per_page, $per_page);
     }
 
-    // A custom query search count function
+    // A custom query function count payment links by search query
     public static function searchCount ($q) {
         $q = '%' . $q . '%';
         return Database::query('SELECT COUNT(`id`) as `count` FROM `payment_links` WHERE `name` LIKE ?', $q)->fetch()->count;
     }
 
-    // A custom query search select function
-    public static function searchPage ($q, $page, $per_page) {
+    // A custom query function paged select payment links by search query
+    public static function searchSelectPage ($q, $page, $per_page) {
         $q = '%' . $q . '%';
         return Database::query('SELECT * FROM `payment_links` WHERE `name` LIKE ? LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
+    }
+
+    // A custom query function count payment links by user by search query
+    public static function searchCountByUser($user_id, $q) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) AND `name` LIKE ?', $user_id, $q)->fetch()->count;
+    }
+
+    // A custom query function paged select payment links by user by search query
+    public static function searchSelectPageByUser ($user_id, $q, $page, $per_page) {
+        $q = '%' . $q . '%';
+        return Database::query('SELECT * FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) AND `name` LIKE ? LIMIT ?, ?', $user_id, $q, ($page - 1) * $per_page, $per_page);
     }
 }

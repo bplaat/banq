@@ -32,14 +32,14 @@ class Devices extends Model {
         return $key;
     }
 
-    // A custom query search count function
+    // A custom query function count devices by search query
     public static function searchCount ($q) {
         $q = '%' . $q . '%';
         return Database::query('SELECT COUNT(`id`) as `count` FROM `devices` WHERE `name` LIKE ?', $q)->fetch()->count;
     }
 
-    // A custom query search select function
-    public static function searchPage ($q, $page, $per_page) {
+    // A custom query function paged select devices by search query
+    public static function searchSelectPage ($q, $page, $per_page) {
         $q = '%' . $q . '%';
         return Database::query('SELECT * FROM `devices` WHERE `name` LIKE ? LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
     }

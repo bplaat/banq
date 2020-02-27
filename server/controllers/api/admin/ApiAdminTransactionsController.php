@@ -1,15 +1,15 @@
 <?php
 
-class ApiTransactionsController {
-    // The API transactions index route
+class ApiAdminTransactionsController {
+    // The API admin transactions index route
     public static function index () {
         // The pagination vars
         $page = get_page();
         $limit = get_limit();
-        $count = Transactions::countByUser(Auth::id());
+        $count = Transactions::count();
 
         // Select all the transactions by page
-        $transactions = Transactions::selectPageByUser(Auth::id(), $page, $limit)->fetchAll();
+        $transactions = Transactions::selectPage($page, $limit)->fetchAll();
 
         // Return the data as JSON
         return [
@@ -20,17 +20,17 @@ class ApiTransactionsController {
         ];
     }
 
-    // The API transactions search route
+    // The API admin transactions search route
     public static function search () {
         $q = request('q', '');
 
         // The pagination vars
         $page = get_page();
         $limit = get_limit();
-        $count = Transactions::searchCountByUser(Auth::id(), $q);
+        $count = Transactions::searchCount($q);
 
         // Select all the transactions by page
-        $transactions = Transactions::searchSelectPageByUser(Auth::id(), $q, $page, $limit)->fetchAll();
+        $transactions = Transactions::searchSelectPage($q, $page, $limit)->fetchAll();
 
         // Return the data as JSON
         return [
@@ -41,12 +41,12 @@ class ApiTransactionsController {
         ];
     }
 
-    // The API transactions create route
+    // The API admin transactions create route
     public static function create () {
         // Validate the user input
         api_validate([
             'name' => Transactions::NAME_VALIDATION,
-            'from_account_id' => Transactions::FROM_ACCOUNT_ID_VALIDATION,
+            'from_account_id' => Transactions::FROM_ACCOUNT_ID_ADMIN_VALIDATION,
             'to_account_id' => Transactions::TO_ACCOUNT_ID_VALIDATION,
             'amount' => Transactions::AMOUNT_VALIDATION
         ]);
@@ -80,20 +80,8 @@ class ApiTransactionsController {
         ];
     }
 
-    // The API transactions show route
+    // The API admin transactions show route
     public static function show ($transaction) {
-        // Check if the transaction is of one of the accounts
-        $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
-        $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();
-        if ($transaction->from_account->user_id == Auth::id() || $transaction->to_account->user_id == Auth::id()) {
-            return $transaction;
-        }
-
-        // Return a error message
-        else {
-            return [
-                'message' => 'The transaction is not yours'
-            ];
-        }
+        return $transaction;
     }
 }

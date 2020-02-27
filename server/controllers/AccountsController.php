@@ -43,10 +43,10 @@ class AccountsController {
         // Pagination variables
         $page = get_page();
         $per_page = 5;
-        $last_page = ceil(Transactions::countAllByAccount($account->id) / $per_page);
+        $last_page = ceil(Transactions::countByAccount($account->id) / $per_page);
 
         // Select all transaction of the account by page and select the accounts info of each transaction
-        $transactions = Transactions::selectAllByAccount($account->id, $page, $per_page)->fetchAll();
+        $transactions = Transactions::selectPageByAccount($account->id, $page, $per_page)->fetchAll();
         foreach ($transactions as $transaction) {
             $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
             $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();

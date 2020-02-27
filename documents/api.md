@@ -1,5 +1,10 @@
 # The Banq API
-The Banq website has also a web API, to use this API you need an API key which you can create via the devices admin page.
+The Banq website has also a web API
+
+## Authentication
+To use this API you need an API key which you can create via the devices admin page. And you need to authenticate as a user by using a user session. If you authenticated with an admin account you get more privilages (via the `admin/` prefix) then with an normal account.
+- `key` The API device key
+- `session` The user session
 
 ## Paged routes
 All the routes where you get a list of data are paged. This means that the data is split up in to pages that you need to fetch separately. You can change the paging process by the folling parameters:
@@ -8,44 +13,182 @@ All the routes where you get a list of data are paged. This means that the data 
 
 ---
 
-## Devices
+## Auth
+*The following routes don't need authentication via an user session*
 
-### /api/devices
+### /api/auth/login
+Login with someones username or email and password and returns an user session
+- `login` The users username or email
+- `password` The users password
+
+## /api/auth/register
+Create a new normal user and returns an user session
+- `firstname` The users firstname
+- `lastname` The users lastname
+- `username` The users username
+- `email` The users email
+- `password` The users password
+- `phone_number` The users phone number
+- `sex` The users gender
+    - **M**: The user is male
+    - **F**: The user is female
+    - **X**: The user is of another gender or it is complicated
+- `birth_date` The users birth date
+- `address` The users address
+- `postcode` The users post code
+- `city` The city the user lives in
+- `region` The region the user lives in
+
+---
+
+## Auth
+
+## /api/auth/logout
+Expire the session of the authed user
+
+## /api/auth/edit_details
+Edit the details of the authed user
+- `firstname` The users firstname
+- `lastname` The users lastname
+- `username` The users username
+- `email` The users email
+- `phone_number` The users phone number
+- `sex` The users gender
+    - **M**: The user is male
+    - **F**: The user is female
+    - **X**: The user is of another gender or it is complicated
+- `birth_date` The users birth date
+- `address` The users address
+- `postcode` The users post code
+- `city` The city the user lives in
+- `region` The region the user lives in
+
+## /api/auth/edit_password
+Edit the password of the authed user
+- `old_password` The users old password
+- `passsword` The users new password
+
+## /api/auth/delete
+Deleted the authed user
+
+---
+
+## Sessions
+
+## /api/sessions
+Get all the authed user sessions
+
+## /api/sessions/{session}/revoke
+Revoke an authed user session
+
+---
+
+## Accounts
+
+### /api/accounts
+Get some information about all your accounts (paged)
+
+### /api/accounts/search
+Search for own of your accounts (paged)
+- `q` search query
+
+### /api/accounts/create
+Create a new account
+- `name` The account name
+- `type` The account type
+
+### /api/accounts/{account_id}
+Get information about own of your accounts
+
+### /api/accounts/{account_id}/edit
+Edit own of your accounts with new information
+- `name` The account name
+- `type` The account type
+
+### /api/accounts/{account_id}/delete
+Delete own of your accounts
+
+---
+
+## Transactions
+
+### /api/transactions
+Get some information about all your transactions (paged)
+
+### /api/transactions/search
+Search for own of your transactions (paged)
+- `q` search query
+
+### /api/transactions/create
+Create a new transaction
+- `name` The transaction name
+- `from_account_id` The transaction from account id
+- `to_account_id` The transaction to account id
+- `amount` The transaction amount
+
+### /api/transactions/{transaction_id}
+Get information about own of your accounts
+
+---
+
+## Payment Links
+
+### /api/payment-links
+Get some information about all your payment links (paged)
+
+### /api/payment-links/search
+Search for own of your payment links (paged)
+- `q` search query
+
+### /api/payment-links/create
+Create a new payment link
+- `name` The payment link name
+- `account_id` The payment link account id
+- `amount` The payment link amount
+
+### /api/payment-links/{payment_link_id}
+Get information about own of your payment links
+
+### /api/payment-links/{payment_link_id}/delete
+Delete own of your payment links
+
+---
+
+## Admin Devices
+
+### /api/admin/devices
 Get some information about all devices (paged)
 
-### /api/devices/search
+### /api/admin/devices/search
 Search for devices (paged)
 - `q` search query
 
-### /api/devices/{device_id}
-Get information about a single device
-
-### /api/devices/create
+### /api/admin/devices/create
 Create a new device
 - `name` The device name
 
-### /api/devices/{device_id}/edit
+### /api/admin/devices/{device_id}
+Get information about a single device
+
+### /api/admin/devices/{device_id}/edit
 Edit a device with new information
 - `name` The device name
 
-### /api/devices/{device_id}/delete
+### /api/admin/devices/{device_id}/delete
 Delete a device
 
 ---
 
-## Users
+## Admin Users
 
-### /api/users
+### /api/admin/users
 Get some information about all users (paged)
 
-### /api/users/search
+### /api/admin/users/search
 Search for users (paged)
 - `q` search query
 
-### /api/users/{user_id}
-Get information about a single user
-
-### /api/users/create
+### /api/admin/users/create
 Create a new user
 - `firstname` The users firstname
 - `lastname` The users lastname
@@ -66,7 +209,10 @@ Create a new user
     - **1**: A normal user
     - **2**: A admin user
 
-### /api/users/{user_id}/edit
+### /api/admin/users/{user_id}
+Get information about a single user
+
+### /api/admin/users/{user_id}/edit
 Edit a user with new information
 - `firstname` The users firstname
 - `lastname` The users lastname
@@ -87,77 +233,90 @@ Edit a user with new information
     - **1**: A normal user
     - **2**: A admin user
 
-### /api/users/{user_id}/delete
+### /api/admin/users/{user_id}/delete
 Delete a user
 
 ---
 
-## Accounts
+## Admin Accounts
 
-### /api/accounts
+### /api/admin/accounts
 Get some information about all accounts (paged)
 
-### /api/accounts/search
-Search for accounts (paged)
+### /api/admin/accounts/search
+Search for an account (paged)
 - `q` search query
 
-### /api/accounts/{account_id}
-Get information about a single account
-
-### /api/accounts/create
+### /api/admin/accounts/create
 Create a new account
 - `name` The account name
 - `type` The account type
 - `user_id` The account user id
 - `amount` The account amount
 
-### /api/accounts/{account_id}/edit
-Edit a account with new information
+### /api/admin/accounts/{account_id}
+Get information about an account
+
+### /api/admin/accounts/{account_id}/edit
+Edit an account with new information
 - `name` The account name
 - `type` The account type
 - `user_id` The account user id
 - `amount` The account amount
 
-### /api/accounts/{account_id}/delete
-Delete a account
+### /api/admin/accounts/{account_id}/delete
+Delete an account
 
 ---
 
-## Transactions
+## Admin Transactions
 
-### /api/transactions
+### /api/admin/transactions
 Get some information about all transactions (paged)
 
-### /api/transactions/search
-Search for transactions (paged)
+### /api/admin/transactions/search
+Search for a transaction (paged)
 - `q` search query
 
-### /api/transactions/{transaction_id}
-Get information about a single transaction
-
-### /api/transactions/create
+### /api/admin/transactions/create
 Create a new transaction
 - `name` The transaction name
 - `from_account_id` The transaction from account id
 - `to_account_id` The transaction to account id
 - `amount` The transaction amount
 
+### /api/admin/transactions/{transaction_id}
+Get information a transaction
+
 ---
 
-## Payment Links
+## Admin Payment Links
 
-### /api/payment-links
+### /api/admin/payment-links
 Get some information about all payment links (paged)
 
-### /api/payment-links/search
-Search for payment links (paged)
+### /api/admin/payment-links/search
+Search for a payment link (paged)
 - `q` search query
 
-### /api/payment-links/{payment_link_id}
-Get information about a single payment link
-
-### /api/payment-links/create
+### /api/admin/payment-links/create
 Create a new payment link
 - `name` The payment link name
 - `account_id` The payment link account id
 - `amount` The payment link amount
+
+### /api/admin/payment-links/{payment_link_id}
+Get information about a payment link
+
+### /api/admin/payment-links/{payment_link_id}/delete
+Delete a payment link
+
+---
+
+## Admin Sessions
+
+## /api/admin/sessions
+Get all the users sessions
+
+## /api/admin/sessions/{session}/revoke
+Revoke an user session

@@ -10,7 +10,7 @@ class AdminPaymentLinksController {
         // Check if search query is given
         if (request('q') != '') {
             $last_page = ceil(PaymentLinks::searchCount(request('q')) / $per_page);
-            $payment_links = PaymentLinks::searchPage(request('q'), $page, $per_page)->fetchAll();
+            $payment_links = PaymentLinks::searchSelectPage(request('q'), $page, $per_page)->fetchAll();
         } else {
             $last_page = ceil(PaymentLinks::count() / $per_page);
             $payment_links = PaymentLinks::selectPage($page, $per_page)->fetchAll();
