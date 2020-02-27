@@ -5,7 +5,7 @@ class AdminUsersController {
     public static function index () {
         // The pagination vars
         $page = get_page();
-        $per_page = 9;
+        $per_page = PAGINATION_LIMIT_ADMIN;
 
         // Check if search query is given
         if (request('q') != '') {

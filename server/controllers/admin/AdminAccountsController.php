@@ -5,7 +5,7 @@ class AdminAccountsController {
     public static function index () {
         // The pagination vars
         $page = get_page();
-        $per_page = 9;
+        $per_page = PAGINATION_LIMIT_ADMIN;
 
         // Check if search query is given
         if (request('q') != '') {
@@ -62,7 +62,7 @@ class AdminAccountsController {
 
         // The pagination vars
         $page = get_page();
-        $per_page = 5;
+        $per_page = PAGINATION_LIMIT_NORMAL;
         $last_page = ceil(Transactions::countByAccount($account->id) / $per_page);
 
         // Select all the transactions of the account and there accounts

@@ -50,18 +50,18 @@ class Transactions extends Model {
     // A custom query function paged select by search query
     public static function searchSelectPage ($q, $page, $per_page) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT * FROM `transactions` WHERE `name` LIKE ? LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
+        return Database::query('SELECT * FROM `transactions` WHERE `name` LIKE ? ORDER BY `created_at` DESC LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
     }
 
     // A custom query function count transactions by user by search query
     public static function searchCountByUser ($user_id, $q) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) AND `name` LIKE ?', $user_id, $q)->fetch()->count;
+        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE (`from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)) AND `name` LIKE ?', $user_id, $user_id, $q)->fetch()->count;
     }
 
     // A custom query function paged select by by user search query
     public static function searchSelectPageByUser ($user_id, $q, $page, $per_page) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT * FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) AND `name` LIKE ? LIMIT ?, ?', $user_id, $q, ($page - 1) * $per_page, $per_page);
+        return Database::query('SELECT * FROM `transactions` WHERE (`from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)) AND `name` LIKE ? ORDER BY `created_at` DESC LIMIT ?, ?', $user_id, $user_id, $q, ($page - 1) * $per_page, $per_page);
     }
 }

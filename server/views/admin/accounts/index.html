@@ -29,6 +29,8 @@
 </div>
 
 @if (count($accounts) > 0):
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+
     <div class="columns is-multiline">
         @foreach ($accounts as $account):
             <div class="column is-one-third">
@@ -50,10 +52,10 @@
             </div>
         @endforeach
     </div>
+
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 @else:
     <p><i>There are no accounts found</i></p>
 @endif
-
-@view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 
 @view('footer')

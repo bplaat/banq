@@ -162,7 +162,7 @@ class Users extends Model {
     // A custom query function paged select users by search query
     public static function searchSelectPage ($q, $page, $per_page) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT * FROM `users` WHERE `firstname` LIKE ? OR `lastname` LIKE ? OR `username` LIKE ? OR `email` LIKE ? LIMIT ?, ?', $q, $q, $q, $q, ($page - 1) * $per_page, $per_page);
+        return Database::query('SELECT * FROM `users` WHERE `firstname` LIKE ? OR `lastname` LIKE ? OR `username` LIKE ? OR `email` LIKE ? ORDER BY `created_at` DESC LIMIT ?, ?', $q, $q, $q, $q, ($page - 1) * $per_page, $per_page);
     }
 
     // A function to create a user and two standard accounts

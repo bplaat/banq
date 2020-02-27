@@ -41,6 +41,6 @@ class Devices extends Model {
     // A custom query function paged select devices by search query
     public static function searchSelectPage ($q, $page, $per_page) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT * FROM `devices` WHERE `name` LIKE ? LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
+        return Database::query('SELECT * FROM `devices` WHERE `name` LIKE ? ORDER BY `created_at` DESC LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
     }
 }

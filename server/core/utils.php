@@ -7,9 +7,9 @@ function get_page () {
 
 // A function that gets the limit number
 function get_limit () {
-    $limit = (int)request('limit', 20);
-    if ($limit < 0) $limit = 1;
-    if ($limit > 50) $limit = 50;
+    $limit = (int)request('limit', PAGINATION_LIMIT_API);
+    if ($limit < 1) $limit = 1;
+    if ($limit > PAGINATION_MAX_LIMIT_API) $limit = PAGINATION_MAX_LIMIT_API;
     return $limit;
 }
 

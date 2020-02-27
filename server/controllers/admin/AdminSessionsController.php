@@ -5,7 +5,7 @@ class AdminSessionsController {
     public static function index () {
         // The pagination vars
         $page = get_page();
-        $per_page = 9;
+        $per_page = PAGINATION_LIMIT_ADMIN;
         $last_page = ceil(Sessions::count() / $per_page);
 
         // Fetch the sessions and there users

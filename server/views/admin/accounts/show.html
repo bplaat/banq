@@ -32,6 +32,8 @@
 <h2 class="title">Transactions</h2>
 
 @if (count($transactions) > 0):
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+
     @foreach ($transactions as $transaction):
         @if ($transaction->to_account_id == $account->id):
             <div class="box has-text-white has-background-success">

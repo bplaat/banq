@@ -11,6 +11,8 @@
 <h1 class="title">Sessions</h1>
 
 @if (count($sessions) > 0):
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+
     <div class="columns is-multiline">
         @foreach ($sessions as $session):
             <div class="column is-one-third">
@@ -26,10 +28,10 @@
             </div>
         @endforeach
     </div>
+
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 @else:
     <p><i>There are no sessions found</i></p>
 @endif
-
-@view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 
 @view('footer')

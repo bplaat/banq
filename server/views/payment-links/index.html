@@ -9,11 +9,27 @@
 
 <h1 class="title">Payment Links</h1>
 
-<div class="buttons">
-    <a class="button is-link" href="/payment-links/create">Create</a>
+<div class="columns">
+    <div class="column">
+        <div class="buttons">
+            <a class="button is-link" href="/payment-links/create">Create</a>
+        </div>
+    </div>
+    <form class="column" method="get">
+        <div class="field has-addons">
+            <div class="control" style="width: 100%;">
+                <input class="input" type="text" id="q" name="q" placeholder="Search..." value="{{ request('q') }}">
+            </div>
+            <div class="control">
+                <button class="button is-link" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 @if (count($payment_links) > 0):
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+
     @foreach ($payment_links as $payment_link):
         <div class="box">
             <h2 class="title is-4">

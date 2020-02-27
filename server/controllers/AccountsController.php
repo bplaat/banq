@@ -3,9 +3,25 @@
 class AccountsController {
     // The accounts index page
     public static function index () {
-        // Select all the accounts from the authed user and give them to the view
-        $accounts = Accounts::select([ 'user_id' => Auth::id() ])->fetchAll();
-        return view('accounts.index', [ 'accounts' => $accounts ]);
+        // The pagination vars
+        $page = get_page();
+        $per_page = PAGINATION_LIMIT_NORMAL;
+
+        // Check if search query is given
+        if (request('q') != '') {
+            $last_page = ceil(Accounts::searchCountByUser(Auth::id(), request('q')) / $per_page);
+            $accounts = Accounts::searchSelectPageByUser(Auth::id(), request('q'), $page, $per_page)->fetchAll();
+        } else {
+            $last_page = ceil(Accounts::countByUser(Auth::id()) / $per_page);
+            $accounts = Accounts::selectPageByUser(Auth::id(), $page, $per_page)->fetchAll();
+        }
+
+        // Give the data to the view
+        return view('accounts.index', [
+            'accounts' => $accounts,
+            'page' => $page,
+            'last_page' => $last_page
+        ]);
     }
 
     // The accounts create form page
@@ -42,7 +58,7 @@ class AccountsController {
 
         // Pagination variables
         $page = get_page();
-        $per_page = 5;
+        $per_page = PAGINATION_LIMIT_NORMAL;
         $last_page = ceil(Transactions::countByAccount($account->id) / $per_page);
 
         // Select all transaction of the account by page and select the accounts info of each transaction

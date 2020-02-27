@@ -9,11 +9,27 @@
 
 <h1 class="title">Transactions</h1>
 
-<div class="buttons">
-    <a class="button is-link" href="/transactions/create">Create</a>
+<div class="columns">
+    <div class="column">
+        <div class="buttons">
+            <a class="button is-link" href="/transactions/create">Create</a>
+        </div>
+    </div>
+    <form class="column" method="get">
+        <div class="field has-addons">
+            <div class="control" style="width: 100%;">
+                <input class="input" type="text" id="q" name="q" placeholder="Search..." value="{{ request('q') }}">
+            </div>
+            <div class="control">
+                <button class="button is-link" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 @if (count($transactions) > 0):
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+
     @foreach ($transactions as $transaction):
         @if ($transaction->to_account->user_id == Auth::id()):
             <div class="box has-text-white has-background-success">

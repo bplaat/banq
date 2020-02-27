@@ -5,11 +5,18 @@ class PaymentLinksController {
     public static function index () {
         // The pagination vars
         $page = get_page();
-        $per_page = 5;
-        $last_page = ceil(PaymentLinks::countByUser(Auth::id()) / $per_page);
+        $per_page = PAGINATION_LIMIT_NORMAL;
 
-        // Select all the payment links by user and there accounts
-        $payment_links = PaymentLinks::selectPageByUser(Auth::id(), $page, $per_page)->fetchAll();
+        // Check if search query is given
+        if (request('q') != '') {
+            $last_page = ceil(PaymentLinks::searchCountByUser(Auth::id(), request('q')) / $per_page);
+            $payment_links = PaymentLinks::searchSelectPageByUser(Auth::id(), request('q'), $page, $per_page)->fetchAll();
+        } else {
+            $last_page = ceil(PaymentLinks::countByUser(Auth::id()) / $per_page);
+            $payment_links = PaymentLinks::selectPageByUser(Auth::id(), $page, $per_page)->fetchAll();
+        }
+
+        // Select the account of every payment link
         foreach ($payment_links as $payment_link) {
             $payment_link->account = Accounts::select($payment_link->account_id)->fetch();
         }

@@ -76,7 +76,7 @@ class Accounts extends Model {
     // A custom query function paged select accounts by search query
     public static function searchSelectPage ($q, $page, $per_page) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT * FROM `accounts` WHERE `name` LIKE ? LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
+        return Database::query('SELECT * FROM `accounts` WHERE `name` LIKE ? ORDER BY `created_at` DESC LIMIT ?, ?', $q, ($page - 1) * $per_page, $per_page);
     }
 
     // A custom query function count accounts by user by search query
@@ -88,6 +88,6 @@ class Accounts extends Model {
     // A custom query function paged select accounts by user by search query
     public static function searchSelectPageByUser ($user_id, $q, $page, $per_page) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT * FROM `accounts` WHERE `user_id` = ? AND `name` LIKE ? LIMIT ?, ?', $user_id, $q, ($page - 1) * $per_page, $per_page);
+        return Database::query('SELECT * FROM `accounts` WHERE `user_id` = ? AND `name` LIKE ? ORDER BY `created_at` DESC LIMIT ?, ?', $user_id, $q, ($page - 1) * $per_page, $per_page);
     }
 }
