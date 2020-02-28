@@ -1,7 +1,7 @@
 <?php
 
 // The API routes
-Router::any('/api(.*)', function () {
+Router::any('/api(.+)', function () {
     Auth::useCookie(false);
     header('Access-Control-Allow-Origin: *');
 

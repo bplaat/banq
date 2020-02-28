@@ -1,7 +1,7 @@
 @if ($last_page > 1):
     @$q = request('q') != '' ? '?q=' . request('q') . '&' : '?';
     <div class="pagination is-centered">
-        <a class="pagination-previous" href="{{ $page == 1 ? '#' : $q . 'page=' . ($page - 1) }}" {{ $page == 1 ? 'disabled' : '' }}>Previous page</a>
+        <a class="pagination-previous" href="{{ $page == 1 ? '#' : $q . 'page=' . ($page - 1) }}" {{ $page == 1 ? 'disabled' : '' }}>&laquo; &nbsp;Previous page</a>
         <ul class="pagination-list">
             @$start = $page - 2 > 0 ? $page - 2 : 1
             @$end = $page + 2 < $last_page ? $page + 2 : $last_page
@@ -24,6 +24,6 @@
                 <li><a class="pagination-link" href="{{ $q }}page={{ $last_page }}">{{ $last_page }}</a></li>
             @endif
         </ul>
-        <a class="pagination-next" href="{{ $page == $last_page ? '#' : $q . 'page=' . ($page + 1) }}" {{ $page == $last_page ? 'disabled' : '' }}>Next page</a>
+        <a class="pagination-next" href="{{ $page == $last_page ? '#' : $q . 'page=' . ($page + 1) }}" {{ $page == $last_page ? 'disabled' : '' }}>Next page &nbsp;&raquo;</a>
     </div>
 @endif

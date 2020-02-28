@@ -5,6 +5,7 @@
 // Default pages
 Router::get('/', 'PagesController::index');
 Router::get('/offline', 'PagesController::offline');
+Router::get('/api', 'PagesController::apiDocs');
 
 // Payment links
 Router::get('/pay/{link}', 'PaymentLinksController::pay');
