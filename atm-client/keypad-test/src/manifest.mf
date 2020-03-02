@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Class-Path: jSerialComm-2.6.0.jar
+Main-Class: ml.banq.keypad.App
