@@ -35,7 +35,7 @@ class Devices extends Model {
     // A custom query function count devices by search query
     public static function searchCount ($q) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `devices` WHERE `name` LIKE ?', $q)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `devices` WHERE `name` LIKE ?', $q)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select devices by search query

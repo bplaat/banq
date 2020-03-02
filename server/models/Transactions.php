@@ -23,7 +23,7 @@ class Transactions extends Model {
 
     // A custom query function count transactions by user
     public static function countByUser ($user_id) {
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', $user_id, $user_id)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `transactions` WHERE `from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', $user_id, $user_id)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select transactions by user
@@ -33,7 +33,7 @@ class Transactions extends Model {
 
     // A custom query function count transactions by account
     public static function countByAccount ($account_id) {
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `from_account_id` = ? OR `to_account_id` = ?', $account_id, $account_id)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `transactions` WHERE `from_account_id` = ? OR `to_account_id` = ?', $account_id, $account_id)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select transactions by acount
@@ -44,7 +44,7 @@ class Transactions extends Model {
     // A custom query function count transactions by search query
     public static function searchCount ($q) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE `name` LIKE ?', $q)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `transactions` WHERE `name` LIKE ?', $q)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select by search query
@@ -56,7 +56,7 @@ class Transactions extends Model {
     // A custom query function count transactions by user by search query
     public static function searchCountByUser ($user_id, $q) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `transactions` WHERE (`from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)) AND `name` LIKE ?', $user_id, $user_id, $q)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `transactions` WHERE (`from_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) OR `to_account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)) AND `name` LIKE ?', $user_id, $user_id, $q)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select by by user search query

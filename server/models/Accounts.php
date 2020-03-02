@@ -59,7 +59,7 @@ class Accounts extends Model {
 
     // A custom query function count accounts by user
     public static function countByUser ($user_id) {
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `accounts` WHERE `user_id` = ?', $user_id)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `accounts` WHERE `user_id` = ?', $user_id)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select accounts by user
@@ -70,7 +70,7 @@ class Accounts extends Model {
     // A custom query function count accounts by search query
     public static function searchCount ($q) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `accounts` WHERE `name` LIKE ?', $q)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `accounts` WHERE `name` LIKE ?', $q)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select accounts by search query
@@ -82,7 +82,7 @@ class Accounts extends Model {
     // A custom query function count accounts by user by search query
     public static function searchCountByUser ($user_id, $q) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `accounts` WHERE `user_id` = ? AND `name` LIKE ?', $user_id, $q)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `accounts` WHERE `user_id` = ? AND `name` LIKE ?', $user_id, $q)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select accounts by user by search query

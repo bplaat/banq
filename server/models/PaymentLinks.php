@@ -37,7 +37,7 @@ class PaymentLinks extends Model {
 
     // A custom query function count payment links by user
     public static function countByUser ($user_id) {
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', $user_id)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?)', $user_id)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select payment links by user
@@ -48,7 +48,7 @@ class PaymentLinks extends Model {
     // A custom query function count payment links by search query
     public static function searchCount ($q) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `payment_links` WHERE `name` LIKE ?', $q)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `payment_links` WHERE `name` LIKE ?', $q)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select payment links by search query
@@ -60,7 +60,7 @@ class PaymentLinks extends Model {
     // A custom query function count payment links by user by search query
     public static function searchCountByUser($user_id, $q) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) AND `name` LIKE ?', $user_id, $q)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `payment_links` WHERE `account_id` IN (SELECT `id` FROM `accounts` WHERE `user_id` = ?) AND `name` LIKE ?', $user_id, $q)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select payment links by user by search query

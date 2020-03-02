@@ -33,7 +33,7 @@ class Sessions extends Model {
 
     // A custom query function count sessions by user
     public static function countByUser ($user_id) {
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `sessions` WHERE `user_id` = ?', $user_id)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `sessions` WHERE `user_id` = ?', $user_id)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select sessions by user

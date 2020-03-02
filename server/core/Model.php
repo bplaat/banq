@@ -70,11 +70,11 @@ abstract class Model {
     // A query function that counts rows in a table
     public static function count ($where = null) {
         if (is_null($where)) {
-            return Database::query('SELECT COUNT(`' . static::$primaryKey . '`) as count FROM `' . static::table() . '`')->fetch()->count;
+            return Database::query('SELECT COUNT(*) FROM `' . static::table() . '`')->fetch()->{'COUNT(*)'};
         } else {
             if (!is_array($where)) $where = [ static::$primaryKey => $where ];
             foreach ($where as $key => $value) $wheres[] = '`' . $key . '` = ?';
-            return Database::query('SELECT COUNT(`' . static::$primaryKey . '`) as count FROM `' . static::table() . '` WHERE ' . implode(' AND ', $wheres), ...array_values($where))->fetch()->count;
+            return Database::query('SELECT COUNT(*) FROM `' . static::table() . '` WHERE ' . implode(' AND ', $wheres), ...array_values($where))->fetch()->{'COUNT(*)'};
         }
     }
 }

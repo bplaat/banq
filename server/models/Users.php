@@ -156,7 +156,7 @@ class Users extends Model {
     // A custom query function count users by search query
     public static function searchCount ($q) {
         $q = '%' . $q . '%';
-        return Database::query('SELECT COUNT(`id`) as `count` FROM `users` WHERE `firstname` LIKE ? OR `lastname` LIKE ? OR `username` LIKE ? OR `email` LIKE ?', $q, $q, $q, $q)->fetch()->count;
+        return Database::query('SELECT COUNT(*) FROM `users` WHERE `firstname` LIKE ? OR `lastname` LIKE ? OR `username` LIKE ? OR `email` LIKE ?', $q, $q, $q, $q)->fetch()->{'COUNT(*)'};
     }
 
     // A custom query function paged select users by search query
