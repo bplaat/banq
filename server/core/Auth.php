@@ -1,9 +1,18 @@
 <?php
 
 class Auth {
-    protected static $checked = false, $user;
+    protected static $useCookie = true, $checked = false, $user;
 
-    // A function thtat creates a new session for a user
+    // A function that sets the use cookie flag
+    public static function useCookie($useCookie = null) {
+        if (is_null($useCookie)) {
+            return static::$useCookie;
+        } else {
+            static::$useCookie = $useCookie;
+        }
+    }
+
+    // A function that creates a new session for a user
     public static function createSession ($user_id) {
         static::$checked = false;
         $session = Sessions::generateSession();
@@ -17,14 +26,20 @@ class Auth {
             'platform' => $user_agent['platform'],
             'expires_at' => date('Y-m-d H:i:s', time() + SESSION_DURATION)
         ]);
-        $_COOKIE[SESSION_COOKIE_NAME] = $session;
-        setcookie(SESSION_COOKIE_NAME, $session, time() + SESSION_DURATION, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']), true);
+        if (static::$useCookie) {
+            $_COOKIE[SESSION_COOKIE_NAME] = $session;
+            setcookie(SESSION_COOKIE_NAME, $session, time() + SESSION_DURATION, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']), true);
+        }
+        return $session;
     }
 
     // A function that updates a session with user agent data
     public static function updateSession () {
+        $session = static::$useCookie ? $_COOKIE[SESSION_COOKIE_NAME] : request('session');
         $user_agent = parse_user_agent();
-        Sessions::update($_COOKIE[SESSION_COOKIE_NAME], [
+        Sessions::update([
+            'session' => $session
+        ], [
             'ip' => get_ip(),
             'browser' => $user_agent['browser'],
             'version' => $user_agent['version'],
@@ -35,9 +50,13 @@ class Auth {
 
     // A function that revokes a session
     public static function revokeSession ($session) {
-        Sessions::update($session, [ 'expires_at' => date('Y-m-d H:i:s') ]);
-        if ($_COOKIE[SESSION_COOKIE_NAME] == $session) {
-            static::$checked = false;
+        static::$checked = false;
+        Sessions::update([
+            'session' => $session
+        ], [
+            'expires_at' => date('Y-m-d H:i:s')
+        ]);
+        if (static::$useCookie && $_COOKIE[SESSION_COOKIE_NAME] == $session) {
             unset($_COOKIE[SESSION_COOKIE_NAME]);
             setcookie(SESSION_COOKIE_NAME, '', time() - 3600, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']), true);
         }
@@ -49,8 +68,7 @@ class Auth {
         if ($user_query->rowCount() == 1) {
             $user = $user_query->fetch();
             if (password_verify($password, $user->password)) {
-                static::createSession($user->id);
-                return;
+                return static::createSession($user->id);
             }
         }
 
@@ -64,17 +82,43 @@ class Auth {
     public static function user () {
         if (!static::$checked) {
             static::$checked = true;
-            if (isset($_COOKIE[SESSION_COOKIE_NAME])) {
-                $session_query = Sessions::select($_COOKIE[SESSION_COOKIE_NAME]);
-                if ($session_query->rowCount() == 1) {
-                    $session = $session_query->fetch();
-                    if (strtotime($session->expires_at) > time()) {
-                        static::$user = Users::select($session->user_id)->fetch();
-                        if (strtotime($session->updated_at) + SESSION_UPDATE_DURATION < time()) {
-                            Auth::updateSession();
+
+            // Check the session cookie for the website
+            if (static::$useCookie) {
+                if (isset($_COOKIE[SESSION_COOKIE_NAME])) {
+                    $session_query = Sessions::select([ 'session' => $_COOKIE[SESSION_COOKIE_NAME] ]);
+                    if ($session_query->rowCount() == 1) {
+                        $session = $session_query->fetch();
+                        if (strtotime($session->expires_at) > time()) {
+                            static::$user = Users::select($session->user_id)->fetch();
+                            if (strtotime($session->updated_at) + SESSION_UPDATE_DURATION < time()) {
+                                Auth::updateSession();
+                            }
+                        } else {
+                            static::revokeSession($session->session);
                         }
-                    } else {
-                        static::revokeSession($session->session);
+                    }
+                }
+            }
+
+            // Check the session request var for the API
+            else {
+                if (request('session') != '') {
+                    $session_query = Sessions::select([ 'session' => request('session') ]);
+                    if ($session_query->rowCount() == 1) {
+                        $session = $session_query->fetch();
+                        if (strtotime($session->expires_at) > time()) {
+                            static::$user = Users::select($session->user_id)->fetch();
+                            if (strtotime($session->updated_at) + SESSION_UPDATE_DURATION < time()) {
+                                Auth::updateSession();
+                            }
+                        } else {
+                            Sessions::update([
+                                'session' => request('session')
+                            ], [
+                                'expires_at' => date('Y-m-d H:i:s')
+                            ]);
+                        }
                     }
                 }
             }

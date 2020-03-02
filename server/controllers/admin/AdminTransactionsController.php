@@ -5,12 +5,12 @@ class AdminTransactionsController {
     public static function index () {
         // The pagination vars
         $page = get_page();
-        $per_page = 9;
+        $per_page = PAGINATION_LIMIT_ADMIN;
 
         // Check if search query is given
         if (request('q') != '') {
             $last_page = ceil(Transactions::searchCount(request('q')) / $per_page);
-            $transactions = Transactions::searchPage(request('q'), $page, $per_page)->fetchAll();
+            $transactions = Transactions::searchSelectPage(request('q'), $page, $per_page)->fetchAll();
         } else {
             $last_page = ceil(Transactions::count() / $per_page);
             $transactions = Transactions::selectPage($page, $per_page)->fetchAll();

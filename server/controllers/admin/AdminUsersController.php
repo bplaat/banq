@@ -5,12 +5,12 @@ class AdminUsersController {
     public static function index () {
         // The pagination vars
         $page = get_page();
-        $per_page = 9;
+        $per_page = PAGINATION_LIMIT_ADMIN;
 
         // Check if search query is given
         if (request('q') != '') {
             $last_page = ceil(Users::searchCount(request('q')) / $per_page);
-            $users = Users::searchPage(request('q'), $page, $per_page)->fetchAll();
+            $users = Users::searchSelectPage(request('q'), $page, $per_page)->fetchAll();
         } else {
             $last_page = ceil(Users::count() / $per_page);
             $users = Users::selectPage($page, $per_page)->fetchAll();

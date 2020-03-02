@@ -1,28 +1,29 @@
 @if ($last_page > 1):
+    @$q = request('q') != '' ? '?q=' . request('q') . '&' : '?';
     <div class="pagination is-centered">
-        <a class="pagination-previous" href="{{ $page == 1 ? '#' : '?page=' . ($page - 1) }}" {{ $page == 1 ? 'disabled' : '' }}>Previous page</a>
+        <a class="pagination-previous" href="{{ $page == 1 ? '#' : $q . 'page=' . ($page - 1) }}" {{ $page == 1 ? 'disabled' : '' }}>&laquo; &nbsp;Previous page</a>
         <ul class="pagination-list">
             @$start = $page - 2 > 0 ? $page - 2 : 1
             @$end = $page + 2 < $last_page ? $page + 2 : $last_page
 
             @if ($start > 1):
-                <li><a class="pagination-link" href="?page=1">1</a></li>
+                <li><a class="pagination-link" href="{{ $q }}page=1">1</a></li>
                 @if ($start > 2):
                     <li><span class="pagination-ellipsis">...</span></li>
                 @endif
             @endif
 
             @for ($i = $start; $i <= $end; $i++):
-                  <li><a class="pagination-link {{ $i == $page ? 'is-current' : '' }}" href="?page={{ $i }}">{{ $i }}</a></li>
+                  <li><a class="pagination-link {{ $i == $page ? 'is-current' : '' }}" href="{{ $q }}page={{ $i }}">{{ $i }}</a></li>
             @endfor
 
             @if ($end < $last_page):
                 @if ($end < $last_page - 1):
                     <li><span class="pagination-ellipsis">...</span></li>
                 @endif
-                <li><a class="pagination-link" href="?page={{ $last_page }}">{{ $last_page }}</a></li>
+                <li><a class="pagination-link" href="{{ $q }}page={{ $last_page }}">{{ $last_page }}</a></li>
             @endif
         </ul>
-        <a class="pagination-next" href="{{ $page == $last_page ? '#' : '?page=' . ($page + 1) }}" {{ $page == $last_page ? 'disabled' : '' }}>Next page</a>
+        <a class="pagination-next" href="{{ $page == $last_page ? '#' : $q . 'page=' . ($page + 1) }}" {{ $page == $last_page ? 'disabled' : '' }}>Next page &nbsp;&raquo;</a>
     </div>
 @endif

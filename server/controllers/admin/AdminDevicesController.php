@@ -5,12 +5,12 @@ class AdminDevicesController {
     public static function index () {
         // The pagination vars
         $page = get_page();
-        $per_page = 9;
+        $per_page = PAGINATION_LIMIT_ADMIN;
 
         // Check if search query is given
         if (request('q') != '') {
             $last_page = ceil(Devices::searchCount(request('q')) / $per_page);
-            $devices = Devices::searchPage(request('q'), $page, $per_page)->fetchAll();
+            $devices = Devices::searchSelectPage(request('q'), $page, $per_page)->fetchAll();
         } else {
             $last_page = ceil(Devices::count() / $per_page);
             $devices = Devices::selectPage($page, $per_page)->fetchAll();

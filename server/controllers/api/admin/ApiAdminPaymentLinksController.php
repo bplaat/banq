@@ -1,15 +1,15 @@
 <?php
 
-class ApiPaymentLinksController {
-    // The API payment links index route
+class ApiAdminPaymentLinksController {
+    // The API admin payment links index route
     public static function index () {
         // The pagination vars
         $page = get_page();
         $limit = get_limit();
-        $count = PaymentLinks::countByUser(Auth::id());
+        $count = PaymentLinks::count();
 
         // Select all the payment links by page
-        $payment_links = PaymentLinks::selectPageByUser(Auth::id(), $page, $limit)->fetchAll();
+        $payment_links = PaymentLinks::selectPage($page, $limit)->fetchAll();
 
         // Return the data as JSON
         return [
@@ -20,17 +20,17 @@ class ApiPaymentLinksController {
         ];
     }
 
-    // The API payment links search route
+    // The API admin payment links search route
     public static function search () {
         $q = request('q', '');
 
         // The pagination vars
         $page = get_page();
         $limit = get_limit();
-        $count = PaymentLinks::searchCountByUser(Auth::id(), $q);
+        $count = PaymentLinks::searchCount($q);
 
         // Select all the payment links by page
-        $payment_links = PaymentLinks::searchSelectPageByUser(Auth::id(), $q, $page, $limit)->fetchAll();
+        $payment_links = PaymentLinks::searchSelectPage($q, $page, $limit)->fetchAll();
 
         // Return the data as JSON
         return [
@@ -41,12 +41,12 @@ class ApiPaymentLinksController {
         ];
     }
 
-    // The API payment links create route
+    // The API admin payment links create route
     public static function create () {
         // Validate the input vars
         api_validate([
             'name' => PaymentLinks::NAME_VALIDATION,
-            'account_id' => PaymentLinks::ACCOUNT_ID_VALIDATION,
+            'account_id' => PaymentLinks::ACCOUNT_ID_ADMIN_VALIDATION,
             'amount' => PaymentLinks::AMOUNT_VALIDATION
         ]);
 
@@ -65,39 +65,19 @@ class ApiPaymentLinksController {
         ];
     }
 
-    // The API payment links show route
+    // The API admin payment links show route
     public static function show ($payment_link) {
-        // Check if the account is from the authed user
-        if ($account->user_id == Auth::id()) {
-            return $payment_link;
-        }
-
-        // Return a error message
-        else {
-            return [
-                'message' => 'The payment link is not yours'
-            ];
-        }
+        return $payment_link;
     }
 
-    // The API payment links delete route
+    // The API admin payment links delete route
     public static function delete ($payment_link) {
-        // Check if the account is from the authed user
-        if ($account->user_id == Auth::id()) {
-            // Delete the payment link
-            PaymentLinks::delete($payment_link->id);
+        // Delete the payment link
+        PaymentLinks::delete($payment_link->id);
 
-            // Return a confirmation message
-            return [
-                'message' => 'The payment link has been deleted successfully'
-            ];
-        }
-
-        // Return a error message
-        else {
-            return [
-                'message' => 'The payment link is not yours'
-            ];
-        }
+        // Return a confirmation message
+        return [
+            'message' => 'The payment link has been deleted successfully'
+        ];
     }
 }

@@ -29,7 +29,7 @@
                         <a class="navbar-item" href="/accounts">Accounts</a>
                     @endif
 
-                    @$transactions = Transactions::selectAllByUser(1, 5)->fetchAll()
+                    @$transactions = Transactions::selectPageByUser(Auth::id(), 1, 5)->fetchAll()
                     @if (count($transactions) > 0):
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link is-arrowless" href="/transactions">Transactions</a>
@@ -43,7 +43,7 @@
                         <a class="navbar-item" href="/transactions">Transactions</a>
                     @endif
 
-                    @$payment_links = PaymentLinks::selectAllByUser(1, 5)->fetchAll()
+                    @$payment_links = PaymentLinks::selectPageByUser(Auth::id(), 1, 5)->fetchAll()
                     @if (count($payment_links) > 0):
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link is-arrowless" href="/payment-links">Payment Links</a>
@@ -63,6 +63,7 @@
                             <div class="navbar-dropdown">
                                 <a class="navbar-item" href="/admin/devices">Devices</a>
                                 <a class="navbar-item" href="/admin/users">Users</a>
+                                <a class="navbar-item" href="/admin/sessions">Sessions</a>
                                 <a class="navbar-item" href="/admin/accounts">Accounts</a>
                                 <a class="navbar-item" href="/admin/transactions">Transactions</a>
                                 <a class="navbar-item" href="/admin/payment-links">Payment Links</a>

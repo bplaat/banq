@@ -4,7 +4,7 @@ class SettingsController {
     // The show settings form page
     public static function showSettingsForm() {
         Auth::updateSession();
-        $active_sessions = Sessions::selectAllActiveByUser(Auth::id())->fetchAll();
+        $active_sessions = Sessions::activeSelectPageByUser(Auth::id())->fetchAll();
         echo view('auth.settings', [ 'active_sessions' => $active_sessions ]);
     }
 

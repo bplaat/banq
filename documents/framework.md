@@ -15,7 +15,7 @@ The framework uses the Model–view–controller design pattern:
 
 - A **model** is a class that is linked to a database table. The class contains all the functions that execute qeuries on that table. It also contains the create table SQL code and, where necessary, a fill initialization function. Each model extends the Model 'core' class this class already contains many standard query functions, covering approximately 80 to 90% of all your requirements. So you only have to add a few more specific query functions. Finally, the model also contains all validation rules of the fields that are in the database table.
 
-- A **controller** is a class where each function is a separate page that is described in the `routes.php` file. The task of the controller is to validate and process all incoming information from, for example, form fields. If needed, the controller can also pass information to a view so that an HTML page can be generated.
+- A **controller** is a class where each function is a separate page that is described in the `routes/` files. The task of the controller is to validate and process all incoming information from, for example, form fields. If needed, the controller can also pass information to a view so that an HTML page can be generated.
 
 - A **view** is a special HTML file which is actually a PHP file, but where a simple translation is made by a few regular expressions, this ensures that you can write much nicer template code that remains legible. The view took the data from the controller and turns it into an HTML page that is then sent back to the user.
 

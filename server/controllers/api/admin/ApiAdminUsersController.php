@@ -1,7 +1,7 @@
 <?php
 
-class ApiUsersController {
-    // The API users index route
+class ApiAdminUsersController {
+    // The API admin users index route
     public static function index () {
         // The pagination vars
         $page = get_page();
@@ -23,7 +23,7 @@ class ApiUsersController {
         ];
     }
 
-    // The API users search route
+    // The API admin users search route
     public static function search () {
         $q = request('q', '');
 
@@ -33,7 +33,7 @@ class ApiUsersController {
         $count = Users::searchCount($q);
 
         // Select all the users by page
-        $users = Users::searchPage($q, $page, $limit)->fetchAll();
+        $users = Users::searchSelectPage($q, $page, $limit)->fetchAll();
         foreach ($users as $user) {
             unset($user->password);
         }
@@ -47,7 +47,7 @@ class ApiUsersController {
         ];
     }
 
-    // The API users create route
+    // The API admin users create route
     public static function create () {
         // Validate the user input fields
         api_validate([
@@ -90,13 +90,13 @@ class ApiUsersController {
         ];
     }
 
-    // The API users show route
+    // The API admin users show route
     public static function show ($user) {
         unset($user->password);
         return $user;
     }
 
-    // The API users edit route
+    // The API admin users edit route
     public static function edit ($user) {
         // Validate the user input fields
         api_validate([
@@ -150,7 +150,7 @@ class ApiUsersController {
         ];
     }
 
-    // The API users delete route
+    // The API admin users delete route
     public static function delete ($user) {
         // Delete the user
         Users::deleteUser($user->id);

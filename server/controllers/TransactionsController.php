@@ -5,11 +5,18 @@ class TransactionsController {
     public static function index () {
         // The pagination vars
         $page = get_page();
-        $per_page = 5;
-        $last_page = ceil(Transactions::countAllByUser() / $per_page);
+        $per_page = PAGINATION_LIMIT_NORMAL;
 
-        // Select all transactions by page and them accounts
-        $transactions = Transactions::selectAllByUser($page, $per_page)->fetchAll();
+        // Check if search query is given
+        if (request('q') != '') {
+            $last_page = ceil(Transactions::searchCountByUser(Auth::id(), request('q')) / $per_page);
+            $transactions = Transactions::searchSelectPageByUser(Auth::id(), request('q'), $page, $per_page)->fetchAll();
+        } else {
+            $last_page = ceil(Transactions::countByUser(Auth::id()) / $per_page);
+            $transactions = Transactions::selectPageByUser(Auth::id(), $page, $per_page)->fetchAll();
+        }
+
+        // Select the accounts of every transaction
         foreach ($transactions as $transaction) {
             $transaction->from_account = Accounts::select($transaction->from_account_id)->fetch();
             $transaction->to_account = Accounts::select($transaction->to_account_id)->fetch();

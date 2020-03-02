@@ -1,7 +1,7 @@
 <?php
 
-class ApiDevicesController {
-    // The API devices index route
+class ApiAdminDevicesController {
+    // The API admin devices index route
     public static function index () {
         // The pagination vars
         $page = get_page();
@@ -20,7 +20,7 @@ class ApiDevicesController {
         ];
     }
 
-    // The API devices search route
+    // The API admin devices search route
     public static function search () {
         $q = request('q', '');
 
@@ -30,7 +30,7 @@ class ApiDevicesController {
         $count = Devices::searchCount($q);
 
         // Select all the devices by page
-        $devices = Devices::searchPage($q, $page, $limit)->fetchAll();
+        $devices = Devices::searchSelectPage($q, $page, $limit)->fetchAll();
 
         // Return the data as JSON
         return [
@@ -41,7 +41,7 @@ class ApiDevicesController {
         ];
     }
 
-    // The API devices create route
+    // The API admin devices create route
     public static function create () {
         // Validate the user input
         api_validate([
@@ -61,12 +61,12 @@ class ApiDevicesController {
         ];
     }
 
-    // The API devices show route
+    // The API admin devices show route
     public static function show ($device) {
         return $device;
     }
 
-    // The API devices edit route
+    // The API admin devices edit route
     public static function edit ($device) {
         // Validate the user input
         api_validate([
@@ -84,7 +84,7 @@ class ApiDevicesController {
         ];
     }
 
-    // The API devices delete route
+    // The API admin devices delete route
     public static function delete ($device) {
         // Delete the device
         Devices::delete($device->id);

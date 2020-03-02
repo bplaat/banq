@@ -8,6 +8,9 @@
         <a class="button" href="/accounts">Accounts</a>
         <a class="button" href="/transactions">Transactions</a>
         <a class="button" href="/payment-links">Payment Links</a>
+        @if (Auth::user()->role == Users::ROLE_ADMIN):
+            <a class="button" href="/admin">Admin</a>
+        @endif
     </div>
 @else:
     <h1 class="title">Welcome to Banq</h1>

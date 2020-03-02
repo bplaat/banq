@@ -1,0 +1,30 @@
+@view('header', [ 'title' => $session->session . ' - Sessions - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li><a href="/admin/sessions">Session</a></li>
+        <li class="is-active"><a href="/admin/sessions/{{ $session->id }}">{{ $session->session }}</a></li>
+    </ul>
+</div>
+
+<h1 class="title">
+    {{ $session->session }}
+    @if (strtotime($session->expires_at) <= time()):
+        <div class="tag is-link" style="margin-left: 8px;">EXPIRED</div>
+    @endif
+</h1>
+
+<div class="buttons">
+    <a class="button is-danger" href="/admin/sessions/{{ $session->id }}/revoke">Revoke</a>
+</div>
+
+<p style="margin-bottom: 16px;">
+    <a href="/admin/users/{{ $session->user_id }}">{{ $session->user->username }}</a> via
+    <a href="https://ipinfo.io/{{ $session->ip }}" target="_blank" rel="noreferrer">{{ $session->ip }}</a>
+    using <b>{{ $session->browser }} {{ $session->version }}</b> on <b>{{ $session->platform }}</b>
+</p>
+<p style="margin-bottom: 16px;">Created on {{ $session->created_at }}, last used on {{ $session->updated_at }} and expires on {{ $session->expires_at }}</p>
+
+@view('footer')

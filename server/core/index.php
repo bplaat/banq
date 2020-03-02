@@ -1,10 +1,19 @@
 <?php
 
-// The directories to be autoloaded
+// Find recursive the folder that need to be autoloaded
 $autoload_folders = [ ROOT . '/core', ROOT . '/models', ROOT . '/controllers' ];
-$controller_files = glob(ROOT . '/controllers/*');
-foreach ($controller_files as $file) {
-    if (is_dir($file)) $autoload_folders[] = $file;
+function search_folder ($folder) {
+    global $autoload_folders;
+    $files = glob($folder . '/*');
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            $autoload_folders[] = $file;
+            search_folder($file);
+        }
+    }
+}
+foreach ($autoload_folders as $folder) {
+    search_folder($folder);
 }
 
 // Register the autoloader
@@ -46,5 +55,10 @@ if (APP_DEBUG) {
     require_once ROOT . '/core/debug_routes.php';
 }
 
-// Load the routes
-require_once ROOT . '/routes.php';
+// Load the routes files
+$files = glob(ROOT . '/routes/*');
+foreach ($files as $file) {
+    if (is_file($file)) {
+        require_once $file;
+    }
+}

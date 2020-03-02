@@ -11,6 +11,11 @@ class PagesController {
         return view('offline');
     }
 
+    // The API documentation page
+    public static function apiDocs () {
+        Router::redirect('https://github.com/bplaat/banq/blob/master/documents/api.md');
+    }
+
     // The not found page
     public static function notfound () {
         http_response_code(404);

@@ -29,6 +29,8 @@
 </div>
 
 @if (count($payment_links) > 0):
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+
     <div class="columns is-multiline">
         @foreach ($payment_links as $payment_link):
             <div class="column is-one-third">
@@ -42,11 +44,10 @@
             </div>
         @endforeach
     </div>
+
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 @else:
     <p><i>There are no payment links found</i></p>
 @endif
-
-@view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
-
 
 @view('footer')

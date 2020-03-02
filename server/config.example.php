@@ -4,7 +4,7 @@
 
 // The app constants
 define('APP_NAME', 'Banq');
-define('APP_VERSION', '0.1');
+define('APP_VERSION', '0.2');
 define('APP_DEBUG', isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'banq.local');
 
 // The database constants
@@ -17,6 +17,12 @@ define('SESSION_COOKIE_NAME', 'banq-session');
 define('SESSION_DURATION', 60 * 60 * 24 * 356);
 define('SESSION_UPDATE_DURATION', 60);
 define('SESSION_SHORT_COOKIE_NAME', 'banq-short-session');
+
+// The pagination limits
+define('PAGINATION_LIMIT_NORMAL', 6);
+define('PAGINATION_LIMIT_ADMIN', 12);
+define('PAGINATION_LIMIT_API', 20);
+define('PAGINATION_MAX_LIMIT_API', 50);
 
 // The interest rate constant in procent
 define('INTEREST_RATE', 1);

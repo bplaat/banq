@@ -11,7 +11,7 @@
 <p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $payment_link->account_id }}">{{ $payment_link->account->name }}</a></p>
 <p style="margin-bottom: 16px;">Amount: {!! format_money($payment_link->amount) !!}</p>
 
-@if ($payment_link->account->user_id == Auth::check()):
+@if ($payment_link->account->user_id == Auth::id()):
     <p><b>You can't pay your own payment links!</b></p>
 @elseif (Auth::check()):
     @view('errors')
