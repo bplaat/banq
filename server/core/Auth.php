@@ -71,11 +71,6 @@ class Auth {
                 return static::createSession($user->id);
             }
         }
-
-        Session::flash('errors', [
-            'Incorrect username, email or password'
-        ]);
-        Router::back();
     }
 
     // A function that returns the authed user
