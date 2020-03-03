@@ -7,6 +7,7 @@
 // https://www.xanthium.in/Serial-Port-Programming-using-Win32-API
 
 #include <windows.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -16,7 +17,6 @@
 char className[] = "keypadTest";
 char windowTitle[] = "Keypad Serial Demo";
 char versionLabel[] = "v0.1";
-char comFile[] = "COM4";
 char fontName[] = "Tahoma";
 char footerLabel[] = "Made by Bastiaan van der Plaat";
 
@@ -55,34 +55,38 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         largeFont = CreateFont(width * 10 / 100, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 0, 0, fontName);
         smallFont = CreateFont(width * 3 / 100, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 0, 0, fontName);
 
-        serialFile = CreateFile(comFile, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+        for (int i = 1; i <= 255; i++) {
+            char comFileName[32];
+            sprintf(comFileName, "COM%d", i);
+            serialFile = CreateFile(comFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-        if (serialFile != INVALID_HANDLE_VALUE) {
-            DCB dcbSerialParams = { 0 };
-            dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
-            dcbSerialParams.BaudRate = CBR_9600;
-            dcbSerialParams.ByteSize = 8;
-            dcbSerialParams.StopBits = ONESTOPBIT;
-            dcbSerialParams.Parity = NOPARITY;
-            SetCommState(serialFile, &dcbSerialParams);
+            if (serialFile != INVALID_HANDLE_VALUE) {
+                DCB dcbSerialParams = { 0 };
+                dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
+                dcbSerialParams.BaudRate = CBR_9600;
+                dcbSerialParams.ByteSize = 8;
+                dcbSerialParams.StopBits = ONESTOPBIT;
+                dcbSerialParams.Parity = NOPARITY;
+                SetCommState(serialFile, &dcbSerialParams);
 
-            COMMTIMEOUTS timeouts = { 0 };
-            timeouts.ReadIntervalTimeout = 50;
-            timeouts.ReadTotalTimeoutConstant = 50;
-            timeouts.ReadTotalTimeoutMultiplier = 10;
-            timeouts.WriteTotalTimeoutConstant = 50;
-            timeouts.WriteTotalTimeoutMultiplier = 10;
-            SetCommTimeouts(serialFile, &timeouts);
+                COMMTIMEOUTS timeouts = { 0 };
+                timeouts.ReadIntervalTimeout = 50;
+                timeouts.ReadTotalTimeoutConstant = 50;
+                timeouts.ReadTotalTimeoutMultiplier = 10;
+                timeouts.WriteTotalTimeoutConstant = 50;
+                timeouts.WriteTotalTimeoutMultiplier = 10;
+                SetCommTimeouts(serialFile, &timeouts);
 
-            CreateThread(0, 0, serialReadThread, NULL, 0, NULL);
+                CreateThread(0, 0, serialReadThread, NULL, 0, NULL);
 
-            strcpy(infoLabel, "Connected");
+                strcpy(infoLabel, "Connected");
+                return 0;
+            }
+
+            CloseHandle(serialFile);
         }
 
-        else {
-            strcpy(infoLabel, "No serial port");
-        }
-
+        strcpy(infoLabel, "No serial port");
         return 0;
     }
 
