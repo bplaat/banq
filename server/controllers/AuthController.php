@@ -8,8 +8,15 @@ class AuthController {
 
     // The auth login page
     public static function login () {
-        Auth::login(request('login'), request('password'));
-        Router::redirect('/');
+        $session = Auth::login(request('login'), request('password'));
+        if (is_string($session)) {
+            Router::redirect('/');
+        } else {
+            Session::flash('errors', [
+                'Incorrect username, email or password'
+            ]);
+            Router::back();
+        }
     }
 
     // The auth register form page

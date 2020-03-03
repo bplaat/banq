@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Banq Payment Terminal Settings</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body, input, button {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+body {
+    margin: 16px;
+    color: #111;
+    background-color: #fff;
+}
+
+a {
+    color: #16c;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+h1, form {
+    margin: 32px 0;
+}
+
+h2, p, .field {
+    margin: 16px 0;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+input {
+    display: block;
+    border-radius: 4px;
+    border: 2px solid #888;
+    width: 100%;
+    padding: 8px 12px;
+}
+
+button {
+    border-radius: 4px;
+    border: 2px solid #bbb;
+    background-color: #ddd;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+    <div id="app" class="container">
+        <h1>Banq Payment Terminal Settings</h1>
+
+        <h2>Local Wifi Settings</h2>
+        <form id="local_wifi_form">
+            <div class="field">
+                <label class="label" for="local_wifi_ssid">Local Wifi SSID</label>
+                <input class="input" type="text" id="local_wifi_ssid">
+            </div>
+
+            <div class="field">
+                <label class="label" for="local_wifi_password">Local Wifi password</label>
+                <input class="input" type="text" id="local_wifi_password">
+            </div>
+
+            <div class="field">
+                <button class="button" type="submit">Save & restart</button>
+            </div>
+        </form>
+
+        <h2>Wifi Settings</h2>
+        <form id="wifi_form">
+            <div class="field">
+                <label class="label" for="wifi_ssid">Wifi SSID</label>
+                <input class="input" type="text" id="wifi_ssid">
+            </div>
+
+            <div class="field">
+                <label class="label" for="wifi_password">Wifi password</label>
+                <input class="input" type="text" id="wifi_password">
+            </div>
+
+            <div class="field">
+                <button class="button" type="submit">Save & connect</button>
+            </div>
+        </form>
+
+        <p>Made by <a href="https://bastiaan.ml/" target="_blank" rel="noreferrer">Bastiaan van der Plaat</a>, Deniz Kahriman and Don Luijendijk</p>
+    </div>
+<script>
+var xhr = new XMLHttpRequest();
+xhr.onload = function () {
+    var data = JSON.parse(xhr.responseText);
+    local_wifi_ssid.value = data.local_wifi_ssid;
+    local_wifi_password.value = data.local_wifi_password;
+    wifi_ssid.value = data.wifi_ssid;
+    wifi_password.value = data.wifi_password;
+};
+xhr.open('GET', '/api/config', true);
+xhr.send();
+
+local_wifi_form.onsubmit = function (event) {
+    event.preventDefault();
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/config/edit?local_wifi_ssid=' + encodeURIComponent(local_wifi_ssid.value) + '&local_wifi_password=' + encodeURIComponent(local_wifi_password.value), true);
+    xhr.send();
+};
+
+wifi_form.onsubmit = function (event) {
+    event.preventDefault();
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/config/edit?wifi_ssid=' + encodeURIComponent(wifi_ssid.value) + '&wifi_password=' + encodeURIComponent(wifi_password.value), true);
+    xhr.send();
+};
+</script>
+</body>
+</html>
