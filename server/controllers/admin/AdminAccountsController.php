@@ -39,7 +39,7 @@ class AdminAccountsController {
         validate([
             'name' => Accounts::NAME_VALIDATION,
             'type' => Accounts::TYPE_VALIDATION,
-            'user_id' => Accounts::USER_ID_VALIDATION,
+            'user_id' => Accounts::USER_ID_ADMIN_VALIDATION,
             'amount' => Accounts::AMOUNT_VALIDATION
         ]);
 
@@ -96,7 +96,7 @@ class AdminAccountsController {
         validate([
             'name' => Accounts::NAME_VALIDATION,
             'type' => Accounts::TYPE_VALIDATION,
-            'user_id' => Accounts::USER_ID_VALIDATION,
+            'user_id' => Accounts::USER_ID_ADMIN_VALIDATION,
             'amount' => Accounts::AMOUNT_VALIDATION,
         ]);
 

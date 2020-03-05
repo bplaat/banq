@@ -5,6 +5,7 @@ class Accounts extends Model {
     const NAME_VALIDATION = 'required|min:3|max:35';
     const TYPE_VALIDATION = 'required|int|number_between:1,2';
     const USER_ID_VALIDATION = 'required|int|exits:User,id|@Accounts::MAX_COUNT_VALIDATION';
+    const USER_ID_ADMIN_VALIDATION = 'required|int|exits:User,id';
     const AMOUNT_VALIDATION = 'required|float|number_min:0';
 
     // A custom validation rule which checks if the account is a payment account
