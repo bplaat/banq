@@ -7,5 +7,5 @@ abstract public class Page extends JPanel {
 
     public void onKeypad(String key) {}
 
-    public void onRFID(String rfid_uid) {}
+    public void onRFID(String rfid) {}
 }

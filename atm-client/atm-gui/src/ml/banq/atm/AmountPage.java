@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 public class AmountPage extends Page {
     private static final long serialVersionUID = 1;
 
-    private int[] defaultAmounts = { 5, 10, 20, 50, 70, 100 };
+    private int[] defaultAmounts = { 5, 10, 20, 50, 70 };
 
     public AmountPage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

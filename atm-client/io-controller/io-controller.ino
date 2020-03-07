@@ -57,7 +57,7 @@ void loop() {
 
         document.clear();
         document["type"] = "rfid";
-        document["rfid_uid"] = rfid_uid;
+        document["rfid"] = rfid_uid;
         serializeJson(document, json_buffer);
         Serial.println(json_buffer);
     }

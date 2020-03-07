@@ -7,10 +7,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class AuthPage extends Page {
+public class RFIDPage extends Page {
     private static final long serialVersionUID = 1;
 
-    public AuthPage() {
+    public RFIDPage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -30,7 +30,8 @@ public class AuthPage extends Page {
         add(Box.createVerticalGlue());
     }
 
-    public void onRFID(String rfid_uid) {
-        Navigator.changePage(new AmountPage());
+    public void onRFID(String rfid) {
+        BanqAPI.setRFID(rfid);
+        Navigator.changePage(new PincodePage());
     }
 }
