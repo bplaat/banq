@@ -31,6 +31,6 @@ public class WelcomePage extends Page {
     }
 
     public void onKeypad(String key) {
-        Navigator.changePage(new AuthPage());
+        Navigator.changePage(new RFIDPage());
     }
 }

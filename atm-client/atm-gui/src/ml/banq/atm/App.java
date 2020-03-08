@@ -28,6 +28,10 @@ import org.json.JSONObject;
 public class App implements Runnable, SerialPortMessageListener {
     private JLabel infoLabel;
 
+    public App() {
+        BanqAPI.setKey("38a03adb365f611fa9861248588b3d18");
+    }
+
     public void run() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -76,7 +80,7 @@ public class App implements Runnable, SerialPortMessageListener {
                         }
 
                         if (message.getString("type").equals("rfid")) {
-                            Navigator.getPage().onRFID(message.getString("rfid_uid"));
+                            Navigator.getPage().onRFID(message.getString("rfid"));
                         }
                     }
                 });
