@@ -1,8 +1,13 @@
-// The serial IO Controller
-// -> Keypad
-// -> RFID
-// <- Printer
-// <- Commands money dispencer
+// The serial I/O Controller
+// -> Keypad input
+// -> RFID read
+// <- RFID write
+// <- Printer commands
+// <- Money dispencer commands
+
+// https://lastminuteengineers.com/how-rfid-works-rc522-arduino-tutorial/
+
+#include <Arduino.h>
 #include <Keypad.h>
 #include <SPI.h>
 #include <MFRC522.h>
