@@ -6,8 +6,6 @@
 // <- Printer commands
 // <- Money dispencer commands
 
-// https://lastminuteengineers.com/how-rfid-works-rc522-arduino-tutorial/
-
 #include <Arduino.h>
 #include <Keypad.h>
 #include <SPI.h>
@@ -34,22 +32,25 @@ Keypad keypad = Keypad(makeKeymap(keypad_keys), keypad_row_pins, keypad_column_p
 #define SS_PIN 10
 #define RST_PIN A0
 
-MFRC522 rfid(SS_PIN, RST_PIN);
-MFRC522::MIFARE_Key key;
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+MFRC522::MIFARE_Key mfrc522_keyA;
 
-char json_buffer[64];
-StaticJsonDocument<64> document;
+#define ACCOUNT_ID_DATA_BLOCK 1
+#define ACCOUNT_ID_TRAILER_BLOCK 3
+#define ACOUNT_ID_LENGTH 16
+
+char json_buffer[256];
+StaticJsonDocument<256> document;
 
 void setup() {
     Serial.begin(9600);
     Serial.setTimeout(50);
 
     SPI.begin();
-    rfid.PCD_Init();
-    delay(4);
+    mfrc522.PCD_Init();
 
     for (byte i = 0; i < 6; i++) {
-        key.keyByte[i] = 0xff;
+        mfrc522_keyA.keyByte[i] = 0xff;
     }
 }
 
@@ -62,6 +63,70 @@ void loop() {
         if (document["type"] == "beeper") {
             tone(BEEPER_PIN, document["frequency"], document["duration"]);
         }
+
+        if (document["type"] == "rfid_write") {
+            Serial.println("[INFO] Waiting for card...");
+            while (!(mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()));
+
+            String rfid_uid = "";
+            for (byte i = 0; i < mfrc522.uid.size; i++) {
+                rfid_uid += (mfrc522.uid.uidByte[i] < 0x10 ? "0" : "") + String(mfrc522.uid.uidByte[i], HEX);
+            }
+
+            String account_id = document["account_id"];
+            if (account_id.length() == ACOUNT_ID_LENGTH) {
+                MFRC522::StatusCode status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, ACCOUNT_ID_TRAILER_BLOCK, &mfrc522_keyA, &(mfrc522.uid));
+                if (status == MFRC522::STATUS_OK) {
+                    uint8_t write_account_id[ACOUNT_ID_LENGTH] = { 0 };
+                    for (int i = 0; i < ACOUNT_ID_LENGTH; i++) {
+                        write_account_id[i] = account_id.charAt(i);
+                    }
+
+                    status = mfrc522.MIFARE_Write(ACCOUNT_ID_DATA_BLOCK, write_account_id, ACOUNT_ID_LENGTH);
+                    if (status == MFRC522::STATUS_OK) {
+                        uint8_t read_account_id[18] = { 0 };
+                        uint8_t size = sizeof(read_account_id);
+
+                        status = mfrc522.MIFARE_Read(ACCOUNT_ID_DATA_BLOCK, read_account_id, &size);
+                        if (status == MFRC522::STATUS_OK) {
+                            bool same = true;
+                            for (uint8_t i = 0; i < ACOUNT_ID_LENGTH; i++) {
+                                if (read_account_id[i] != write_account_id[i]) {
+                                    same = false;
+                                    break;
+                                }
+                            }
+
+                            if (same) {
+                                document.clear();
+                                document["type"] = "rfid_write";
+                                document["success"] = true;
+                                document["rfid_uid"] = rfid_uid;
+                                document["account_id"] = account_id;
+                                serializeJson(document, json_buffer);
+                                Serial.println(json_buffer);
+                            } else {
+                                Serial.println("[ERROR] The RFID write is not the same");
+                            }
+                        } else {
+                            Serial.print("[ERROR] MIFARE_Read() failed: ");
+                            Serial.println(mfrc522.GetStatusCodeName(status));
+                        }
+                    } else {
+                        Serial.print("[ERROR] MIFARE_Write() failed: ");
+                        Serial.println(mfrc522.GetStatusCodeName(status));
+                    }
+                } else {
+                    Serial.print("[ERROR] PCD_Authenticate() failed: ");
+                    Serial.println(mfrc522.GetStatusCodeName(status));
+                }
+            } else {
+                Serial.println("[ERROR] The account id is not 16 characters long");
+            }
+
+            mfrc522.PICC_HaltA();
+            mfrc522.PCD_StopCrypto1();
+        }
     }
 
     char key = keypad.getKey();
@@ -73,17 +138,35 @@ void loop() {
         Serial.println(json_buffer);
     }
 
-    if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
+    if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
         String rfid_uid = "";
-        for (byte i = 0; i < rfid.uid.size; i++) {
-           rfid_uid += (rfid.uid.uidByte[i] < 0x10 ? "0" : "") + String(rfid.uid.uidByte[i], HEX);
+        for (byte i = 0; i < mfrc522.uid.size; i++) {
+           rfid_uid += (mfrc522.uid.uidByte[i] < 0x10 ? "0" : "") + String(mfrc522.uid.uidByte[i], HEX);
         }
-        rfid.PICC_HaltA();
 
-        document.clear();
-        document["type"] = "rfid_read";
-        document["rfid_uid"] = rfid_uid;
-        serializeJson(document, json_buffer);
-        Serial.println(json_buffer);
+        MFRC522::StatusCode status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, ACCOUNT_ID_TRAILER_BLOCK, &mfrc522_keyA, &(mfrc522.uid));
+        if (status == MFRC522::STATUS_OK) {
+            uint8_t account_id[18] = { 0 };
+            uint8_t size = sizeof(account_id);
+            status = mfrc522.MIFARE_Read(ACCOUNT_ID_DATA_BLOCK, account_id, &size);
+            if (status == MFRC522::STATUS_OK) {
+                account_id[ACOUNT_ID_LENGTH] = 0;
+                document.clear();
+                document["type"] = "rfid_read";
+                document["rfid_uid"] = rfid_uid;
+                document["account_id"] = account_id;
+                serializeJson(document, json_buffer);
+                Serial.println(json_buffer);
+            } else {
+                Serial.print("[ERROR] MIFARE_Read() failed: ");
+                Serial.println(mfrc522.GetStatusCodeName(status));
+            }
+        } else {
+            Serial.print("[ERROR] PCD_Authenticate() failed: ");
+            Serial.println(mfrc522.GetStatusCodeName(status));
+        }
+
+        mfrc522.PICC_HaltA();
+        mfrc522.PCD_StopCrypto1();
     }
 }

@@ -90,7 +90,12 @@ public class App implements Runnable, SerialPortMessageListener {
 
                             if (message.getString("type").equals("rfid_read")) {
                                 sendBeeper(440, 250);
-                                Navigator.getPage().onRFID(message.getString("rfid_uid"));
+                                Navigator.getPage().onRFIDRead(message.getString("rfid_uid"));
+                            }
+
+                            if (message.getString("type").equals("rfid_write")) {
+                                sendBeeper(880, 500);
+                                Navigator.getPage().onRFIDWrite(message.getString("rfid_uid"), message.getString("account_id"));
                             }
                         }
                     });
@@ -101,12 +106,22 @@ public class App implements Runnable, SerialPortMessageListener {
         }
     }
 
+    public void writeRFID(String account_id) {
+        JSONObject message = new JSONObject();
+        message.put("type", "rfid_write");
+        message.put("account_id", account_id);
+        sendMessage(message);
+    }
+
     public void sendBeeper(int frequency, int duration) {
         JSONObject message = new JSONObject();
         message.put("type", "beeper");
         message.put("frequency", frequency);
         message.put("duration", duration);
+        sendMessage(message);
+    }
 
+    public void sendMessage(JSONObject message) {
         String line = message.toString() + "\n";
         byte[] bytes = line.getBytes();
         serialPort.writeBytes(bytes, bytes.length);

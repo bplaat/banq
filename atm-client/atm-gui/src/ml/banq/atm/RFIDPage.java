@@ -30,8 +30,8 @@ public class RFIDPage extends Page {
         add(Box.createVerticalGlue());
     }
 
-    public void onRFID(String rfid) {
-        BanqAPI.setRFID(rfid);
+    public void onRFIDRead(String rfid_uid) {
+        BanqAPI.setRFID(rfid_uid);
         Navigator.changePage(new PincodePage());
     }
 }
