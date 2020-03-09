@@ -31,12 +31,12 @@ function pay_interest () {
     $save_accounts = Accounts::select([ 'type' => Accounts::TYPE_SAVE ])->fetchAll();
     foreach ($save_accounts as $account) {
         // Calculate the right amount of interest
-        $amount = ceil($account->amount * (INTEREST_RATE / 100));
+        $amount = round($account->amount * (INTEREST_RATE / 100), 2);
 
         // Add a new interest transaction to the database
         Transactions::insert([
             'name' => 'Interest at ' . date('Y-m-d H:i:s'),
-            'from_account_id' => 1,
+            'from_account_id' => ADMIN_INTEREST_ACCOUNT_ID,
             'to_account_id' => $account->id,
             'amount' => $amount
         ]);

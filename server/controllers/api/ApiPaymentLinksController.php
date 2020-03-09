@@ -68,6 +68,7 @@ class ApiPaymentLinksController {
     // The API payment links show route
     public static function show ($payment_link) {
         // Check if the account is from the authed user
+        $account = Accounts::select($payment_link->account_id)->fetch();
         if ($account->user_id == Auth::id()) {
             return $payment_link;
         }
@@ -83,6 +84,7 @@ class ApiPaymentLinksController {
     // The API payment links delete route
     public static function delete ($payment_link) {
         // Check if the account is from the authed user
+        $account = Accounts::select($payment_link->account_id)->fetch();
         if ($account->user_id == Auth::id()) {
             // Delete the payment link
             PaymentLinks::delete($payment_link->id);
