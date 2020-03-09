@@ -1,6 +1,7 @@
 // The serial I/O Controller
 // -> Keypad input
 // -> RFID read
+// <- Beeper
 // <- RFID write
 // <- Printer commands
 // <- Money dispencer commands
@@ -23,27 +24,46 @@ char keypad_keys[KEYPAD_ROWS][KEYPAD_COLUMNS]= {
     { '*', '0', '#', 'D' }
 };
 
-uint8_t keypad_row_pins[KEYPAD_ROWS] = { 9, 8, 7, 6 };
+uint8_t keypad_row_pins[KEYPAD_ROWS] = { A1, 8, 7, 6 };
 uint8_t keypad_column_pins[KEYPAD_COLUMNS] = { 5, 4, 3, 2 };
 
 Keypad keypad = Keypad(makeKeymap(keypad_keys), keypad_row_pins, keypad_column_pins, KEYPAD_ROWS, KEYPAD_COLUMNS);
+
+#define BEEPER_PIN 9
 
 #define SS_PIN 10
 #define RST_PIN A0
 
 MFRC522 rfid(SS_PIN, RST_PIN);
+MFRC522::MIFARE_Key key;
 
 char json_buffer[64];
 StaticJsonDocument<64> document;
 
 void setup() {
     Serial.begin(9600);
+    Serial.setTimeout(50);
+
     SPI.begin();
     rfid.PCD_Init();
     delay(4);
+
+    for (byte i = 0; i < 6; i++) {
+        key.keyByte[i] = 0xff;
+    }
 }
 
 void loop() {
+    if (Serial.available() > 0) {
+        document.clear();
+        String line = Serial.readString();
+        deserializeJson(document, line);
+
+        if (document["type"] == "beeper") {
+            tone(BEEPER_PIN, document["frequency"], document["duration"]);
+        }
+    }
+
     char key = keypad.getKey();
     if (key != NO_KEY) {
         document.clear();
@@ -61,8 +81,8 @@ void loop() {
         rfid.PICC_HaltA();
 
         document.clear();
-        document["type"] = "rfid";
-        document["rfid"] = rfid_uid;
+        document["type"] = "rfid_read";
+        document["rfid_uid"] = rfid_uid;
         serializeJson(document, json_buffer);
         Serial.println(json_buffer);
     }

@@ -26,10 +26,18 @@ import javax.swing.SwingUtilities;
 import org.json.JSONObject;
 
 public class App implements Runnable, SerialPortMessageListener {
+    private static App instance = new App();
+
+    private SerialPort serialPort;
+
     private JLabel infoLabel;
 
-    public App() {
+    private App() {
         BanqAPI.setKey("38a03adb365f611fa9861248588b3d18");
+    }
+
+    public static App getInstance() {
+        return instance;
     }
 
     public void run() {
@@ -47,7 +55,7 @@ public class App implements Runnable, SerialPortMessageListener {
 
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         if (serialPorts.length > 0) {
-            SerialPort serialPort = serialPorts[0];
+            serialPort = serialPorts[0];
             serialPort.openPort();
             serialPort.addDataListener(this);
         }
@@ -70,28 +78,38 @@ public class App implements Runnable, SerialPortMessageListener {
     public void serialEvent(SerialPortEvent event) {
         if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED) {
             String line = new String(event.getReceivedData());
-            System.out.print(line);
-            try {
-                JSONObject message = new JSONObject(line);
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        if (message.getString("type").equals("keypad")) {
-                            Navigator.getPage().onKeypad(message.getString("key"));
-                        }
+            System.out.print("Read: " + line);
+            if (line.charAt(0) == '{') {
+                try {
+                    JSONObject message = new JSONObject(line);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            if (message.getString("type").equals("keypad")) {
+                                Navigator.getPage().onKeypad(message.getString("key"));
+                            }
 
-                        if (message.getString("type").equals("rfid")) {
-                            Navigator.getPage().onRFID(message.getString("rfid"));
+                            if (message.getString("type").equals("rfid_read")) {
+                                sendBeeper(440, 250);
+                                Navigator.getPage().onRFID(message.getString("rfid_uid"));
+                            }
                         }
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    public static void main(String[] args) {
-        App app = new App();
-        SwingUtilities.invokeLater(app);
+    public void sendBeeper(int frequency, int duration) {
+        JSONObject message = new JSONObject();
+        message.put("type", "beeper");
+        message.put("frequency", frequency);
+        message.put("duration", duration);
+
+        String line = message.toString() + "\n";
+        byte[] bytes = line.getBytes();
+        serialPort.writeBytes(bytes, bytes.length);
+        System.out.print("Write: " + line);
     }
 }

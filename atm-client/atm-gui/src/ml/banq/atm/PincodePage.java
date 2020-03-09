@@ -46,7 +46,17 @@ public class PincodePage extends Page {
         for (int i = 0; i < pincode.length(); i++) pincodeString += "*";
         pincodeLabel.setText(pincodeString);
 
-        if (key.equals("#")) {
+        if (pincode.length() == 4 && key.equals("#")) {
+            App.getInstance().sendBeeper(440, 250);
+
+            try {
+                Thread.sleep(350);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            App.getInstance().sendBeeper(440, 250);
+
             BanqAPI.setPincode(pincode);
             Navigator.changePage(new AccountPage());
         }
