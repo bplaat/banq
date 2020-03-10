@@ -7,10 +7,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class AccountPage extends Page {
+public class WithdrawAccountPage extends Page {
     private static final long serialVersionUID = 1;
 
-    public AccountPage() {
+    public WithdrawAccountPage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -39,7 +39,7 @@ public class AccountPage extends Page {
 
     public void onKeypad(String key) {
         if (key.equals("1")) {
-            Navigator.changePage(new AmountPage());
+            Navigator.changePage(new WithdrawAmountPage());
         }
     }
 }

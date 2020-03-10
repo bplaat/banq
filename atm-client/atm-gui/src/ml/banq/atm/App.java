@@ -26,6 +26,8 @@ import javax.swing.SwingUtilities;
 import org.json.JSONObject;
 
 public class App implements Runnable, SerialPortMessageListener {
+    public static final String ADMIN_RFID_UID = "4a360c0b";
+
     private static App instance = new App();
 
     private SerialPort serialPort;
@@ -90,7 +92,7 @@ public class App implements Runnable, SerialPortMessageListener {
 
                             if (message.getString("type").equals("rfid_read")) {
                                 sendBeeper(440, 250);
-                                Navigator.getPage().onRFIDRead(message.getString("rfid_uid"));
+                                Navigator.getPage().onRFIDRead(message.getString("rfid_uid"), message.getString("account_id"));
                             }
 
                             if (message.getString("type").equals("rfid_write")) {
@@ -106,14 +108,14 @@ public class App implements Runnable, SerialPortMessageListener {
         }
     }
 
-    public void writeRFID(String account_id) {
+    public static void sendWriteRFID(String account_id) {
         JSONObject message = new JSONObject();
         message.put("type", "rfid_write");
         message.put("account_id", account_id);
         sendMessage(message);
     }
 
-    public void sendBeeper(int frequency, int duration) {
+    public static void sendBeeper(int frequency, int duration) {
         JSONObject message = new JSONObject();
         message.put("type", "beeper");
         message.put("frequency", frequency);
@@ -121,10 +123,10 @@ public class App implements Runnable, SerialPortMessageListener {
         sendMessage(message);
     }
 
-    public void sendMessage(JSONObject message) {
+    public static void sendMessage(JSONObject message) {
         String line = message.toString() + "\n";
         byte[] bytes = line.getBytes();
-        serialPort.writeBytes(bytes, bytes.length);
+        instance.serialPort.writeBytes(bytes, bytes.length);
         System.out.print("Write: " + line);
     }
 }

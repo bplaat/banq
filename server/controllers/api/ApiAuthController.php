@@ -7,12 +7,14 @@ class ApiAuthController {
         if (is_string($session)) {
             // Return a confirmation message
             return [
+                'success' => true,
                 'message' => 'The user has sucessfull logged in',
                 'session' => $session
             ];
         } else {
             // Return a error message
             return [
+                'success' => false,
                 'message' => 'Incorrect username, email or password'
             ];
         }
@@ -70,6 +72,7 @@ class ApiAuthController {
 
         // Return a confirmation message
         return [
+            'success' => true,
             'message' => 'The sesions has been revoked'
         ];
     }

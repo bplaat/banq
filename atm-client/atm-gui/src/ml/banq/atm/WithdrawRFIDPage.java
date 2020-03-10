@@ -7,22 +7,22 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class DonePage extends Page {
+public class WithdrawRFIDPage extends Page {
     private static final long serialVersionUID = 1;
 
-    public DonePage() {
+    public WithdrawRFIDPage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Done");
+        JLabel titleLabel = new JLabel("Authenticate yourself");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
         add(Box.createVerticalStrut(24));
 
-        JLabel messageLabel = new JLabel("Press any key on the keypad to go back to the welcome page...");
+        JLabel messageLabel = new JLabel("Scan your Banq card...");
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
@@ -30,7 +30,9 @@ public class DonePage extends Page {
         add(Box.createVerticalGlue());
     }
 
-    public void onKeypad(String key) {
-        Navigator.changePage(new WelcomePage());
+    public void onRFIDRead(String rfid_uid, String account_id) {
+        BanqAPI.setRfidUid(rfid_uid);
+        BanqAPI.setAccountId(account_id);
+        Navigator.changePage(new WithdrawPincodePage());
     }
 }

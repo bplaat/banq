@@ -6,14 +6,14 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 
-public class PincodePage extends Page {
+public class WithdrawPincodePage extends Page {
     private static final long serialVersionUID = 1;
 
-    private String pincode = "";
-    private JLabel pincodeLabel;
+    private JPasswordField pincodeInput;
 
-    public PincodePage() {
+    public WithdrawPincodePage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -25,40 +25,38 @@ public class PincodePage extends Page {
 
         add(Box.createVerticalStrut(24));
 
-        pincodeLabel = new JLabel("Pincode: ");
+        JLabel pincodeLabel = new JLabel("Pincode: ");
         pincodeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         pincodeLabel.setFont(Fonts.NORMAL);
         add(pincodeLabel);
+
+        add(Box.createVerticalStrut(16));
+
+        pincodeInput = new JPasswordField(4);
+        pincodeInput.setFont(Fonts.NORMAL);
+        pincodeInput.setHorizontalAlignment(JPasswordField.CENTER);
+        pincodeInput.setMaximumSize(pincodeInput.getPreferredSize());
+        add(pincodeInput);
 
         add(Box.createVerticalGlue());
     }
 
     public void onKeypad(String key) {
+        String pincode = new String(pincodeInput.getPassword());
+
         if (key.matches("[0-9]") && pincode.length() < 4) {
-            pincode += key;
+            pincodeInput.setText(pincode + key);
         }
 
         if (key.equals("*")) {
-            pincode = "";
+            pincodeInput.setText("");
         }
 
-        String pincodeString = "Pincode: ";
-        for (int i = 0; i < pincode.length(); i++) pincodeString += "*";
-        pincodeLabel.setText(pincodeString);
-
         if (pincode.length() == 4 && key.equals("#")) {
-            App.getInstance().sendBeeper(440, 250);
-
-            try {
-                Thread.sleep(350);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            App.getInstance().sendBeeper(440, 250);
-
+            // App.sendBeeper(880, 500);
+            // App.sendBeeper(220, 500);
             BanqAPI.setPincode(pincode);
-            Navigator.changePage(new AccountPage());
+            Navigator.changePage(new WithdrawAccountPage());
         }
     }
 }
