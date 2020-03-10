@@ -58,8 +58,10 @@ public class AdminWriteLoginPage extends Page {
 
         add(Box.createVerticalStrut(24));
 
+        Box buttonsBox = Box.createHorizontalBox();
+        add(buttonsBox);
+
         JButton loginButton = new JButton("Login");
-        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.setFont(Fonts.NORMAL);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -70,9 +72,9 @@ public class AdminWriteLoginPage extends Page {
                 }
             }
         });
-        add(loginButton);
+        buttonsBox.add(loginButton);
 
-        add(Box.createVerticalStrut(16));
+        buttonsBox.add(Box.createHorizontalStrut(16));
 
         JButton backButton = new JButton("Back");
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -82,7 +84,7 @@ public class AdminWriteLoginPage extends Page {
                 Navigator.changePage(new AdminMenuPage());
             }
         });
-        add(backButton);
+        buttonsBox.add(backButton);
 
         add(Box.createVerticalGlue());
     }

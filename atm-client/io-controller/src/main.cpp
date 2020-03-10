@@ -10,7 +10,10 @@
 #include <Keypad.h>
 #include <SPI.h>
 #include <MFRC522.h>
+#define ARDUINOJSON_DECODE_UNICODE 1
 #include <ArduinoJson.h>
+#include <Adafruit_Thermal.h>
+#include "printer_logo.h"
 
 #define KEYPAD_ROWS 4
 #define KEYPAD_COLUMNS 4
@@ -22,15 +25,15 @@ char keypad_keys[KEYPAD_ROWS][KEYPAD_COLUMNS]= {
     { '*', '0', '#', 'D' }
 };
 
-uint8_t keypad_row_pins[KEYPAD_ROWS] = { A1, 8, 7, 6 };
-uint8_t keypad_column_pins[KEYPAD_COLUMNS] = { 5, 4, 3, 2 };
+uint8_t keypad_row_pins[KEYPAD_ROWS] = { 22, 23, 24, 25 };
+uint8_t keypad_column_pins[KEYPAD_COLUMNS] = { 26, 27, 28, 29 };
 
 Keypad keypad = Keypad(makeKeymap(keypad_keys), keypad_row_pins, keypad_column_pins, KEYPAD_ROWS, KEYPAD_COLUMNS);
 
-#define BEEPER_PIN 9
+#define BEEPER_PIN 2
 
-#define SS_PIN 10
-#define RST_PIN A0
+#define SS_PIN 53
+#define RST_PIN 49
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key mfrc522_keyA;
@@ -39,12 +42,17 @@ MFRC522::MIFARE_Key mfrc522_keyA;
 #define ACCOUNT_ID_TRAILER_BLOCK 3
 #define ACOUNT_ID_LENGTH 16
 
-char json_buffer[256];
-StaticJsonDocument<256> document;
+Adafruit_Thermal printer(&Serial1);
+
+char json_buffer[512];
+StaticJsonDocument<512> document;
 
 void setup() {
     Serial.begin(9600);
     Serial.setTimeout(50);
+
+    Serial1.begin(9600);
+    printer.begin();
 
     SPI.begin();
     mfrc522.PCD_Init();
@@ -62,6 +70,22 @@ void loop() {
 
         if (document["type"] == "beeper") {
             tone(BEEPER_PIN, document["frequency"], document["duration"]);
+        }
+
+        if (document["type"] == "printer") {
+            JsonArray lines = document["lines"];
+            printer.write('\n');
+            printer.printBitmap(128, 64, printer_logo);
+
+            for (uint8_t i = 0; i < lines.size(); i++) {
+                char *line = lines[i];
+                for (uint8_t j = 0; j < strlen(line); j++) {
+                    printer.write(line[j]);
+                }
+                printer.write('\n');
+            }
+            printer.write('\n');
+            printer.write('\n');
         }
 
         if (document["type"] == "rfid_write") {

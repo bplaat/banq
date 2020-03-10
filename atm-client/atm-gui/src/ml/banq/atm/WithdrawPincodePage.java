@@ -64,10 +64,10 @@ public class WithdrawPincodePage extends Page {
             BanqAPI.setPincode(pincode);
             String message = BanqAPI.loadActiveAccount();
             if (message.equals("success")) {
-                App.sendBeeper(880, 500);
+                App.sendBeeper(880, 250);
                 Navigator.changePage(new WithdrawAccountPage());
             } else {
-                App.sendBeeper(110, 500);
+                App.sendBeeper(110, 250);
                 messageLabel.setText("Error: " + message);
                 pincodeInput.setText("");
             }

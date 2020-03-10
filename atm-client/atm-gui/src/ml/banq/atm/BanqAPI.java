@@ -44,6 +44,7 @@ public class BanqAPI {
     private String rfid_uid;
     private String accountId;
     private String pincode;
+    private int amount;
     private Account activeAccount;
 
     private BanqAPI() {}
@@ -52,44 +53,52 @@ public class BanqAPI {
         return instance;
     }
 
-    public static void setKey(String key) {
-        instance.key = key;
-    }
-
     public static String getKey() {
         return instance.key;
+    }
+
+    public static void setKey(String key) {
+        instance.key = key;
     }
 
     public static String getSession() {
         return instance.session;
     }
 
-    public static void setRfidUid(String rfid_uid) {
-        instance.rfid_uid = rfid_uid;
-    }
-
     public static String getRfidUid() {
         return instance.rfid_uid;
     }
 
-    public static void setAccountId(String accountId) {
-        instance.accountId = accountId;
+    public static void setRfidUid(String rfid_uid) {
+        instance.rfid_uid = rfid_uid;
     }
 
     public static String getAccountId() {
         return instance.accountId;
     }
 
+    public static void setAccountId(String accountId) {
+        instance.accountId = accountId;
+    }
+
     public static int parseAccountId(String account_id) {
         return Integer.parseInt(account_id.substring(8));
+    }
+
+    public static String getPincode() {
+        return instance.pincode;
     }
 
     public static void setPincode(String pincode) {
         instance.pincode = pincode;
     }
 
-    public static String getPincode() {
-        return instance.pincode;
+    public static int getAmount() {
+        return instance.amount;
+    }
+
+    public static void setAmount(int amount) {
+        instance.amount = amount;
     }
 
     public static Account getActiveAccount() {
@@ -218,7 +227,7 @@ public class BanqAPI {
     public static String loadActiveAccount() {
         try {
             URL url = new URL(API_URL + "/atm/accounts/" + instance.accountId + "?key=" + instance.key + "&rfid=" + instance.rfid_uid + "&pincode=" + instance.pincode);
-            System.out.print("URL: " + url);
+            System.out.println("URL: " + url);
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
             StringBuilder stringBuilder = new StringBuilder();

@@ -24,22 +24,27 @@ public class WithdrawAmountPage extends Page {
         add(Box.createVerticalStrut(24));
 
         for (int i = 0; i < defaultAmounts.length; i++) {
-            JLabel amountLabel = new JLabel((i + 1) + ". \u20ac" + defaultAmounts[i]);
+            JLabel amountLabel = new JLabel((i + 1) + ". \u20ac " + defaultAmounts[i]);
             amountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             amountLabel.setFont(Fonts.NORMAL);
             add(amountLabel);
             add(Box.createVerticalStrut(8));
         }
 
-        JLabel customLabel = new JLabel((defaultAmounts.length + 1) + ". Custom");
+        /*JLabel customLabel = new JLabel((defaultAmounts.length + 1) + ". Custom");
         customLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         customLabel.setFont(Fonts.NORMAL);
-        add(customLabel);
+        add(customLabel);*/
 
         add(Box.createVerticalGlue());
     }
 
     public void onKeypad(String key) {
-        Navigator.changePage(new WithdrawDonePage());
+        for (int i = 0; i < defaultAmounts.length; i++) {
+            if (key.equals(String.valueOf(i + 1))) {
+                BanqAPI.setAmount(defaultAmounts[i]);
+                Navigator.changePage(new WithdrawTransactionPage());
+            }
+        }
     }
 }
