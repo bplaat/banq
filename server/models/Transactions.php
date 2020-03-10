@@ -15,7 +15,7 @@ class Transactions extends Model {
             `name` VARCHAR(255) NOT NULL,
             `from_account_id` INT UNSIGNED NOT NULL,
             `to_account_id` INT UNSIGNED NOT NULL,
-            `amount` BIGINT UNSIGNED NOT NULL,
+            `amount` DECIMAL(15,2) UNSIGNED NOT NULL,
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )');

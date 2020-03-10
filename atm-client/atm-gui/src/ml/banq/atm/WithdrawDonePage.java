@@ -7,10 +7,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class DonePage extends Page {
+public class WithdrawDonePage extends Page {
     private static final long serialVersionUID = 1;
 
-    public DonePage() {
+    public WithdrawDonePage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());

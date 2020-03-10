@@ -7,12 +7,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class AmountPage extends Page {
+public class WithdrawAmountPage extends Page {
     private static final long serialVersionUID = 1;
 
     private int[] defaultAmounts = { 5, 10, 20, 50, 70 };
 
-    public AmountPage() {
+    public WithdrawAmountPage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -40,6 +40,6 @@ public class AmountPage extends Page {
     }
 
     public void onKeypad(String key) {
-        Navigator.changePage(new DonePage());
+        Navigator.changePage(new WithdrawDonePage());
     }
 }

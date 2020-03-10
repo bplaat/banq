@@ -17,10 +17,9 @@ class Accounts extends Model {
     }
 
     // A custom validation rule which checks that you can max create sum amount of accounts
-    const MAX_COUNT = 6;
     public static function MAX_COUNT_VALIDATION ($key, $value) {
-        if (static::select([ $key => $value ])->rowCount() >= static::MAX_COUNT) {
-            return 'You can create a maximum of ' . static::MAX_COUNT . ' accounts';
+        if (static::select([ $key => $value ])->rowCount() >= ACCOUNTS_MAX_COUNT) {
+            return 'You can create a maximum of ' . ACCOUNTS_MAX_COUNT . ' accounts';
         }
     }
 
@@ -52,7 +51,7 @@ class Accounts extends Model {
             `name` VARCHAR(255) NOT NULL,
             `type` INT UNSIGNED NOT NULL,
             `user_id` INT UNSIGNED NOT NULL,
-            `amount` BIGINT UNSIGNED NOT NULL,
+            `amount` DECIMAL(15,2) UNSIGNED NOT NULL,
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )');

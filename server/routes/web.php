@@ -21,6 +21,11 @@ if (Auth::check()) {
     Router::post('/accounts/{Accounts}', 'AccountsController::update');
     Router::get('/accounts/{Accounts}/delete', 'AccountsController::delete');
 
+    // Cards
+    Router::get('/cards', 'CardsController::index');
+    Router::get('/cards/{Cards}', 'CardsController::show');
+    Router::get('/cards/{Cards}/delete', 'CardsController::delete');
+
     // Transactions
     Router::get('/transactions', 'TransactionsController::index');
     Router::get('/transactions/create', 'TransactionsController::create');
@@ -77,6 +82,11 @@ if (Auth::check()) {
         Router::get('/admin/accounts/{Accounts}/edit', 'AdminAccountsController::edit');
         Router::post('/admin/accounts/{Accounts}', 'AdminAccountsController::update');
         Router::get('/admin/accounts/{Accounts}/delete', 'AdminAccountsController::delete');
+
+        // Admin Cards
+        Router::get('/admin/cards', 'AdminCardsController::index');
+        Router::get('/admin/cards/{Cards}', 'AdminCardsController::show');
+        Router::get('/admin/cards/{Cards}/delete', 'AdminCardsController::delete');
 
         // Admin transactions
         Router::get('/admin/transactions', 'AdminTransactionsController::index');

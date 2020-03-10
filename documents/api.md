@@ -11,6 +11,28 @@ All the routes where you get a list of data are paged. This means that the data 
 - `page` The number of the page you want to see, one based
 - `limit` The limit of items per page, minimal 1 and maximal 50
 
+## ATM Accounts
+*The following routes don't need authentication via an user session*
+
+### /api/atm/accounts/{account_id}
+Get information about an account via a rfid card and pincode
+- `rfid` The rfid card matching the account id
+- `pincode` the pincode matching the card
+
+---
+
+## ATM Transactions
+*The following routes don't need authentication via an user session*
+
+### /api/atm/transactions/create
+Create a new transaction
+- `rfid` The rfid card matching the account id
+- `pincode` the pincode matching the card
+- `name` The transaction name
+- `from_account_id` The from account id form the card
+- `to_account_id` The transaction to account id
+- `amount` The transaction amount
+
 ---
 
 ## Auth
@@ -89,7 +111,7 @@ Revoke an authed user session
 Get some information about all your accounts (paged)
 
 ### /api/accounts/search
-Search for own of your accounts (paged)
+Search for one of your accounts (paged)
 - `q` search query
 
 ### /api/accounts/create
@@ -98,15 +120,15 @@ Create a new account
 - `type` The account type
 
 ### /api/accounts/{account_id}
-Get information about own of your accounts
+Get information about one of your accounts
 
 ### /api/accounts/{account_id}/edit
-Edit own of your accounts with new information
+Edit one of your accounts with new information
 - `name` The account name
 - `type` The account type
 
 ### /api/accounts/{account_id}/delete
-Delete own of your accounts
+Delete one of your accounts
 
 ---
 
@@ -116,7 +138,7 @@ Delete own of your accounts
 Get some information about all your transactions (paged)
 
 ### /api/transactions/search
-Search for own of your transactions (paged)
+Search for one of your transactions (paged)
 - `q` search query
 
 ### /api/transactions/create
@@ -127,7 +149,7 @@ Create a new transaction
 - `amount` The transaction amount
 
 ### /api/transactions/{transaction_id}
-Get information about own of your accounts
+Get information about one of your accounts
 
 ---
 
@@ -137,7 +159,7 @@ Get information about own of your accounts
 Get some information about all your payment links (paged)
 
 ### /api/payment-links/search
-Search for own of your payment links (paged)
+Search for one of your payment links (paged)
 - `q` search query
 
 ### /api/payment-links/create
@@ -147,10 +169,34 @@ Create a new payment link
 - `amount` The payment link amount
 
 ### /api/payment-links/{payment_link_id}
-Get information about own of your payment links
+Get information about one of your payment links
 
 ### /api/payment-links/{payment_link_id}/delete
-Delete own of your payment links
+Delete one of your payment links
+
+---
+
+## Cards
+
+### /api/cards
+Get some information about all your cards (paged)
+
+### /api/cards/search
+Search for one of your cards (paged)
+- `q` search query
+
+### /api/cards/create
+Create a new card
+- `name` The payment link name
+- `account_id` The payment link account id
+- `rfid` The card rfid (4 hex bytes)
+- `pincode` The card pincode (4 digits)
+
+### /api/cards/{card_id}
+Get information about one of cards
+
+### /api/cards/{card_id}/delete
+Delete one of your cards
 
 ---
 
@@ -310,6 +356,30 @@ Get information about a payment link
 
 ### /api/admin/payment-links/{payment_link_id}/delete
 Delete a payment link
+
+---
+
+## Admin Cards
+
+### /api/admin/cards
+Get some information about all cards (paged)
+
+### /api/admin/cards/search
+Search for a card (paged)
+- `q` search query
+
+### /api/admin/cards/create
+Create a new card
+- `name` The payment link name
+- `account_id` The payment link account id
+- `rfid` The card rfid (4 hex bytes)
+- `pincode` The card pincode (4 digits)
+
+### /api/admin/cards/{card_id}
+Get information about a card
+
+### /api/admin/cards/{card_id}/delete
+Delete a card
 
 ---
 

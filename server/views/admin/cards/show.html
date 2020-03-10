@@ -1,0 +1,21 @@
+@view('header', [ 'title' => $card->name . ' - Cards - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li><a href="/admin/cards">Cards</a></li>
+        <li class="is-active"><a href="/admin/cards/{{ $card->id }}">{{ $card->name }}</a></li>
+    </ul>
+</div>
+
+<h1 class="title">{{ $card->name }}</h1>
+
+<p style="margin-bottom: 16px;">For: <a href="/admin/accounts/{{ $card->account_id }}">{{ $card->account->name }}</a></p>
+<p style="margin-bottom: 16px;">RFID: <code>{{ $card->rfid }}</code></p>
+
+<div class="buttons">
+    <a class="button is-danger" href="/admin/cards/{{ $card->id }}/delete">Delete</a>
+</div>
+
+@view('footer')

@@ -26,10 +26,20 @@ import javax.swing.SwingUtilities;
 import org.json.JSONObject;
 
 public class App implements Runnable, SerialPortMessageListener {
+    public static final String ADMIN_RFID_UID = "4a360c0b";
+
+    private static App instance = new App();
+
+    private SerialPort serialPort;
+
     private JLabel infoLabel;
 
-    public App() {
-        BanqAPI.setKey("38a03adb365f611fa9861248588b3d18");
+    private App() {
+        BanqAPI.setKey("38cd34142710c0b70419cb36dc2de1ae");
+    }
+
+    public static App getInstance() {
+        return instance;
     }
 
     public void run() {
@@ -47,7 +57,7 @@ public class App implements Runnable, SerialPortMessageListener {
 
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         if (serialPorts.length > 0) {
-            SerialPort serialPort = serialPorts[0];
+            serialPort = serialPorts[0];
             serialPort.openPort();
             serialPort.addDataListener(this);
         }
@@ -70,28 +80,53 @@ public class App implements Runnable, SerialPortMessageListener {
     public void serialEvent(SerialPortEvent event) {
         if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED) {
             String line = new String(event.getReceivedData());
-            System.out.print(line);
-            try {
-                JSONObject message = new JSONObject(line);
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        if (message.getString("type").equals("keypad")) {
-                            Navigator.getPage().onKeypad(message.getString("key"));
-                        }
+            System.out.print("Read: " + line);
+            if (line.charAt(0) == '{') {
+                try {
+                    JSONObject message = new JSONObject(line);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            if (message.getString("type").equals("keypad")) {
+                                Navigator.getPage().onKeypad(message.getString("key"));
+                            }
 
-                        if (message.getString("type").equals("rfid")) {
-                            Navigator.getPage().onRFID(message.getString("rfid"));
+                            if (message.getString("type").equals("rfid_read")) {
+                                sendBeeper(440, 250);
+                                Navigator.getPage().onRFIDRead(message.getString("rfid_uid"), message.getString("account_id"));
+                            }
+
+                            if (message.getString("type").equals("rfid_write")) {
+                                sendBeeper(880, 500);
+                                Navigator.getPage().onRFIDWrite(message.getString("rfid_uid"), message.getString("account_id"));
+                            }
                         }
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    public static void main(String[] args) {
-        App app = new App();
-        SwingUtilities.invokeLater(app);
+    public static void sendWriteRFID(String account_id) {
+        JSONObject message = new JSONObject();
+        message.put("type", "rfid_write");
+        message.put("account_id", account_id);
+        sendMessage(message);
+    }
+
+    public static void sendBeeper(int frequency, int duration) {
+        JSONObject message = new JSONObject();
+        message.put("type", "beeper");
+        message.put("frequency", frequency);
+        message.put("duration", duration);
+        sendMessage(message);
+    }
+
+    public static void sendMessage(JSONObject message) {
+        String line = message.toString() + "\n";
+        byte[] bytes = line.getBytes();
+        instance.serialPort.writeBytes(bytes, bytes.length);
+        System.out.print("Write: " + line);
     }
 }

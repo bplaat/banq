@@ -15,12 +15,12 @@ function get_limit () {
 
 // A function that parse input money amount
 function parse_money_number ($string) {
-    return round(floatval($string) * 100);
+    return floatval($string);
 }
 
 // A function which formats money
 function format_money_number ($money) {
-    return number_format($money / 100, 2);
+    return number_format($money, 2);
 }
 
 // A function which formats money with HTML

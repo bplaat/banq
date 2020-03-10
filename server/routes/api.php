@@ -7,6 +7,12 @@ Router::any('/api(.+)', function () {
 
     // Check the api key
     if (APP_DEBUG || Devices::select([ 'key' => request('key') ])->rowCount() == 1) {
+        // ATM accounts
+        Router::any('/api/atm/accounts/{account_id}', 'ApiATMAccountsController::show');
+
+        // ATM transactions
+        Router::any('/api/atm/transactions/create', 'ApiATMTransactionsController::create');
+
         // API auth
         Router::any('/api/auth/login', 'ApiAuthController::login');
         Router::any('/api/auth/register', 'ApiAuthController::register');
@@ -44,12 +50,12 @@ Router::any('/api(.+)', function () {
             Router::any('/api/payment-links/{PaymentLinks}', 'ApiPaymentLinksController::show');
             Router::any('/api/payment-links/{PaymentLinks}/delete', 'ApiPaymentLinksController::delete');
 
-            // API authed
-            Router::any('/api/payment-links', 'ApiPaymentLinksController::index');
-            Router::any('/api/payment-links/search', 'ApiPaymentLinksController::search');
-            Router::any('/api/payment-links/create', 'ApiPaymentLinksController::create');
-            Router::any('/api/payment-links/{PaymentLinks}', 'ApiPaymentLinksController::show');
-            Router::any('/api/payment-links/{PaymentLinks}/delete', 'ApiPaymentLinksController::delete');
+            // API cards
+            Router::any('/api/cards', 'ApiCardsController::index');
+            Router::any('/api/cards/search', 'ApiCardsController::search');
+            Router::any('/api/cards/create', 'ApiCardsController::create');
+            Router::any('/api/cards/{Cards}', 'ApiCardsController::show');
+            Router::any('/api/cards/{Cards}/delete', 'ApiCardsController::delete');
 
             // API Admin
             if (Auth::user()->role == Users::ROLE_ADMIN) {
@@ -89,6 +95,13 @@ Router::any('/api(.+)', function () {
                 Router::any('/api/admin/payment-links/create', 'ApiAdminPaymentLinksController::create');
                 Router::any('/api/admin/payment-links/{PaymentLinks}', 'ApiAdminPaymentLinksController::show');
                 Router::any('/api/admin/payment-links/{PaymentLinks}/delete', 'ApiAdminPaymentLinksController::delete');
+
+                // API admin cards
+                Router::any('/api/admin/cards', 'ApiAdminCardsController::index');
+                Router::any('/api/admin/cards/search', 'ApiAdminCardsController::search');
+                Router::any('/api/admin/cards/create', 'ApiAdminCardsController::create');
+                Router::any('/api/admin/cards/{Cards}', 'ApiAdminCardsController::show');
+                Router::any('/api/admin/cards/{Cards}/delete', 'ApiAdminCardsController::delete');
 
                 // API admin sessions
                 Router::any('/api/admin/sessions', 'ApiAdminSessionsController::index');

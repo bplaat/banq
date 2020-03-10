@@ -21,9 +21,9 @@ class Auth {
             'session' => $session,
             'user_id' => $user_id,
             'ip' => get_ip(),
-            'browser' => $user_agent['browser'],
-            'version' => $user_agent['version'],
-            'platform' => $user_agent['platform'],
+            'browser' => $user_agent['browser'] != null ? $user_agent['browser'] : "?",
+            'version' => $user_agent['version'] != null ? $user_agent['version'] : "?",
+            'platform' => $user_agent['platform'] != null ? $user_agent['platform'] : "?",
             'expires_at' => date('Y-m-d H:i:s', time() + SESSION_DURATION)
         ]);
         if (static::$useCookie) {
@@ -41,9 +41,9 @@ class Auth {
             'session' => $session
         ], [
             'ip' => get_ip(),
-            'browser' => $user_agent['browser'],
-            'version' => $user_agent['version'],
-            'platform' => $user_agent['platform'],
+            'browser' => $user_agent['browser'] != null ? $user_agent['browser'] : "?",
+            'version' => $user_agent['version'] != null ? $user_agent['version'] : "?",
+            'platform' => $user_agent['platform'] != null ? $user_agent['platform'] : "?",
             'updated_at' => date('Y-m-d H:i:s')
         ]);
     }

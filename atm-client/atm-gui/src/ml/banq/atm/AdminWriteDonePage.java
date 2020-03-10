@@ -7,22 +7,22 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class WelcomePage extends Page {
+public class AdminWriteDonePage extends Page {
     private static final long serialVersionUID = 1;
 
-    public WelcomePage() {
+    public AdminWriteDonePage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Welcome to Banq");
+        JLabel titleLabel = new JLabel("The card has been written succesfully");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
         add(Box.createVerticalStrut(24));
 
-        JLabel messageLabel = new JLabel("Press any key on the keypad to continue...");
+        JLabel messageLabel = new JLabel("Press any key on the keypad to go back to the admin menu page...");
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
@@ -31,16 +31,6 @@ public class WelcomePage extends Page {
     }
 
     public void onKeypad(String key) {
-        Navigator.changePage(new WithdrawRFIDPage());
-    }
-
-    public void onRFIDRead(String rfid_uid, String account_id) {
-        if (rfid_uid.equals(App.ADMIN_RFID_UID)) {
-            Navigator.changePage(new AdminMenuPage());
-        } else {
-            BanqAPI.setRfidUid(rfid_uid);
-            BanqAPI.setAccountId(account_id);
-            Navigator.changePage(new WithdrawPincodePage());
-        }
+        Navigator.changePage(new AdminMenuPage());
     }
 }

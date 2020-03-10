@@ -71,9 +71,28 @@ class Users extends Model {
             'role' => static::ROLE_ADMIN
         ]);
 
+        // Create Banq withdraw account
+        Accounts::insert([
+            'id' => ADMIN_WITHDRAW_ACCOUNT_ID,
+            'name' => 'Banq Withdraw Account',
+            'type' => Accounts::TYPE_SAVE,
+            'user_id' => 1,
+            'amount' => 0
+        ]);
+
         // Create Banq interest account
         Accounts::insert([
+            'id' => ADMIN_INTEREST_ACCOUNT_ID,
             'name' => 'Banq Interest Account',
+            'type' => Accounts::TYPE_SAVE,
+            'user_id' => 1,
+            'amount' => 0
+        ]);
+
+        // Create Banq deleted account
+        Accounts::insert([
+            'id' => ADMIN_DELETED_ACCOUNT_ID,
+            'name' => 'Banq Deleted Account',
             'type' => Accounts::TYPE_SAVE,
             'user_id' => 1,
             'amount' => 0
@@ -178,7 +197,7 @@ class Users extends Model {
             'name' => $user['firstname'] . '\'s Save Account',
             'type' => Accounts::TYPE_SAVE,
             'user_id' => $user_id,
-            'amount' => 5000
+            'amount' => 50
         ]);
 
         // Create a new users payment account
