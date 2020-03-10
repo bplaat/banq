@@ -7,6 +7,9 @@ Router::any('/api(.+)', function () {
 
     // Check the api key
     if (APP_DEBUG || Devices::select([ 'key' => request('key') ])->rowCount() == 1) {
+        // ATM accounts
+        Router::any('/api/atm/accounts/{account_id}', 'ApiATMAccountsController::show');
+
         // ATM transactions
         Router::any('/api/atm/transactions/create', 'ApiATMTransactionsController::create');
 

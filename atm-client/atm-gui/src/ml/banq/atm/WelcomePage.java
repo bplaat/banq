@@ -37,6 +37,10 @@ public class WelcomePage extends Page {
     public void onRFIDRead(String rfid_uid, String account_id) {
         if (rfid_uid.equals(App.ADMIN_RFID_UID)) {
             Navigator.changePage(new AdminMenuPage());
+        } else {
+            BanqAPI.setRfidUid(rfid_uid);
+            BanqAPI.setAccountId(account_id);
+            Navigator.changePage(new WithdrawPincodePage());
         }
     }
 }

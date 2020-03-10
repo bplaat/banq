@@ -11,6 +11,7 @@ import javax.swing.JPasswordField;
 public class WithdrawPincodePage extends Page {
     private static final long serialVersionUID = 1;
 
+    private JLabel messageLabel;
     private JPasswordField pincodeInput;
 
     public WithdrawPincodePage() {
@@ -22,6 +23,13 @@ public class WithdrawPincodePage extends Page {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
+
+        add(Box.createVerticalStrut(24));
+
+        messageLabel = new JLabel("Enter your pincode press '#' when you are finished");
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        messageLabel.setFont(Fonts.NORMAL);
+        add(messageLabel);
 
         add(Box.createVerticalStrut(24));
 
@@ -53,10 +61,16 @@ public class WithdrawPincodePage extends Page {
         }
 
         if (pincode.length() == 4 && key.equals("#")) {
-            // App.sendBeeper(880, 500);
-            // App.sendBeeper(220, 500);
             BanqAPI.setPincode(pincode);
-            Navigator.changePage(new WithdrawAccountPage());
+            String message = BanqAPI.loadActiveAccount();
+            if (message.equals("success")) {
+                App.sendBeeper(880, 500);
+                Navigator.changePage(new WithdrawAccountPage());
+            } else {
+                App.sendBeeper(110, 500);
+                messageLabel.setText("Error: " + message);
+                pincodeInput.setText("");
+            }
         }
     }
 }

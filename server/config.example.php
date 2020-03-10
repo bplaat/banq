@@ -24,6 +24,9 @@ define('PAGINATION_LIMIT_ADMIN', 12);
 define('PAGINATION_LIMIT_API', 20);
 define('PAGINATION_MAX_LIMIT_API', 50);
 
+// The max accounts count per user
+define('ACCOUNTS_MAX_COUNT', 6);
+
 // Special admin account ids
 define('ADMIN_WITHDRAW_ACCOUNT_ID', 1);
 define('ADMIN_INTEREST_ACCOUNT_ID', 2);

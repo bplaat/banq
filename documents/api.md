@@ -11,15 +11,25 @@ All the routes where you get a list of data are paged. This means that the data 
 - `page` The number of the page you want to see, one based
 - `limit` The limit of items per page, minimal 1 and maximal 50
 
+## ATM Accounts
+*The following routes don't need authentication via an user session*
+
+### /api/atm/accounts/{account_id}
+Get information about an account via a rfid card and pincode
+- `rfid` The rfid card matching the account id
+- `pincode` the pincode matching the card
+
+---
+
 ## ATM Transactions
 *The following routes don't need authentication via an user session*
 
-### /api/transactions/create
+### /api/atm/transactions/create
 Create a new transaction
-- `name` The transaction name
-- `from_account_id` The from account id form the card
 - `rfid` The rfid card matching the account id
 - `pincode` the pincode matching the card
+- `name` The transaction name
+- `from_account_id` The from account id form the card
 - `to_account_id` The transaction to account id
 - `amount` The transaction amount
 
