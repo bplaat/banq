@@ -1,0 +1,44 @@
+@view('header', [ 'title' => 'Cards' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li class="is-active"><a href="/cards">Cards</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Card</h1>
+
+<div class="columns">
+    <div class="column"></div>
+    <form class="column" method="get">
+        <div class="field has-addons">
+            <div class="control" style="width: 100%;">
+                <input class="input" type="text" id="q" name="q" placeholder="Search..." value="{{ request('q') }}">
+            </div>
+            <div class="control">
+                <button class="button is-link" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (count($cards) > 0):
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+
+    @foreach ($cards as $card):
+        <div class="box">
+            <h2 class="title is-4">
+                <a href="/cards/{{ $card->id }}">{{ $card->name }}</a>
+            </h2>
+            <p>For: <a href="/accounts/{{ $card->account_id }}">{{ $card->account->name }}</a></p>
+            <p>RFID: <code>{{ $card->rfid }}</code></p>
+        </div>
+    @endforeach
+
+    @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
+@else:
+    <p><i>There are no cards found</i></p>
+@endif
+
+@view('footer')

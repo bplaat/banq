@@ -29,6 +29,20 @@
                         <a class="navbar-item" href="/accounts">Accounts</a>
                     @endif
 
+                    @$cards = Cards::selectPageByUser(Auth::id(), 1, 5)->fetchAll()
+                    @if (count($cards) > 0):
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link is-arrowless" href="/cards">Cards</a>
+                            <div class="navbar-dropdown">
+                                @foreach ($cards as $card):
+                                    <a class="navbar-item" href="/cards/{{ $card->id }}">{{ $card->name }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else:
+                        <a class="navbar-item" href="/cards">Cards</a>
+                    @endif
+
                     @$transactions = Transactions::selectPageByUser(Auth::id(), 1, 5)->fetchAll()
                     @if (count($transactions) > 0):
                         <div class="navbar-item has-dropdown is-hoverable">
@@ -65,6 +79,7 @@
                                 <a class="navbar-item" href="/admin/users">Users</a>
                                 <a class="navbar-item" href="/admin/sessions">Sessions</a>
                                 <a class="navbar-item" href="/admin/accounts">Accounts</a>
+                                <a class="navbar-item" href="/admin/cards">Cards</a>
                                 <a class="navbar-item" href="/admin/transactions">Transactions</a>
                                 <a class="navbar-item" href="/admin/payment-links">Payment Links</a>
                             </div>

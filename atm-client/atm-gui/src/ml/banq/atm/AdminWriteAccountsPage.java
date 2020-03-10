@@ -44,10 +44,8 @@ public class AdminWriteAccountsPage extends Page {
 
     public void onKeypad(String key) {
         for (int i = 0; i < accounts.size(); i++) {
-            BanqAPI.Account account = accounts.get(i);
-            if (Integer.parseInt(key) == i + 1) {
-                String account_id = String.format("SU-BANQ-%08d", account.getId());
-                BanqAPI.setAccountId(account_id);
+            if (key.equals(String.valueOf(i + 1))) {
+                BanqAPI.setAccountId(String.format("SU-BANQ-%08d", accounts.get(i).getId()));
                 Navigator.changePage(new AdminWritePincodePage());
             }
         }
