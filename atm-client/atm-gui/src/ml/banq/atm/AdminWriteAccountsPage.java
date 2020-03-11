@@ -39,10 +39,22 @@ public class AdminWriteAccountsPage extends Page {
             }
         }
 
+        add(Box.createVerticalStrut(24));
+
+        JLabel backLabel = new JLabel("Press the 'D' key to logout and go back the login page");
+        backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backLabel.setFont(Fonts.NORMAL);
+        add(backLabel);
+
         add(Box.createVerticalGlue());
     }
 
     public void onKeypad(String key) {
+        if (key.equals("D")) {
+            BanqAPI.logout();
+            Navigator.changePage(new AdminWriteLoginPage());
+        }
+
         for (int i = 0; i < accounts.size(); i++) {
             if (key.equals(String.valueOf(i + 1))) {
                 BanqAPI.setAccountId(String.format("SU-BANQ-%08d", accounts.get(i).getId()));

@@ -3,6 +3,8 @@ package ml.banq.atm;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -58,7 +60,8 @@ public class AdminWriteLoginPage extends Page {
 
         add(Box.createVerticalStrut(24));
 
-        Box buttonsBox = Box.createHorizontalBox();
+        JPanel buttonsBox = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+        buttonsBox.setMaximumSize(new Dimension(320, 64));
         add(buttonsBox);
 
         JButton loginButton = new JButton("Login");
@@ -73,8 +76,6 @@ public class AdminWriteLoginPage extends Page {
             }
         });
         buttonsBox.add(loginButton);
-
-        buttonsBox.add(Box.createHorizontalStrut(16));
 
         JButton backButton = new JButton("Back");
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);

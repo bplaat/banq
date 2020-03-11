@@ -1,6 +1,8 @@
 package ml.banq.atm;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -33,23 +35,36 @@ public class WithdrawPincodePage extends Page {
 
         add(Box.createVerticalStrut(24));
 
+        JPanel pincodeBox = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+        pincodeBox.setMaximumSize(new Dimension(320, 64));
+        add(pincodeBox);
+
         JLabel pincodeLabel = new JLabel("Pincode: ");
         pincodeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         pincodeLabel.setFont(Fonts.NORMAL);
-        add(pincodeLabel);
-
-        add(Box.createVerticalStrut(16));
+        pincodeBox.add(pincodeLabel);
 
         pincodeInput = new JPasswordField(4);
         pincodeInput.setFont(Fonts.NORMAL);
         pincodeInput.setHorizontalAlignment(JPasswordField.CENTER);
         pincodeInput.setMaximumSize(pincodeInput.getPreferredSize());
-        add(pincodeInput);
+        pincodeBox.add(pincodeInput);
+
+        add(Box.createVerticalStrut(24));
+
+        JLabel backLabel = new JLabel("Press the 'D' key to go back to the welcome page");
+        backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backLabel.setFont(Fonts.NORMAL);
+        add(backLabel);
 
         add(Box.createVerticalGlue());
     }
 
     public void onKeypad(String key) {
+        if (key.equals("D")) {
+            Navigator.changePage(new WelcomePage());
+        }
+
         String pincode = new String(pincodeInput.getPassword());
 
         if (key.matches("[0-9]") && pincode.length() < 4) {

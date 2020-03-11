@@ -48,15 +48,21 @@ public class WithdrawTransactionPage extends Page {
 
     public void onKeypad(String key) {
         if (key.equals("1")) {
-            char ESC = '\u001b';
             App.sendPrinter(new String[] {
-                ESC+"a1" + "Payment detials" + ESC+"a0" + "\n",
-                "Bank name: Banq",
-                ("Account number: " + BanqAPI.getAccountId()),
-                "Transaction number: 00000005",
-                ("Amount: $ " + String.valueOf(BanqAPI.getAmount())),
-                "Location: Rotterdam",
-                "Time: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                Utils.printerHorizontalLine(),
+                "",
+                Utils.printerCenter("PAYMENT DETAILS"),
+                "",
+                Utils.printerPad("Bank name:", Config.BANK_NAME),
+                Utils.printerPad("Account number:", BanqAPI.getAccountId()),
+                Utils.printerPad("Transaction number:", "00000005"),
+                Utils.printerPad("Amount:", "$ " + String.valueOf(BanqAPI.getAmount())),
+                Utils.printerPad("Location:", Config.ATM_LOCATION),
+                Utils.printerPad("Time:", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())),
+                "",
+                Utils.printerHorizontalLine(),
+                "",
+                ""
             });
 
             Navigator.changePage(new WithdrawDonePage());

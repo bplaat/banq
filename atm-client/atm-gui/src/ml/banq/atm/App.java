@@ -35,7 +35,7 @@ public class App implements Runnable, SerialPortMessageListener {
     private JLabel infoLabel;
 
     private App() {
-        BanqAPI.setKey("38cd34142710c0b70419cb36dc2de1ae");
+        BanqAPI.setKey(Config.DEVICE_KEY);
     }
 
     public static App getInstance() {

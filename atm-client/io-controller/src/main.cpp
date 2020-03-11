@@ -53,6 +53,7 @@ void setup() {
 
     Serial1.begin(9600);
     printer.begin();
+    printer.sleep();
 
     SPI.begin();
     mfrc522.PCD_Init();
@@ -73,10 +74,9 @@ void loop() {
         }
 
         if (document["type"] == "printer") {
-            JsonArray lines = document["lines"];
-            printer.write('\n');
+            printer.wake();
             printer.printBitmap(128, 64, printer_logo);
-
+            JsonArray lines = document["lines"];
             for (uint8_t i = 0; i < lines.size(); i++) {
                 char *line = lines[i];
                 for (uint8_t j = 0; j < strlen(line); j++) {
@@ -84,8 +84,7 @@ void loop() {
                 }
                 printer.write('\n');
             }
-            printer.write('\n');
-            printer.write('\n');
+            printer.sleep();
         }
 
         if (document["type"] == "rfid_write") {

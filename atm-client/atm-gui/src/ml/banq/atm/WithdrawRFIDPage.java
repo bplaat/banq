@@ -27,7 +27,20 @@ public class WithdrawRFIDPage extends Page {
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
 
+        add(Box.createVerticalStrut(24));
+
+        JLabel backLabel = new JLabel("Press the 'D' key to go back to the welcome page");
+        backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backLabel.setFont(Fonts.NORMAL);
+        add(backLabel);
+
         add(Box.createVerticalGlue());
+    }
+
+    public void onKeypad(String key) {
+        if (key.equals("D")) {
+            Navigator.changePage(new WelcomePage());
+        }
     }
 
     public void onRFIDRead(String rfid_uid, String account_id) {

@@ -36,10 +36,21 @@ public class WithdrawAmountPage extends Page {
         customLabel.setFont(Fonts.NORMAL);
         add(customLabel);*/
 
+        add(Box.createVerticalStrut(24));
+
+        JLabel backLabel = new JLabel("Press the 'D' key to go back");
+        backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backLabel.setFont(Fonts.NORMAL);
+        add(backLabel);
+
         add(Box.createVerticalGlue());
     }
 
     public void onKeypad(String key) {
+        if (key.equals("D")) {
+            Navigator.changePage(new WithdrawAccountPage());
+        }
+
         for (int i = 0; i < defaultAmounts.length; i++) {
             if (key.equals(String.valueOf(i + 1))) {
                 BanqAPI.setAmount(defaultAmounts[i]);
