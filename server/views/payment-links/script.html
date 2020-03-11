@@ -6,7 +6,7 @@ if (typeof Android != 'undefined' && 'share' in Android) {
     shareButton.style.display = 'inline-block';
     shareButton.addEventListener('click', function (event) {
         event.preventDefault();
-        Android.share('Pay \u20AC' + paymentLink.amount + ' for \'' + paymentLink.name + '\' to \'' + paymentLink.account_name + '\' via Banq ' + paymentLink.link);
+        Android.share('Pay \u20ac ' + paymentLink.amount + ' for \'' + paymentLink.name + '\' to \'' + paymentLink.account_name + '\' via Banq ' + paymentLink.link);
     });
 }
 
@@ -17,7 +17,7 @@ else if ('share' in navigator) {
         event.preventDefault();
         navigator.share({
             title: 'Payment link from Banq',
-            text: 'Pay \u20AC' + paymentLink.amount + ' for \'' + paymentLink.name + '\' to \'' + paymentLink.account_name + '\' via Banq',
+            text: 'Pay \u20ac ' + paymentLink.amount + ' for \'' + paymentLink.name + '\' to \'' + paymentLink.account_name + '\' via Banq',
             url: paymentLink.link
         });
     });

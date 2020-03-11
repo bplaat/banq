@@ -3,6 +3,8 @@ package ml.banq.atm;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -57,6 +59,10 @@ public class AdminWritePincodePage extends Page {
 
         add(Box.createVerticalStrut(24));
 
+        JPanel buttonsBox = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+        buttonsBox.setMaximumSize(new Dimension(320, 64));
+        add(buttonsBox);
+
         JButton continueButton = new JButton("Continue");
         continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         continueButton.setFont(Fonts.NORMAL);
@@ -75,9 +81,7 @@ public class AdminWritePincodePage extends Page {
                 }
             }
         });
-        add(continueButton);
-
-        add(Box.createVerticalStrut(16));
+        buttonsBox.add(continueButton);
 
         JButton backButton = new JButton("Back");
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -87,7 +91,7 @@ public class AdminWritePincodePage extends Page {
                 Navigator.changePage(new AdminWriteAccountsPage());
             }
         });
-        add(backButton);
+        buttonsBox.add(backButton);
 
         add(Box.createVerticalGlue());
     }

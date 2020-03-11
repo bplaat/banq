@@ -29,7 +29,7 @@ public class AdminMenuPage extends Page {
 
         add(Box.createVerticalStrut(16));
 
-        JLabel menu2Label = new JLabel("2. Go back to the ATM welcome page");
+        JLabel menu2Label = new JLabel("D. Go back to the welcome page");
         menu2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu2Label.setFont(Fonts.NORMAL);
         add(menu2Label);
@@ -42,7 +42,7 @@ public class AdminMenuPage extends Page {
             Navigator.changePage(new AdminWriteLoginPage());
         }
 
-        if (key.equals("2")) {
+        if (key.equals("D")) {
             Navigator.changePage(new WelcomePage());
         }
     }

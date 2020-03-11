@@ -36,10 +36,9 @@ public class WithdrawAccountPage extends Page {
         menu1Label.setFont(Fonts.NORMAL);
         add(menu1Label);
 
-
         add(Box.createVerticalStrut(16));
 
-        JLabel menu2Label = new JLabel("2. Logout and go back to the welcome page");
+        JLabel menu2Label = new JLabel("D. Logout and go back to the welcome page");
         menu2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu2Label.setFont(Fonts.NORMAL);
         add(menu2Label);
@@ -52,7 +51,7 @@ public class WithdrawAccountPage extends Page {
             Navigator.changePage(new WithdrawAmountPage());
         }
 
-        if (key.equals("2")) {
+        if (key.equals("D")) {
             Navigator.changePage(new WelcomePage());
         }
     }

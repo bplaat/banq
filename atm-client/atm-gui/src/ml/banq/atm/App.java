@@ -35,7 +35,7 @@ public class App implements Runnable, SerialPortMessageListener {
     private JLabel infoLabel;
 
     private App() {
-        BanqAPI.setKey("38cd34142710c0b70419cb36dc2de1ae");
+        BanqAPI.setKey(Config.DEVICE_KEY);
     }
 
     public static App getInstance() {
@@ -96,7 +96,7 @@ public class App implements Runnable, SerialPortMessageListener {
                             }
 
                             if (message.getString("type").equals("rfid_write")) {
-                                sendBeeper(880, 500);
+                                sendBeeper(880, 250);
                                 Navigator.getPage().onRFIDWrite(message.getString("rfid_uid"), message.getString("account_id"));
                             }
                         }
@@ -120,6 +120,13 @@ public class App implements Runnable, SerialPortMessageListener {
         message.put("type", "beeper");
         message.put("frequency", frequency);
         message.put("duration", duration);
+        sendMessage(message);
+    }
+
+    public static void sendPrinter(String[] lines) {
+        JSONObject message = new JSONObject();
+        message.put("type", "printer");
+        message.put("lines", lines);
         sendMessage(message);
     }
 
