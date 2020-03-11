@@ -10,7 +10,6 @@
 #include <Keypad.h>
 #include <SPI.h>
 #include <MFRC522.h>
-#define ARDUINOJSON_DECODE_UNICODE 1
 #include <ArduinoJson.h>
 #include <Adafruit_Thermal.h>
 #include "printer_logo.h"
@@ -75,14 +74,10 @@ void loop() {
 
         if (document["type"] == "printer") {
             printer.wake();
-            printer.printBitmap(128, 64, printer_logo);
+            printer.printBitmap(256, 64, printer_logo);
             JsonArray lines = document["lines"];
             for (uint8_t i = 0; i < lines.size(); i++) {
-                char *line = lines[i];
-                for (uint8_t j = 0; j < strlen(line); j++) {
-                    printer.write(line[j]);
-                }
-                printer.write('\n');
+                printer.println((char *)lines[i]);
             }
             printer.sleep();
         }

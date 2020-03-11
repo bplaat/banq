@@ -9,22 +9,22 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class WithdrawTransactionPage extends Page {
+public class WithdrawReceiptPage extends Page {
     private static final long serialVersionUID = 1;
 
-    public WithdrawTransactionPage() {
+    public WithdrawReceiptPage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("The transaction is successfull");
+        JLabel titleLabel = new JLabel("The withdraw is accepted");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
         add(Box.createVerticalStrut(24));
 
-        JLabel messageLabel = new JLabel("Do you want a receid?");
+        JLabel messageLabel = new JLabel("Do you want a receipt?");
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
@@ -51,14 +51,14 @@ public class WithdrawTransactionPage extends Page {
             App.sendPrinter(new String[] {
                 Utils.printerHorizontalLine(),
                 "",
-                Utils.printerCenter("PAYMENT DETAILS"),
+                Utils.printerCenter("WITHDRAW DETAILS"),
                 "",
                 Utils.printerPad("Bank name:", Config.BANK_NAME),
                 Utils.printerPad("Account number:", BanqAPI.getAccountId()),
-                Utils.printerPad("Transaction number:", "00000005"),
+                Utils.printerPad("Transaction number:", String.format("%08d", BanqAPI.getLastTransactionId())),
                 Utils.printerPad("Amount:", "$ " + String.valueOf(BanqAPI.getAmount())),
                 Utils.printerPad("Location:", Config.ATM_LOCATION),
-                Utils.printerPad("Time:", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())),
+                Utils.printerPad("Time:", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(BanqAPI.getLastTransactionTime())),
                 "",
                 Utils.printerHorizontalLine(),
                 "",

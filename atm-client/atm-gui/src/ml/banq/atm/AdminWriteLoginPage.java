@@ -69,8 +69,10 @@ public class AdminWriteLoginPage extends Page {
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 if (BanqAPI.login(loginInput.getText(), new String(passwordInput.getPassword()))) {
+                    App.sendBeeper(880, 250);
                     Navigator.changePage(new AdminWriteAccountsPage());
                 } else {
+                    App.sendBeeper(110, 250);
                     JOptionPane.showMessageDialog(null, "Incorrect username, email or password");
                 }
             }

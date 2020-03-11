@@ -22,7 +22,7 @@ class ApiATMTransactionsController {
         // Validate the user input
         api_validate([
             'name' => Transactions::NAME_VALIDATION,
-            'from_account_id' => Transactions::FROM_ACCOUNT_ID_VALIDATION,
+            'from_account_id' => Transactions::FROM_ACCOUNT_ID_ADMIN_VALIDATION,
             'rfid' => Cards::RFID_VALIDATION,
             'pincode' => Cards::PINCODE_VALIDATION,
             'to_account_id' => Transactions::TO_ACCOUNT_ID_VALIDATION,
@@ -79,6 +79,7 @@ class ApiATMTransactionsController {
 
         // Return a confirmation message
         return [
+            'success' => true,
             'message' => 'The transaction has been created successfully',
             'transaction_id' => $transaction_id
         ];

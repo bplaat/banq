@@ -46,6 +46,8 @@ public class BanqAPI {
     private String pincode;
     private int amount;
     private Account activeAccount;
+    private int lastTransactionId;
+    private long lastTransactionTime;
 
     private BanqAPI() {}
 
@@ -105,26 +107,38 @@ public class BanqAPI {
         return instance.activeAccount;
     }
 
+    public static int getLastTransactionId() {
+        return instance.lastTransactionId;
+    }
+
+    public static long getLastTransactionTime() {
+        return instance.lastTransactionTime;
+    }
+
+    private static JSONObject fetch(String url) throws Exception {
+        System.out.println("Fetch: " + url);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            stringBuilder.append(line);
+            stringBuilder.append(System.lineSeparator());
+        }
+        bufferedReader.close();
+        String data = stringBuilder.toString();
+        System.out.print("Response: " + data);
+        if (data.charAt(0) == '{') {
+            return new JSONObject(data);
+        }
+        return null;
+    }
+
     public static boolean login(String login, String password) {
         try {
-            URL url = new URL(API_URL + "/auth/login?key=" + instance.key + "&login=" + URLEncoder.encode(login, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8"));
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append(System.lineSeparator());
-            }
-            bufferedReader.close();
-            String data = stringBuilder.toString();
-
-            if (data.charAt(0) == '{') {
-                JSONObject response = new JSONObject(data);
-
-                if (response.getBoolean("success")) {
-                    instance.session = response.getString("session");
-                    return true;
-                }
+            JSONObject data = fetch(API_URL + "/auth/login?key=" + instance.key + "&login=" + URLEncoder.encode(login, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8"));
+            if (data.getBoolean("success")) {
+                instance.session = data.getString("session");
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,24 +148,10 @@ public class BanqAPI {
 
     public static boolean logout() {
         try {
-            URL url = new URL(API_URL + "/auth/logout?key=" + instance.key + "&session=" + instance.session);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append(System.lineSeparator());
-            }
-            bufferedReader.close();
-            String data = stringBuilder.toString();
-
-            if (data.charAt(0) == '{') {
-                JSONObject response = new JSONObject(data);
-
-                if (response.getBoolean("success")) {
-                    instance.session = "";
-                    return true;
-                }
+            JSONObject data = fetch(API_URL + "/auth/logout?key=" + instance.key + "&session=" + instance.session);
+            if (data.getBoolean("success")) {
+                instance.session = "";
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,35 +162,22 @@ public class BanqAPI {
     public static ArrayList<Account> getPaymentAccounts() {
         if (!instance.session.equals("")) {
             try {
-                URL url = new URL(API_URL + "/accounts?key=" + instance.key + "&session=" + instance.session);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line);
-                    stringBuilder.append(System.lineSeparator());
-                }
-                bufferedReader.close();
-                String data = stringBuilder.toString();
+                JSONObject data = fetch(API_URL + "/accounts?key=" + instance.key + "&session=" + instance.session);
 
-                if (data.charAt(0) == '{') {
-                    JSONObject response = new JSONObject(data);
-
-                    ArrayList<Account> accounts = new ArrayList<Account>();
-                    JSONArray json_accounts = response.getJSONArray("accounts");
-                    for (int i = 0; i < json_accounts.length(); i++) {
-                        JSONObject json_account = json_accounts.getJSONObject(i);
-                        if (json_account.getInt("type") == Account.TYPE_PAYMENT) {
-                            accounts.add(new Account(
-                                json_account.getInt("id"),
-                                json_account.getString("name"),
-                                json_account.getFloat("amount")
-                            ));
-                        }
+                ArrayList<Account> accounts = new ArrayList<Account>();
+                JSONArray json_accounts = data.getJSONArray("accounts");
+                for (int i = 0; i < json_accounts.length(); i++) {
+                    JSONObject json_account = json_accounts.getJSONObject(i);
+                    if (json_account.getInt("type") == Account.TYPE_PAYMENT) {
+                        accounts.add(new Account(
+                            json_account.getInt("id"),
+                            json_account.getString("name"),
+                            json_account.getFloat("amount")
+                        ));
                     }
-
-                    return accounts;
                 }
+
+                return accounts;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -201,20 +188,8 @@ public class BanqAPI {
     public static boolean createCard() {
         if (!instance.session.equals("")) {
             try {
-                URL url = new URL(API_URL + "/cards/create?key=" + instance.key + "&session=" + instance.session + "&name=" + URLEncoder.encode("Card for " + instance.accountId, "UTF-8") + "&account_id=" + String.valueOf(parseAccountId(instance.accountId)) + "&rfid=" + instance.rfid_uid + "&pincode=" + instance.pincode);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line);
-                    stringBuilder.append(System.lineSeparator());
-                }
-                bufferedReader.close();
-                String data = stringBuilder.toString();
-
-                if (data.charAt(0) == '{') {
-                    JSONObject response = new JSONObject(data);
-
+                JSONObject data = fetch(API_URL + "/cards/create?key=" + instance.key + "&session=" + instance.session + "&name=" + URLEncoder.encode("Card for " + instance.accountId, "UTF-8") + "&account_id=" + String.valueOf(parseAccountId(instance.accountId)) + "&rfid=" + instance.rfid_uid + "&pincode=" + instance.pincode);
+                if (data != null) {
                     return true;
                 }
             } catch (Exception e) {
@@ -226,41 +201,38 @@ public class BanqAPI {
 
     public static String loadActiveAccount() {
         try {
-            URL url = new URL(API_URL + "/atm/accounts/" + instance.accountId + "?key=" + instance.key + "&rfid=" + instance.rfid_uid + "&pincode=" + instance.pincode);
-            System.out.println("URL: " + url);
-
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append(System.lineSeparator());
+            JSONObject data = fetch(API_URL + "/atm/accounts/" + instance.accountId + "?key=" + instance.key + "&rfid=" + instance.rfid_uid + "&pincode=" + instance.pincode);
+            if (data.getBoolean("success")) {
+                JSONObject json_account = data.getJSONObject("account");
+                instance.activeAccount = new Account(
+                    json_account.getInt("id"),
+                    json_account.getString("name"),
+                    json_account.getFloat("amount")
+                );
+                return "success";
             }
-            bufferedReader.close();
-            String data = stringBuilder.toString();
-
-            System.out.print("Response: " + data);
-
-            if (data.charAt(0) == '{') {
-                JSONObject response = new JSONObject(data);
-
-                if (response.getBoolean("success")) {
-                    JSONObject json_account = response.getJSONObject("account");
-                    instance.activeAccount = new Account(
-                        json_account.getInt("id"),
-                        json_account.getString("name"),
-                        json_account.getFloat("amount")
-                    );
-                    return "success";
-                }
-
-                else {
-                    return response.getString("message");
-                }
+            else {
+                return data.getString("message");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "Communication error";
+    }
+
+    public static boolean createTransaction(String name, String to_account_id) {
+        try {
+            JSONObject data = fetch(API_URL + "/atm/transactions/create?key=" + instance.key + "&name=" + URLEncoder.encode(name, "UTF-8") +
+                "&from_account_id=" + instance.accountId + "&to_account_id=" + to_account_id + "&rfid=" + instance.rfid_uid +
+                "&pincode=" + instance.pincode + "&amount=" + instance.amount);
+            if (data != null && data.getBoolean("success")) {
+                instance.lastTransactionId = data.getInt("transaction_id");
+                instance.lastTransactionTime = System.currentTimeMillis();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

@@ -2,10 +2,13 @@ package ml.banq.atm;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 public class WithdrawAmountPage extends Page {
     private static final long serialVersionUID = 1;
@@ -54,7 +57,19 @@ public class WithdrawAmountPage extends Page {
         for (int i = 0; i < defaultAmounts.length; i++) {
             if (key.equals(String.valueOf(i + 1))) {
                 BanqAPI.setAmount(defaultAmounts[i]);
-                Navigator.changePage(new WithdrawTransactionPage());
+                if (BanqAPI.getActiveAccount().getAmount() - defaultAmounts[i] >= 0) {
+                    String name = "Withdraw at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                    if (BanqAPI.createTransaction(name, "SU-BANQ-00000001")) {
+                        App.sendBeeper(880, 250);
+                        Navigator.changePage(new WithdrawReceiptPage());
+                    } else {
+                        App.sendBeeper(440, 250);
+                        JOptionPane.showMessageDialog(null, "Internal server error");
+                    }
+                } else {
+                    App.sendBeeper(110, 250);
+                    JOptionPane.showMessageDialog(null, "You dont have enough money!");
+                }
             }
         }
     }

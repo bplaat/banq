@@ -15,7 +15,7 @@ public class WithdrawDonePage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Done");
+        JLabel titleLabel = new JLabel("The withdraw is done");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
