@@ -20,14 +20,14 @@ public class AdminMenuPage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel menu1Label = new JLabel("1. Add a new card to a Banq account");
         menu1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu1Label.setFont(Fonts.NORMAL);
         add(menu1Label);
 
-        add(Box.createVerticalStrut(16));
+        add(Box.createVerticalStrut(Paddings.NORMAL));
 
         JLabel menu2Label = new JLabel("D. Go back to the welcome page");
         menu2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -39,11 +39,11 @@ public class AdminMenuPage extends Page {
 
     public void onKeypad(String key) {
         if (key.equals("1")) {
-            Navigator.changePage(new AdminWriteLoginPage());
+            Navigator.getInstance().changePage(new AdminWriteLoginPage());
         }
 
         if (key.equals("D")) {
-            Navigator.changePage(new WelcomePage());
+            Navigator.getInstance().changePage(new WelcomePage());
         }
     }
 }

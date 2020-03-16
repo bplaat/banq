@@ -20,14 +20,14 @@ public class WithdrawRFIDPage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel messageLabel = new JLabel("Scan your Banq card...");
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel backLabel = new JLabel("Press the 'D' key to go back to the welcome page");
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -39,13 +39,11 @@ public class WithdrawRFIDPage extends Page {
 
     public void onKeypad(String key) {
         if (key.equals("D")) {
-            Navigator.changePage(new WelcomePage());
+            Navigator.getInstance().changePage(new WelcomePage());
         }
     }
 
-    public void onRFIDRead(String rfid_uid, String account_id) {
-        BanqAPI.setRfidUid(rfid_uid);
-        BanqAPI.setAccountId(account_id);
-        Navigator.changePage(new WithdrawPincodePage());
+    public void onRFIDRead(String account_id, String rfid_uid) {
+        Navigator.getInstance().changePage(new WithdrawPincodePage(account_id, rfid_uid));
     }
 }

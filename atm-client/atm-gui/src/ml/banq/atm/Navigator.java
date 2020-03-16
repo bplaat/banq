@@ -15,11 +15,11 @@ public class Navigator extends JScrollPane {
         return instance;
     }
 
-    public static void changePage(Page page) {
+    public void changePage(Page page) {
         instance.setViewportView(page);
     }
 
-    public static Page getPage() {
+    public Page getPage() {
         return (Page)(instance.getViewport().getView());
     }
 }

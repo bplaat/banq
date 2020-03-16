@@ -3,7 +3,6 @@ package ml.banq.atm;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -22,20 +21,17 @@ import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-
 import org.json.JSONObject;
 
 public class App implements Runnable, SerialPortMessageListener {
-    public static final String ADMIN_RFID_UID = "4a360c0b";
-
     private static App instance = new App();
 
+    private JFrame frame;
     private SerialPort serialPort;
-
     private JLabel infoLabel;
 
     private App() {
-        BanqAPI.setKey(Config.DEVICE_KEY);
+        BanqAPI.getInstance().setKey(Config.DEVICE_KEY);
     }
 
     public static App getInstance() {
@@ -47,13 +43,20 @@ public class App implements Runnable, SerialPortMessageListener {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {}
 
-        JFrame frame = new JFrame("Banq ATM GUI");
+        frame = new JFrame("Banq ATM GUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
+        if (Config.FULLSCREEN_MODE) {
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            frame.setUndecorated(true);
+        } else {
+            frame.setSize(1280, 720);
+            frame.setLocationRelativeTo(null);
+        }
+        frame.setResizable(false);
+        frame.setVisible(true);
 
         frame.add(Navigator.getInstance());
-        Navigator.changePage(new WelcomePage());
+        Navigator.getInstance().changePage(new WelcomePage());
 
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         if (serialPorts.length > 0) {
@@ -61,8 +64,6 @@ public class App implements Runnable, SerialPortMessageListener {
             serialPort.openPort();
             serialPort.addDataListener(this);
         }
-
-        frame.setVisible(true);
     }
 
     public int getListeningEvents() {
@@ -80,24 +81,24 @@ public class App implements Runnable, SerialPortMessageListener {
     public void serialEvent(SerialPortEvent event) {
         if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED) {
             String line = new String(event.getReceivedData());
-            System.out.print("Read: " + line);
+            System.out.print("[INFO] Read: " + line);
             if (line.charAt(0) == '{') {
                 try {
                     JSONObject message = new JSONObject(line);
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             if (message.getString("type").equals("keypad")) {
-                                Navigator.getPage().onKeypad(message.getString("key"));
+                                Navigator.getInstance().getPage().onKeypad(message.getString("key"));
                             }
 
                             if (message.getString("type").equals("rfid_read")) {
                                 sendBeeper(440, 250);
-                                Navigator.getPage().onRFIDRead(message.getString("rfid_uid"), message.getString("account_id"));
+                                Navigator.getInstance().getPage().onRFIDRead(message.getString("account_id"), message.getString("rfid_uid"));
                             }
 
                             if (message.getString("type").equals("rfid_write")) {
                                 sendBeeper(880, 250);
-                                Navigator.getPage().onRFIDWrite(message.getString("rfid_uid"), message.getString("account_id"));
+                                Navigator.getInstance().getPage().onRFIDWrite(message.getString("account_id"), message.getString("rfid_uid"));
                             }
                         }
                     });
@@ -108,14 +109,18 @@ public class App implements Runnable, SerialPortMessageListener {
         }
     }
 
-    public static void sendWriteRFID(String account_id) {
+    public int getWindowWidth() {
+        return frame.getWidth();
+    }
+
+    public void sendWriteRFID(String account_id) {
         JSONObject message = new JSONObject();
         message.put("type", "rfid_write");
         message.put("account_id", account_id);
         sendMessage(message);
     }
 
-    public static void sendBeeper(int frequency, int duration) {
+    public void sendBeeper(int frequency, int duration) {
         JSONObject message = new JSONObject();
         message.put("type", "beeper");
         message.put("frequency", frequency);
@@ -123,17 +128,17 @@ public class App implements Runnable, SerialPortMessageListener {
         sendMessage(message);
     }
 
-    public static void sendPrinter(String[] lines) {
+    public void sendPrinter(String[] lines) {
         JSONObject message = new JSONObject();
         message.put("type", "printer");
         message.put("lines", lines);
         sendMessage(message);
     }
 
-    public static void sendMessage(JSONObject message) {
+    public void sendMessage(JSONObject message) {
         String line = message.toString() + "\n";
         byte[] bytes = line.getBytes();
         instance.serialPort.writeBytes(bytes, bytes.length);
-        System.out.print("Write: " + line);
+        System.out.print("[INFO] Write: " + line);
     }
 }

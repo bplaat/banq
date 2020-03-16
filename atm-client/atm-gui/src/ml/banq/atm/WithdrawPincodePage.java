@@ -13,10 +13,16 @@ import javax.swing.JPasswordField;
 public class WithdrawPincodePage extends Page {
     private static final long serialVersionUID = 1;
 
-    private JLabel messageLabel;
+    private String accountId;
+    private String rfid_uid;
+
+    private JLabel message1Label;
     private JPasswordField pincodeInput;
 
-    public WithdrawPincodePage() {
+    public WithdrawPincodePage(String accountId, String rfid_uid) {
+        this.accountId = accountId;
+        this.rfid_uid = rfid_uid;
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -26,16 +32,23 @@ public class WithdrawPincodePage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        messageLabel = new JLabel("Enter your pincode press '#' when you are finished");
-        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        messageLabel.setFont(Fonts.NORMAL);
-        add(messageLabel);
+        message1Label = new JLabel("Enter your pincode press '#' when you are finished");
+        message1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        message1Label.setFont(Fonts.NORMAL);
+        add(message1Label);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.NORMAL));
 
-        JPanel pincodeBox = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+        JLabel message2Label = new JLabel("Press '*' to clear the pincode");
+        message2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        message2Label.setFont(Fonts.NORMAL);
+        add(message2Label);
+
+        add(Box.createVerticalStrut(Paddings.LARGE));
+
+        JPanel pincodeBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
         pincodeBox.setMaximumSize(new Dimension(320, 64));
         add(pincodeBox);
 
@@ -50,7 +63,7 @@ public class WithdrawPincodePage extends Page {
         pincodeInput.setMaximumSize(pincodeInput.getPreferredSize());
         pincodeBox.add(pincodeInput);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel backLabel = new JLabel("Press the 'D' key to go back to the welcome page");
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -62,7 +75,7 @@ public class WithdrawPincodePage extends Page {
 
     public void onKeypad(String key) {
         if (key.equals("D")) {
-            Navigator.changePage(new WelcomePage());
+            Navigator.getInstance().changePage(new WelcomePage());
         }
 
         String pincode = new String(pincodeInput.getPassword());
@@ -76,14 +89,13 @@ public class WithdrawPincodePage extends Page {
         }
 
         if (pincode.length() == 4 && key.equals("#")) {
-            BanqAPI.setPincode(pincode);
-            String message = BanqAPI.loadActiveAccount();
-            if (message.equals("success")) {
-                App.sendBeeper(880, 250);
-                Navigator.changePage(new WithdrawAccountPage());
+            BanqAPI.Account account = BanqAPI.getInstance().getAccount(accountId, rfid_uid, pincode);
+            if (account != null) {
+                App.getInstance().sendBeeper(880, 250);
+                Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
             } else {
-                App.sendBeeper(110, 250);
-                messageLabel.setText("Error: " + message);
+                App.getInstance().sendBeeper(110, 250);
+                message1Label.setText("The pincode is wrong or your card is blocked");
                 pincodeInput.setText("");
             }
         }

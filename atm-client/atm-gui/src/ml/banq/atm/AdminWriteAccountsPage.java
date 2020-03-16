@@ -16,7 +16,7 @@ public class AdminWriteAccountsPage extends Page {
     public AdminWriteAccountsPage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-        accounts = BanqAPI.getPaymentAccounts();
+        accounts = BanqAPI.getInstance().getPaymentAccounts();
 
         add(Box.createVerticalGlue());
 
@@ -25,7 +25,7 @@ public class AdminWriteAccountsPage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         for (int i = 0; i < accounts.size(); i++) {
             BanqAPI.Account account = accounts.get(i);
@@ -35,11 +35,11 @@ public class AdminWriteAccountsPage extends Page {
             add(accountLabel);
 
             if (i != accounts.size() - 1) {
-                add(Box.createVerticalStrut(16));
+                add(Box.createVerticalStrut(Paddings.NORMAL));
             }
         }
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel backLabel = new JLabel("Press the 'D' key to logout and go back the login page");
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -51,14 +51,13 @@ public class AdminWriteAccountsPage extends Page {
 
     public void onKeypad(String key) {
         if (key.equals("D")) {
-            BanqAPI.logout();
-            Navigator.changePage(new AdminWriteLoginPage());
+            BanqAPI.getInstance().logout();
+            Navigator.getInstance().changePage(new AdminWriteLoginPage());
         }
 
         for (int i = 0; i < accounts.size(); i++) {
             if (key.equals(String.valueOf(i + 1))) {
-                BanqAPI.setAccountId(String.format("SU-BANQ-%08d", accounts.get(i).getId()));
-                Navigator.changePage(new AdminWritePincodePage());
+                Navigator.getInstance().changePage(new AdminWritePincodePage(String.format("SU-BANQ-%08d", accounts.get(i).getId())));
             }
         }
     }

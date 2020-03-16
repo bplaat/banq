@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 public class AdminWritePincodePage extends Page {
     private static final long serialVersionUID = 1;
 
-    public AdminWritePincodePage() {
+    public AdminWritePincodePage(String accountId) {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -27,14 +27,14 @@ public class AdminWritePincodePage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel pincodeLabel = new JLabel("New pincode: ");
         pincodeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         pincodeLabel.setFont(Fonts.NORMAL);
         add(pincodeLabel);
 
-        add(Box.createVerticalStrut(16));
+        add(Box.createVerticalStrut(Paddings.NORMAL));
 
         JPasswordField pincodeInput = new JPasswordField(4);
         pincodeInput.setFont(Fonts.NORMAL);
@@ -42,14 +42,14 @@ public class AdminWritePincodePage extends Page {
         pincodeInput.setMaximumSize(pincodeInput.getPreferredSize());
         add(pincodeInput);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel pincodeConfirmationLabel = new JLabel("New pincode confirmation: ");
         pincodeConfirmationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         pincodeConfirmationLabel.setFont(Fonts.NORMAL);
         add(pincodeConfirmationLabel);
 
-        add(Box.createVerticalStrut(16));
+        add(Box.createVerticalStrut(Paddings.NORMAL));
 
         JPasswordField pincodeConfirmationInput = new JPasswordField(4);
         pincodeConfirmationInput.setFont(Fonts.NORMAL);
@@ -57,9 +57,9 @@ public class AdminWritePincodePage extends Page {
         pincodeConfirmationInput.setMaximumSize(pincodeConfirmationInput.getPreferredSize());
         add(pincodeConfirmationInput);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JPanel buttonsBox = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+        JPanel buttonsBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
         buttonsBox.setMaximumSize(new Dimension(320, 64));
         add(buttonsBox);
 
@@ -71,8 +71,7 @@ public class AdminWritePincodePage extends Page {
                 String pincode = new String(pincodeInput.getPassword());
                 if (pincode.matches("[0-9]{4}")) {
                     if (pincode.equals(new String(pincodeConfirmationInput.getPassword()))) {
-                        BanqAPI.setPincode(pincode);
-                        Navigator.changePage(new AdminWriteRFIDPage());
+                        Navigator.getInstance().changePage(new AdminWriteRFIDPage(accountId, pincode));
                     } else {
                         JOptionPane.showMessageDialog(null, "The pincode confirmation is not the same");
                     }
@@ -88,7 +87,7 @@ public class AdminWritePincodePage extends Page {
         backButton.setFont(Fonts.NORMAL);
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                Navigator.changePage(new AdminWriteAccountsPage());
+                Navigator.getInstance().changePage(new AdminWriteAccountsPage());
             }
         });
         buttonsBox.add(backButton);

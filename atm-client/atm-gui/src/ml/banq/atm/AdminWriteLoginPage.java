@@ -28,14 +28,14 @@ public class AdminWriteLoginPage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel loginLabel = new JLabel("Username or email address: ");
         loginLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginLabel.setFont(Fonts.NORMAL);
         add(loginLabel);
 
-        add(Box.createVerticalStrut(16));
+        add(Box.createVerticalStrut(Paddings.NORMAL));
 
         JTextField loginInput = new JTextField(16);
         loginInput.setFont(Fonts.NORMAL);
@@ -43,14 +43,14 @@ public class AdminWriteLoginPage extends Page {
         loginInput.setMaximumSize(loginInput.getPreferredSize());
         add(loginInput);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel passwordLabel = new JLabel("Password: ");
         passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         passwordLabel.setFont(Fonts.NORMAL);
         add(passwordLabel);
 
-        add(Box.createVerticalStrut(16));
+        add(Box.createVerticalStrut(Paddings.NORMAL));
 
         JPasswordField passwordInput = new JPasswordField(16);
         passwordInput.setFont(Fonts.NORMAL);
@@ -58,9 +58,9 @@ public class AdminWriteLoginPage extends Page {
         passwordInput.setMaximumSize(passwordInput.getPreferredSize());
         add(passwordInput);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JPanel buttonsBox = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+        JPanel buttonsBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
         buttonsBox.setMaximumSize(new Dimension(320, 64));
         add(buttonsBox);
 
@@ -68,11 +68,11 @@ public class AdminWriteLoginPage extends Page {
         loginButton.setFont(Fonts.NORMAL);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                if (BanqAPI.login(loginInput.getText(), new String(passwordInput.getPassword()))) {
-                    App.sendBeeper(880, 250);
-                    Navigator.changePage(new AdminWriteAccountsPage());
+                if (BanqAPI.getInstance().login(loginInput.getText(), new String(passwordInput.getPassword()))) {
+                    App.getInstance().sendBeeper(880, 250);
+                    Navigator.getInstance().changePage(new AdminWriteAccountsPage());
                 } else {
-                    App.sendBeeper(110, 250);
+                    App.getInstance().sendBeeper(110, 250);
                     JOptionPane.showMessageDialog(null, "Incorrect username, email or password");
                 }
             }
@@ -84,7 +84,7 @@ public class AdminWriteLoginPage extends Page {
         backButton.setFont(Fonts.NORMAL);
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                Navigator.changePage(new AdminMenuPage());
+                Navigator.getInstance().changePage(new AdminMenuPage());
             }
         });
         buttonsBox.add(backButton);

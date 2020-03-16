@@ -80,8 +80,7 @@ class ApiATMTransactionsController {
         // Return a confirmation message
         return [
             'success' => true,
-            'message' => 'The transaction has been created successfully',
-            'transaction_id' => $transaction_id
+            'transaction' => Transactions::select($transaction_id)->fetch()
         ];
     }
 }

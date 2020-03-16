@@ -3,7 +3,6 @@ package ml.banq.atm;
 import java.awt.Component;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -12,7 +11,11 @@ import javax.swing.JPanel;
 public class WithdrawReceiptPage extends Page {
     private static final long serialVersionUID = 1;
 
-    public WithdrawReceiptPage() {
+    private BanqAPI.Transaction transaction;
+
+    public WithdrawReceiptPage(BanqAPI.Transaction transaction) {
+        this.transaction = transaction;
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -22,21 +25,21 @@ public class WithdrawReceiptPage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel messageLabel = new JLabel("Do you want a receipt?");
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel menu1Label = new JLabel("1. Yes");
         menu1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu1Label.setFont(Fonts.NORMAL);
         add(menu1Label);
 
-        add(Box.createVerticalStrut(16));
+        add(Box.createVerticalStrut(Paddings.NORMAL));
 
         JLabel menu2Label = new JLabel("2. No");
         menu2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -48,28 +51,32 @@ public class WithdrawReceiptPage extends Page {
 
     public void onKeypad(String key) {
         if (key.equals("1")) {
-            App.sendPrinter(new String[] {
+            App.getInstance().sendBeeper(880, 250);
+
+            App.getInstance().sendPrinter(new String[] {
                 Utils.printerHorizontalLine(),
                 "",
                 Utils.printerCenter("WITHDRAW DETAILS"),
                 "",
                 Utils.printerPad("Bank name:", Config.BANK_NAME),
-                Utils.printerPad("Account number:", BanqAPI.getAccountId()),
-                Utils.printerPad("Transaction number:", String.format("%08d", BanqAPI.getLastTransactionId())),
-                Utils.printerPad("Amount:", "$ " + String.valueOf(BanqAPI.getAmount())),
-                Utils.printerPad("Location:", Config.ATM_LOCATION),
-                Utils.printerPad("Time:", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(BanqAPI.getLastTransactionTime())),
+                Utils.printerPad("Account number:", transaction.getFromAccountId()),
+                Utils.printerPad("Transaction number:", String.format("%08d", transaction.getId())),
+                Utils.printerPad("Amount:", String.format("$ %.02f", transaction.getAmount())),
+                Utils.printerPad("Location:", Config.DEVICE_LOCATION),
+                Utils.printerPad("Time:", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transaction.getCreatedAt())),
                 "",
                 Utils.printerHorizontalLine(),
                 "",
                 ""
             });
 
-            Navigator.changePage(new WithdrawDonePage());
+            Navigator.getInstance().changePage(new WithdrawDonePage());
         }
 
         if (key.equals("2")) {
-            Navigator.changePage(new WithdrawDonePage());
+            App.getInstance().sendBeeper(880, 250);
+
+            Navigator.getInstance().changePage(new WithdrawDonePage());
         }
     }
 }

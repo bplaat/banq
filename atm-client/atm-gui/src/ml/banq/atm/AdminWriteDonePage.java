@@ -20,7 +20,7 @@ public class AdminWriteDonePage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel messageLabel = new JLabel("Press any key on the keypad to go back to the admin menu page...");
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -31,6 +31,6 @@ public class AdminWriteDonePage extends Page {
     }
 
     public void onKeypad(String key) {
-        Navigator.changePage(new AdminMenuPage());
+        Navigator.getInstance().changePage(new AdminMenuPage());
     }
 }

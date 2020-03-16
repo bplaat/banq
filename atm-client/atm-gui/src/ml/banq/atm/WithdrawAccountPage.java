@@ -10,8 +10,16 @@ import javax.swing.JPanel;
 public class WithdrawAccountPage extends Page {
     private static final long serialVersionUID = 1;
 
-    public WithdrawAccountPage() {
-        BanqAPI.Account account = BanqAPI.getActiveAccount();
+    private String accountId;
+    private String rfid_uid;
+    private String pincode;
+    private BanqAPI.Account account;
+
+    public WithdrawAccountPage(String accountId, String rfid_uid, String pincode, BanqAPI.Account account) {
+        this.accountId = accountId;
+        this.rfid_uid = rfid_uid;
+        this.pincode = pincode;
+        this.account = account;
 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -22,21 +30,21 @@ public class WithdrawAccountPage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(16));
+        add(Box.createVerticalStrut(Paddings.NORMAL));
 
         JLabel amountLabel = new JLabel(String.format("\u20ac %.2f", account.getAmount()));
         amountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         amountLabel.setFont(Fonts.NORMAL);
         add(amountLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel menu1Label = new JLabel("1. Withdraw money");
         menu1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu1Label.setFont(Fonts.NORMAL);
         add(menu1Label);
 
-        add(Box.createVerticalStrut(16));
+        add(Box.createVerticalStrut(Paddings.NORMAL));
 
         JLabel menu2Label = new JLabel("D. Logout and go back to the welcome page");
         menu2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -48,11 +56,11 @@ public class WithdrawAccountPage extends Page {
 
     public void onKeypad(String key) {
         if (key.equals("1")) {
-            Navigator.changePage(new WithdrawAmountPage());
+            Navigator.getInstance().changePage(new WithdrawAmountPage(accountId, rfid_uid, pincode, account));
         }
 
         if (key.equals("D")) {
-            Navigator.changePage(new WelcomePage());
+            Navigator.getInstance().changePage(new WelcomePage());
         }
     }
 }

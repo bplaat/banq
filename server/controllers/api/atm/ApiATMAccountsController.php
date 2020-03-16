@@ -6,7 +6,10 @@ class ApiATMAccountsController {
         // Convert account id string to banq id
         $banqCode = 'SU-BANQ-';
         if (substr($account_id, 0, strlen($banqCode)) != $banqCode) {
-            return 'This API supports only Banq cards';
+            return [
+                'success' => false,
+                'message' => 'This API supports only Banq cards'
+            ];
         }
         $account_id = floatval(substr($account_id, strlen($banqCode)));
 
@@ -21,7 +24,7 @@ class ApiATMAccountsController {
         if ($cardQuery->rowCount() == 0) {
             return [
                 'success' => false,
-                'message' => 'This card is corrupt or deleted'
+                'message' => 'This card is not found in the Banq database'
             ];
         }
 
@@ -44,7 +47,7 @@ class ApiATMAccountsController {
                     Cards::update($card->id, [ 'blocked' => 1 ]);
                     return [
                         'success' => false,
-                        'message' => 'This card is blocked'
+                        'message' => 'This card is now blocked'
                     ];
                 }
 

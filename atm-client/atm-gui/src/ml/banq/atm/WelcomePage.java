@@ -20,7 +20,7 @@ public class WelcomePage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         JLabel messageLabel = new JLabel("Press any key on the keypad to continue...");
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -31,16 +31,17 @@ public class WelcomePage extends Page {
     }
 
     public void onKeypad(String key) {
-        Navigator.changePage(new WithdrawRFIDPage());
+        Navigator.getInstance().changePage(new WithdrawRFIDPage());
     }
 
-    public void onRFIDRead(String rfid_uid, String account_id) {
-        if (rfid_uid.equals(App.ADMIN_RFID_UID)) {
-            Navigator.changePage(new AdminMenuPage());
-        } else {
-            BanqAPI.setRfidUid(rfid_uid);
-            BanqAPI.setAccountId(account_id);
-            Navigator.changePage(new WithdrawPincodePage());
+    public void onRFIDRead(String account_id, String rfid_uid) {
+        for (int i = 0; i < Config.ADMIN_RFID_UIDS.length; i++) {
+            if (rfid_uid.equals(Config.ADMIN_RFID_UIDS[i])) {
+                Navigator.getInstance().changePage(new AdminMenuPage());
+                return;
+            }
         }
+
+        Navigator.getInstance().changePage(new WithdrawPincodePage(account_id, rfid_uid));
     }
 }

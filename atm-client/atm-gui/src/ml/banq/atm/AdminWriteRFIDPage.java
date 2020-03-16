@@ -11,7 +11,13 @@ import javax.swing.JPanel;
 public class AdminWriteRFIDPage extends Page {
     private static final long serialVersionUID = 1;
 
-    public AdminWriteRFIDPage() {
+    private String accountId;
+    private String pincode;
+
+    public AdminWriteRFIDPage(String accountId, String pincode) {
+        this.accountId = accountId;
+        this.pincode = pincode;
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -21,23 +27,22 @@ public class AdminWriteRFIDPage extends Page {
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel messageLabel = new JLabel("Hold your card to the RFID reader to write: " + BanqAPI.getAccountId());
+        JLabel messageLabel = new JLabel("Hold your card to the RFID reader to write: " + accountId);
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
 
         add(Box.createVerticalGlue());
 
-        App.sendWriteRFID(BanqAPI.getAccountId());
+        App.getInstance().sendWriteRFID(accountId);
     }
 
-    public void onRFIDWrite(String rfid_uid, String account_id) {
-        BanqAPI.setRfidUid(rfid_uid);
-        BanqAPI.createCard();
-        BanqAPI.logout();
+    public void onRFIDWrite(String account_id, String rfid_uid) {
+        BanqAPI.getInstance().createCard(account_id, rfid_uid, pincode);
+        BanqAPI.getInstance().logout();
 
-        Navigator.changePage(new AdminWriteDonePage());
+        Navigator.getInstance().changePage(new AdminWriteDonePage());
     }
 }
