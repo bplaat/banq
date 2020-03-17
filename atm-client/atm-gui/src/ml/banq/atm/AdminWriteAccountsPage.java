@@ -1,12 +1,10 @@
 package ml.banq.atm;
 
 import java.awt.Component;
-import java.awt.Font;
 import java.util.ArrayList;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class AdminWriteAccountsPage extends Page {
     private static final long serialVersionUID = 1;

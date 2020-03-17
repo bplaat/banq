@@ -1,25 +1,43 @@
 package ml.banq.atm;
 
-import javax.swing.JScrollPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-public class Navigator extends JScrollPane {
+public class Navigator extends JPanel {
     private static final long serialVersionUID = 1;
 
     private static Navigator instance = new Navigator();
 
+    Page page;
+
     private Navigator() {
-        setBorder(null);
+        setLayout(null);
+
+        JLabel logo = new JLabel(Utils.loadImage("logo.png", 256, 128));
+        logo.setBounds(Paddings.NORMAL, Paddings.NORMAL, 256, 128);
+        add(logo);
     }
 
     public static Navigator getInstance() {
         return instance;
     }
 
-    public void changePage(Page page) {
-        instance.setViewportView(page);
+    public void changePage(Page new_page) {
+        if (page != null) {
+            remove(page);
+        }
+        page = new_page;
+        page.setBounds(0, 0, App.getInstance().getWindowWidth(), App.getInstance().getWindowHeight());
+        add(page);
+
+        App.getInstance().repaintWindow();
+    }
+
+    public void resizePage(int width, int height) {
+        page.setBounds(0, 0, width, height);
     }
 
     public Page getPage() {
-        return (Page)(instance.getViewport().getView());
+        return page;
     }
 }

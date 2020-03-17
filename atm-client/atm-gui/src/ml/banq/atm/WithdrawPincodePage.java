@@ -3,7 +3,6 @@ package ml.banq.atm;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -49,7 +48,7 @@ public class WithdrawPincodePage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         JPanel pincodeBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
-        pincodeBox.setMaximumSize(new Dimension(320, 64));
+        pincodeBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, Fonts.NORMAL.getSize() * 2));
         add(pincodeBox);
 
         JLabel pincodeLabel = new JLabel("Pincode: ");

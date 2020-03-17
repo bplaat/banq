@@ -104,11 +104,11 @@ public class BanqAPI {
     }
 
     public String getKey() {
-        return instance.key;
+        return key;
     }
 
     public void setKey(String key) {
-        instance.key = key;
+        key = key;
     }
 
     public static int parseAccountId(String account_id) {
@@ -233,7 +233,7 @@ public class BanqAPI {
 
     public Transaction createTransaction(String fromAccountId, String rfid_uid, String pincode, String name, String toAccountId, float amount) {
         try {
-            JSONObject data = fetch(Config.BANQ_API_URL + "/atm/transactions/create?key=" + instance.key + "&name=" + URLEncoder.encode(name, "UTF-8") +
+            JSONObject data = fetch(Config.BANQ_API_URL + "/atm/transactions/create?key=" + key + "&name=" + URLEncoder.encode(name, "UTF-8") +
                 "&from_account_id=" + fromAccountId + "&to_account_id=" + toAccountId + "&rfid=" + rfid_uid + "&pincode=" + pincode + "&amount=" + amount);
             if (data != null && data.getBoolean("success")) {
                 JSONObject json_transaction = data.getJSONObject("transaction");

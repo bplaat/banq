@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -61,7 +60,7 @@ public class AdminWriteLoginPage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         JPanel buttonsBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
-        buttonsBox.setMaximumSize(new Dimension(320, 64));
+        buttonsBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, Fonts.NORMAL.getSize() * 2));
         add(buttonsBox);
 
         JButton loginButton = new JButton("Login");
@@ -90,5 +89,11 @@ public class AdminWriteLoginPage extends Page {
         buttonsBox.add(backButton);
 
         add(Box.createVerticalGlue());
+    }
+
+    public void onKeypad(String key) {
+        if (key.equals("D")) {
+            Navigator.getInstance().changePage(new AdminMenuPage());
+        }
     }
 }

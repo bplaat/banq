@@ -1,11 +1,9 @@
 package ml.banq.atm;
 
 import java.awt.Component;
-import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class AdminWriteDonePage extends Page {
     private static final long serialVersionUID = 1;

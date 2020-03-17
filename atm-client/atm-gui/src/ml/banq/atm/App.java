@@ -3,23 +3,12 @@ package ml.banq.atm;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JScrollPane;
 import javax.swing.UIManager;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import org.json.JSONObject;
 
@@ -52,7 +41,11 @@ public class App implements Runnable, SerialPortMessageListener {
             frame.setSize(1280, 720);
             frame.setLocationRelativeTo(null);
         }
-        frame.setResizable(false);
+        frame.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent componentEvent) {
+                Navigator.getInstance().resizePage(frame.getWidth(), frame.getHeight());
+            }
+        });
         frame.setVisible(true);
 
         frame.add(Navigator.getInstance());
@@ -113,6 +106,15 @@ public class App implements Runnable, SerialPortMessageListener {
         return frame.getWidth();
     }
 
+    public int getWindowHeight() {
+        return frame.getHeight();
+    }
+
+    public void repaintWindow() {
+        frame.getContentPane().validate();
+        frame.getContentPane().repaint();
+    }
+
     public void sendWriteRFID(String account_id) {
         JSONObject message = new JSONObject();
         message.put("type", "rfid_write");
@@ -138,7 +140,7 @@ public class App implements Runnable, SerialPortMessageListener {
     public void sendMessage(JSONObject message) {
         String line = message.toString() + "\n";
         byte[] bytes = line.getBytes();
-        instance.serialPort.writeBytes(bytes, bytes.length);
+        serialPort.writeBytes(bytes, bytes.length);
         System.out.print("[INFO] Write: " + line);
     }
 }
