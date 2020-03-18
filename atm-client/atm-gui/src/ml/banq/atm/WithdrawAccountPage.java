@@ -23,7 +23,7 @@ public class WithdrawAccountPage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Acount name: " + account.getName());
+        JLabel titleLabel = new JLabel(Language.getString("withdraw_account_page_title_prefix") + " " + account.getName());
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
@@ -37,14 +37,14 @@ public class WithdrawAccountPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel menu1Label = new JLabel("1. Withdraw money");
+        JLabel menu1Label = new JLabel("1. " + Language.getString("withdraw_account_page_withdraw"));
         menu1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu1Label.setFont(Fonts.NORMAL);
         add(menu1Label);
 
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
-        JLabel menu2Label = new JLabel("D. Logout and go back to the welcome page");
+        JLabel menu2Label = new JLabel("D. " + Language.getString("withdraw_account_page_back"));
         menu2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu2Label.setFont(Fonts.NORMAL);
         add(menu2Label);

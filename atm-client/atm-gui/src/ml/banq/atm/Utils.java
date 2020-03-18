@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 public class Utils {
     public static ImageIcon loadImage(String filename, int width, int height) {
         try {
-            BufferedImage image = ImageIO.read(Utils.class.getResource("/resources/" + filename));
+            BufferedImage image = ImageIO.read(Utils.class.getResource("/resources/images/" + filename));
             return new ImageIcon(image.getScaledInstance(width, height, Image.SCALE_SMOOTH));
         } catch (Exception e) {
             e.printStackTrace();

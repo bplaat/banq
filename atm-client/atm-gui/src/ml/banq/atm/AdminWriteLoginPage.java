@@ -22,14 +22,14 @@ public class AdminWriteLoginPage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Login to your Banq account");
+        JLabel titleLabel = new JLabel(Language.getString("admin_write_login_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel loginLabel = new JLabel("Username or email address: ");
+        JLabel loginLabel = new JLabel(Language.getString("admin_write_login_page_login_input"));
         loginLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginLabel.setFont(Fonts.NORMAL);
         add(loginLabel);
@@ -44,7 +44,7 @@ public class AdminWriteLoginPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel passwordLabel = new JLabel("Password: ");
+        JLabel passwordLabel = new JLabel(Language.getString("admin_write_login_page_password_input"));
         passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         passwordLabel.setFont(Fonts.NORMAL);
         add(passwordLabel);
@@ -60,10 +60,10 @@ public class AdminWriteLoginPage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         JPanel buttonsBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
-        buttonsBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, Fonts.NORMAL.getSize() * 2));
+        buttonsBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, 0));
         add(buttonsBox);
 
-        JButton loginButton = new JButton("Login");
+        JButton loginButton = new JButton(Language.getString("admin_write_login_page_login_button"));
         loginButton.setFont(Fonts.NORMAL);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -72,13 +72,13 @@ public class AdminWriteLoginPage extends Page {
                     Navigator.getInstance().changePage(new AdminWriteAccountsPage());
                 } else {
                     App.getInstance().sendBeeper(110, 250);
-                    JOptionPane.showMessageDialog(null, "Incorrect username, email or password");
+                    JOptionPane.showMessageDialog(null, Language.getString("admin_write_login_page_error"));
                 }
             }
         });
         buttonsBox.add(loginButton);
 
-        JButton backButton = new JButton("Back");
+        JButton backButton = new JButton(Language.getString("admin_write_login_page_back_button"));
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(Fonts.NORMAL);
         backButton.addActionListener(new ActionListener() {

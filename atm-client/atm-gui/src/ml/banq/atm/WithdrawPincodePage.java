@@ -15,7 +15,7 @@ public class WithdrawPincodePage extends Page {
     private String accountId;
     private String rfid_uid;
 
-    private JLabel message1Label;
+    private JLabel messageLabel;
     private JPasswordField pincodeInput;
 
     public WithdrawPincodePage(String accountId, String rfid_uid) {
@@ -26,33 +26,25 @@ public class WithdrawPincodePage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Enter your pincode");
+        JLabel titleLabel = new JLabel(Language.getString("withdraw_pincode_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        message1Label = new JLabel("Enter your pincode press '#' when you are finished");
-        message1Label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        message1Label.setFont(Fonts.NORMAL);
-        add(message1Label);
-
-        add(Box.createVerticalStrut(Paddings.NORMAL));
-
-        JLabel message2Label = new JLabel("Press '*' to clear the pincode");
-        message2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        message2Label.setFont(Fonts.NORMAL);
-        add(message2Label);
+        messageLabel = new JLabel(Language.getString("withdraw_pincode_page_message"));
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        messageLabel.setFont(Fonts.NORMAL);
+        add(messageLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         JPanel pincodeBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
-        pincodeBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, Fonts.NORMAL.getSize() * 2));
+        pincodeBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, 0));
         add(pincodeBox);
 
-        JLabel pincodeLabel = new JLabel("Pincode: ");
-        pincodeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel pincodeLabel = new JLabel(Language.getString("withdraw_pincode_page_pincode_input"));
         pincodeLabel.setFont(Fonts.NORMAL);
         pincodeBox.add(pincodeLabel);
 
@@ -64,7 +56,7 @@ public class WithdrawPincodePage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel backLabel = new JLabel("Press the 'D' key to go back to the welcome page");
+        JLabel backLabel = new JLabel(Language.getString("withdraw_pincode_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         backLabel.setFont(Fonts.NORMAL);
         add(backLabel);
@@ -94,7 +86,7 @@ public class WithdrawPincodePage extends Page {
                 Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
             } else {
                 App.getInstance().sendBeeper(110, 250);
-                message1Label.setText("The pincode is wrong or your card is blocked");
+                messageLabel.setText("The pincode is wrong or your card is blocked");
                 pincodeInput.setText("");
             }
         }

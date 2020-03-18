@@ -20,14 +20,14 @@ public class AdminWriteRFIDPage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Hold your card to the RFID reader");
+        JLabel titleLabel = new JLabel(Language.getString("admin_write_rfid_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel messageLabel = new JLabel("Hold your card to the RFID reader to write: " + accountId);
+        JLabel messageLabel = new JLabel(Language.getString("admin_write_rfid_page_message_prefix") + " " + accountId);
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);

@@ -27,13 +27,13 @@ public class WithdrawAmountPage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Select a amount to withdraw");
+        JLabel titleLabel = new JLabel(Language.getString("withdraw_amount_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        messageLabel = new JLabel("Select a amount to withdraw from your account");
+        messageLabel = new JLabel(Language.getString("withdraw_amount_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
@@ -48,14 +48,14 @@ public class WithdrawAmountPage extends Page {
             add(Box.createVerticalStrut(Paddings.NORMAL));
         }
 
-        JLabel customLabel = new JLabel((Config.DEFAULT_AMOUNTS.length + 1) + ". Custom");
+        JLabel customLabel = new JLabel((Config.DEFAULT_AMOUNTS.length + 1) + ". " + Language.getString("withdraw_amount_page_custom"));
         customLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         customLabel.setFont(Fonts.NORMAL);
         add(customLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel backLabel = new JLabel("Press the 'D' key to go back");
+        JLabel backLabel = new JLabel("D. " + Language.getString("withdraw_amount_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         backLabel.setFont(Fonts.NORMAL);
         add(backLabel);
@@ -73,25 +73,25 @@ public class WithdrawAmountPage extends Page {
                 float amount = Config.DEFAULT_AMOUNTS[i];
 
                 if (account.getAmount() - Config.DEFAULT_AMOUNTS[i] >= 0) {
-                    String name = "Withdraw at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                    String name = Language.getString("withdraw_amount_page_transaction_prefix") + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                     BanqAPI.Transaction transaction = BanqAPI.getInstance().createTransaction(accountId, rfid_uid, pincode, name, "SU-BANQ-00000001", amount);
                     if (transaction != null) {
                         App.getInstance().sendBeeper(880, 250);
                         Navigator.getInstance().changePage(new WithdrawReceiptPage(transaction));
                     } else {
                         App.getInstance().sendBeeper(110, 250);
-                        messageLabel.setText("Internal server error");
+                        messageLabel.setText(Language.getString("withdraw_amount_page_error"));
                     }
                 } else {
                     App.getInstance().sendBeeper(110, 250);
-                    messageLabel.setText("You dont have enough money!");
+                    messageLabel.setText(Language.getString("withdraw_amount_page_not_enough"));
                 }
             }
         }
 
         if (key.equals(String.valueOf(Config.DEFAULT_AMOUNTS.length + 1))) {
             App.getInstance().sendBeeper(110, 250);
-            messageLabel.setText("Custom amount is not supported right now!");
+            messageLabel.setText(Language.getString("withdraw_amount_page_not_custom"));
         }
     }
 }

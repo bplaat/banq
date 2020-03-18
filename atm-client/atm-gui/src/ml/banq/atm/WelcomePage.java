@@ -1,9 +1,12 @@
 package ml.banq.atm;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class WelcomePage extends Page {
     private static final long serialVersionUID = 1;
@@ -13,23 +16,57 @@ public class WelcomePage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Welcome to Banq");
+        JLabel titleLabel = new JLabel(Language.getString("welcome_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel messageLabel = new JLabel("Press any key on the keypad to continue...");
+        JLabel messageLabel = new JLabel(Language.getString("welcome_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
+
+        add(Box.createVerticalStrut(Paddings.LARGE * 2));
+
+        JLabel languageLabel = new JLabel(Language.getString("welcome_page_language_input"));
+        languageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        languageLabel.setFont(Fonts.NORMAL_BOLD);
+        add(languageLabel);
+
+        add(Box.createVerticalStrut(Paddings.LARGE));
+
+        for (int i = 0; i < Config.LANGUAGES.length; i++) {
+            JPanel languageBox = new JPanel(new FlowLayout(FlowLayout.LEFT, Paddings.LARGE, 0));
+            languageBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 3, 0));
+            add(languageBox);
+
+            languageBox.add(new JLabel(Utils.loadImage("flag_" + Config.LANGUAGES[i] + ".png", 150, 100)));
+
+            JLabel languageOptionLabel = new JLabel((i + 1) + ". " + Language.getString("language_" + Config.LANGUAGES[i]));
+            languageOptionLabel.setFont(Language.getInstance().getLanguage() == Config.LANGUAGES[i] ? Fonts.NORMAL_BOLD : Fonts.NORMAL);
+            languageBox.add(languageOptionLabel);
+
+            if (i != Config.LANGUAGES.length - 1) {
+                add(Box.createVerticalStrut(Paddings.NORMAL));
+            }
+        }
 
         add(Box.createVerticalGlue());
     }
 
     public void onKeypad(String key) {
-        Navigator.getInstance().changePage(new WithdrawRFIDPage());
+        for (int i = 0; i < Config.LANGUAGES.length; i++) {
+            if (key.equals(String.valueOf(i + 1))) {
+                Language.getInstance().changeLanguage(Config.LANGUAGES[i]);
+                Navigator.getInstance().changePage(new WelcomePage());
+            }
+        }
+
+        if (key.equals("#")) {
+            Navigator.getInstance().changePage(new WithdrawRFIDPage());
+        }
     }
 
     public void onRFIDRead(String account_id, String rfid_uid) {

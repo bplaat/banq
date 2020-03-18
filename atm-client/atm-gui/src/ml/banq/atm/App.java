@@ -3,8 +3,8 @@ package ml.banq.atm;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
-import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,22 +12,23 @@ import javax.swing.UIManager;
 import javax.swing.SwingUtilities;
 import org.json.JSONObject;
 
-public class App implements Runnable, SerialPortMessageListener {
+public class App implements Runnable, ComponentListener, SerialPortMessageListener {
     private static App instance = new App();
 
     private JFrame frame;
     private SerialPort serialPort;
     private JLabel infoLabel;
 
-    private App() {
-        BanqAPI.getInstance().setKey(Config.DEVICE_KEY);
-    }
+    private App() {}
 
     public static App getInstance() {
         return instance;
     }
 
     public void run() {
+        BanqAPI.getInstance().setKey(Config.DEVICE_KEY);
+        Language.getInstance().changeLanguage(Config.LANGUAGES[0]);
+
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {}
@@ -35,17 +36,14 @@ public class App implements Runnable, SerialPortMessageListener {
         frame = new JFrame("Banq ATM GUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         if (Config.FULLSCREEN_MODE) {
+            frame.setResizable(false);
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             frame.setUndecorated(true);
         } else {
             frame.setSize(1280, 720);
             frame.setLocationRelativeTo(null);
         }
-        frame.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent componentEvent) {
-                Navigator.getInstance().resizePage(frame.getWidth(), frame.getHeight());
-            }
-        });
+        frame.addComponentListener(this);
         frame.setVisible(true);
 
         frame.add(Navigator.getInstance());
@@ -57,6 +55,14 @@ public class App implements Runnable, SerialPortMessageListener {
             serialPort.openPort();
             serialPort.addDataListener(this);
         }
+    }
+
+    public void componentShown(ComponentEvent event) {}
+    public void componentHidden(ComponentEvent event) {}
+    public void componentMoved(ComponentEvent event) {}
+
+    public void componentResized(ComponentEvent event) {
+        Navigator.getInstance().resizePage(frame.getWidth(), frame.getHeight());
     }
 
     public int getListeningEvents() {

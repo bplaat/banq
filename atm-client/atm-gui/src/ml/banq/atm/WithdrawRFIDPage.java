@@ -13,21 +13,21 @@ public class WithdrawRFIDPage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Authenticate yourself");
+        JLabel titleLabel = new JLabel(Language.getString("withdraw_rfid_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel messageLabel = new JLabel("Scan your Banq card...");
+        JLabel messageLabel = new JLabel(Language.getString("withdraw_rfid_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel backLabel = new JLabel("Press the 'D' key to go back to the welcome page");
+        JLabel backLabel = new JLabel(Language.getString("withdraw_rfid_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         backLabel.setFont(Fonts.NORMAL);
         add(backLabel);

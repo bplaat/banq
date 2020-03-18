@@ -18,7 +18,7 @@ public class AdminWriteAccountsPage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Select a Banq account to add your card to");
+        JLabel titleLabel = new JLabel(Language.getString("admin_write_accounts_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
@@ -39,7 +39,7 @@ public class AdminWriteAccountsPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel backLabel = new JLabel("Press the 'D' key to logout and go back the login page");
+        JLabel backLabel = new JLabel("D. " + Language.getString("admin_write_accounts_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         backLabel.setFont(Fonts.NORMAL);
         add(backLabel);

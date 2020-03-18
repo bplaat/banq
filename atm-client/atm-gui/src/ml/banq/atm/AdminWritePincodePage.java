@@ -21,14 +21,14 @@ public class AdminWritePincodePage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Enter your new pincode for the new card");
+        JLabel titleLabel = new JLabel(Language.getString("admin_write_pincode_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel pincodeLabel = new JLabel("New pincode: ");
+        JLabel pincodeLabel = new JLabel(Language.getString("admin_write_pincode_page_pincode_input"));
         pincodeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         pincodeLabel.setFont(Fonts.NORMAL);
         add(pincodeLabel);
@@ -43,7 +43,7 @@ public class AdminWritePincodePage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel pincodeConfirmationLabel = new JLabel("New pincode confirmation: ");
+        JLabel pincodeConfirmationLabel = new JLabel(Language.getString("admin_write_pincode_page_pincode_confirmation_input"));
         pincodeConfirmationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         pincodeConfirmationLabel.setFont(Fonts.NORMAL);
         add(pincodeConfirmationLabel);
@@ -59,10 +59,10 @@ public class AdminWritePincodePage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         JPanel buttonsBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
-        buttonsBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, Fonts.NORMAL.getSize() * 2));
+        buttonsBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, 0));
         add(buttonsBox);
 
-        JButton continueButton = new JButton("Continue");
+        JButton continueButton = new JButton(Language.getString("admin_write_pincode_page_continue_button"));
         continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         continueButton.setFont(Fonts.NORMAL);
         continueButton.addActionListener(new ActionListener() {
@@ -72,16 +72,16 @@ public class AdminWritePincodePage extends Page {
                     if (pincode.equals(new String(pincodeConfirmationInput.getPassword()))) {
                         Navigator.getInstance().changePage(new AdminWriteRFIDPage(accountId, pincode));
                     } else {
-                        JOptionPane.showMessageDialog(null, "The pincode confirmation is not the same");
+                        JOptionPane.showMessageDialog(null, Language.getString("admin_write_pincode_page_error_same"));
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "The pincode must be four digits");
+                    JOptionPane.showMessageDialog(null, Language.getString("admin_write_pincode_page_error_digits"));
                 }
             }
         });
         buttonsBox.add(continueButton);
 
-        JButton backButton = new JButton("Back");
+        JButton backButton = new JButton(Language.getString("admin_write_pincode_page_back_button"));
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(Fonts.NORMAL);
         backButton.addActionListener(new ActionListener() {

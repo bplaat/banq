@@ -13,14 +13,14 @@ public class AdminWriteDonePage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("The card has been written succesfully");
+        JLabel titleLabel = new JLabel(Language.getString("admin_write_done_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel messageLabel = new JLabel("Press any key on the keypad to go back to the admin menu page...");
+        JLabel messageLabel = new JLabel(Language.getString("admin_write_done_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
