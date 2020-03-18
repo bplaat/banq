@@ -90,8 +90,7 @@ public class WithdrawAmountPage extends Page {
         }
 
         if (key.equals(String.valueOf(Config.DEFAULT_AMOUNTS.length + 1))) {
-            App.getInstance().sendBeeper(110, 250);
-            messageLabel.setText(Language.getString("withdraw_amount_page_not_custom"));
+            Navigator.getInstance().changePage(new WithdrawCustomAmountPage(accountId, rfid_uid, pincode, account));
         }
     }
 }

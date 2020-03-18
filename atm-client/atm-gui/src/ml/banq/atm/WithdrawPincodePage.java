@@ -86,7 +86,7 @@ public class WithdrawPincodePage extends Page {
                 Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
             } else {
                 App.getInstance().sendBeeper(110, 250);
-                messageLabel.setText("The pincode is wrong or your card is blocked");
+                messageLabel.setText(Language.getString("withdraw_pincode_message_error"));
                 pincodeInput.setText("");
             }
         }

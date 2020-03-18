@@ -25,6 +25,10 @@ public class Language {
     }
 
     public static String getString(String key) {
-        return instance.resourceBundle.getString(key);
+        try {
+            return new String(instance.resourceBundle.getString(key).getBytes("ISO-8859-1"), "UTF-8");
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

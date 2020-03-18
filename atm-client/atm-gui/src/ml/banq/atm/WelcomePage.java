@@ -3,6 +3,7 @@ package ml.banq.atm;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -28,7 +29,7 @@ public class WelcomePage extends Page {
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
 
-        add(Box.createVerticalStrut(Paddings.LARGE * 2));
+        add(Box.createVerticalStrut(Paddings.LARGE * 3));
 
         JLabel languageLabel = new JLabel(Language.getString("welcome_page_language_input"));
         languageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -37,20 +38,19 @@ public class WelcomePage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        JPanel languagesBox = new JPanel(new GridLayout(Config.LANGUAGES.length / 2, Config.LANGUAGES.length / 2, Paddings.LARGE, Paddings.LARGE));
+        languagesBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 3 * 2, 0));
+        add(languagesBox);
+
         for (int i = 0; i < Config.LANGUAGES.length; i++) {
             JPanel languageBox = new JPanel(new FlowLayout(FlowLayout.LEFT, Paddings.LARGE, 0));
-            languageBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 3, 0));
-            add(languageBox);
+            languagesBox.add(languageBox);
 
             languageBox.add(new JLabel(Utils.loadImage("flag_" + Config.LANGUAGES[i] + ".png", 150, 100)));
 
             JLabel languageOptionLabel = new JLabel((i + 1) + ". " + Language.getString("language_" + Config.LANGUAGES[i]));
             languageOptionLabel.setFont(Language.getInstance().getLanguage() == Config.LANGUAGES[i] ? Fonts.NORMAL_BOLD : Fonts.NORMAL);
             languageBox.add(languageOptionLabel);
-
-            if (i != Config.LANGUAGES.length - 1) {
-                add(Box.createVerticalStrut(Paddings.NORMAL));
-            }
         }
 
         add(Box.createVerticalGlue());
@@ -59,6 +59,7 @@ public class WelcomePage extends Page {
     public void onKeypad(String key) {
         for (int i = 0; i < Config.LANGUAGES.length; i++) {
             if (key.equals(String.valueOf(i + 1))) {
+                App.getInstance().sendBeeper(440, 250);
                 Language.getInstance().changeLanguage(Config.LANGUAGES[i]);
                 Navigator.getInstance().changePage(new WelcomePage());
             }

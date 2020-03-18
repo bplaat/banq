@@ -40,7 +40,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             frame.setUndecorated(true);
         } else {
-            frame.setSize(1280, 720);
+            frame.setSize(1280, 1024);
             frame.setLocationRelativeTo(null);
         }
         frame.addComponentListener(this);
@@ -59,7 +59,10 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
 
     public void componentShown(ComponentEvent event) {}
     public void componentHidden(ComponentEvent event) {}
-    public void componentMoved(ComponentEvent event) {}
+
+    public void componentMoved(ComponentEvent event) {
+        Navigator.getInstance().resizePage(frame.getWidth(), frame.getHeight());
+    }
 
     public void componentResized(ComponentEvent event) {
         Navigator.getInstance().resizePage(frame.getWidth(), frame.getHeight());
