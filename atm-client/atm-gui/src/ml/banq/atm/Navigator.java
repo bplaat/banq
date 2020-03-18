@@ -13,9 +13,14 @@ public class Navigator extends JPanel {
     private Navigator() {
         setLayout(null);
 
-        JLabel logo = new JLabel(Utils.loadImage("logo.png", 256, 128));
-        logo.setBounds(Paddings.NORMAL, Paddings.NORMAL, 256, 128);
-        add(logo);
+        JLabel logoImage = new JLabel(Utils.loadImage("logo.png", 96, 96));
+        logoImage.setBounds(Paddings.NORMAL, Paddings.NORMAL, 96, 96);
+        add(logoImage);
+
+        JLabel logoLabel = new JLabel(Config.BANK_NAME);
+        logoLabel.setFont(Fonts.LOGO);
+        logoLabel.setBounds(Paddings.NORMAL * 2 + 96, Paddings.NORMAL + 4, 256, 96);
+        add(logoLabel);
     }
 
     public static Navigator getInstance() {

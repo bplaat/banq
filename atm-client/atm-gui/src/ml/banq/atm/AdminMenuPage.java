@@ -9,6 +9,8 @@ public class AdminMenuPage extends Page {
     private static final long serialVersionUID = 1;
 
     public AdminMenuPage() {
+        App.getInstance().showCursor();
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -41,6 +43,9 @@ public class AdminMenuPage extends Page {
         }
 
         if (key.equals("D")) {
+            if (Config.FULLSCREEN_MODE) {
+                App.getInstance().hideCursor();
+            }
             Navigator.getInstance().changePage(new WelcomePage());
         }
     }

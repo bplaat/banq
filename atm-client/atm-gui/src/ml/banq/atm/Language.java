@@ -1,13 +1,13 @@
 package ml.banq.atm;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.io.InputStreamReader;
+import java.util.Properties;
 
 public class Language {
     private static Language instance = new Language();
 
-    private ResourceBundle resourceBundle;
     private String language;
+    private Properties properties;
 
     private Language() {}
 
@@ -21,12 +21,18 @@ public class Language {
 
     public void changeLanguage(String language) {
         this.language = language;
-        resourceBundle = ResourceBundle.getBundle("resources.languages.strings", new Locale(language));
+
+        try {
+            properties = new Properties();
+            properties.load(new InputStreamReader(getClass().getResource("/resources/languages/strings_" + language + ".properties").openStream(), "UTF8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static String getString(String key) {
         try {
-            return new String(instance.resourceBundle.getString(key).getBytes("ISO-8859-1"), "UTF-8");
+            return instance.properties.getProperty(key);
         } catch (Exception e) {
             return null;
         }

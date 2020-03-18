@@ -5,7 +5,11 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
@@ -34,11 +38,12 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         } catch (Exception e) {}
 
         frame = new JFrame("Banq ATM GUI");
+        frame.setIconImage(Utils.loadImage("logo.png", 96, 96).getImage());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         if (Config.FULLSCREEN_MODE) {
-            frame.setResizable(false);
-            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             frame.setUndecorated(true);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].setFullScreenWindow(frame);
+            hideCursor();
         } else {
             frame.setSize(1280, 1024);
             frame.setLocationRelativeTo(null);
@@ -107,6 +112,14 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
                 }
             }
         }
+    }
+
+    void showCursor() {
+        frame.setCursor(Cursor.getDefaultCursor());
+    }
+
+    void hideCursor() {
+        frame.setCursor(frame.getToolkit().createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), null));
     }
 
     public int getWindowWidth() {

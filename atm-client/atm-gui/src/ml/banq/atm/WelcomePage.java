@@ -58,7 +58,7 @@ public class WelcomePage extends Page {
 
     public void onKeypad(String key) {
         for (int i = 0; i < Config.LANGUAGES.length; i++) {
-            if (key.equals(String.valueOf(i + 1))) {
+            if (key.equals(String.valueOf(i + 1)) && !Config.LANGUAGES[i].equals(Language.getInstance().getLanguage())) {
                 Language.getInstance().changeLanguage(Config.LANGUAGES[i]);
                 Navigator.getInstance().changePage(new WelcomePage());
             }
