@@ -9,5 +9,5 @@ public class Config {
     public static final String[] LANGUAGES = { "nl", "en", "de", "fr" };
     public static final int[] DEFAULT_AMOUNTS = { 5, 10, 20, 50, 70, 100, 200 };
     public static final int PRINTER_PAPER_WIDTH = 32;
-    public static final boolean FULLSCREEN_MODE = false;
+    public static final boolean FULLSCREEN_MODE = true;
 }

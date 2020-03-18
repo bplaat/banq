@@ -23,6 +23,10 @@ public class Navigator extends JPanel {
     }
 
     public void changePage(Page new_page) {
+        changePage(new_page, true);
+    }
+
+    public void changePage(Page new_page, boolean beeper) {
         if (page != null) {
             remove(page);
         }
@@ -31,6 +35,10 @@ public class Navigator extends JPanel {
         add(page);
 
         App.getInstance().repaintWindow();
+
+        if (beeper) {
+            App.getInstance().sendBeeper(440, 250);
+        }
     }
 
     public void resizePage(int width, int height) {

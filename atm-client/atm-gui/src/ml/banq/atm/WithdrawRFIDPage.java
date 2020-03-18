@@ -42,6 +42,7 @@ public class WithdrawRFIDPage extends Page {
     }
 
     public void onRFIDRead(String account_id, String rfid_uid) {
-        Navigator.getInstance().changePage(new WithdrawPincodePage(account_id, rfid_uid));
+        App.getInstance().sendBeeper(880, 250);
+        Navigator.getInstance().changePage(new WithdrawPincodePage(account_id, rfid_uid), false);
     }
 }

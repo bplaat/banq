@@ -59,7 +59,6 @@ public class WelcomePage extends Page {
     public void onKeypad(String key) {
         for (int i = 0; i < Config.LANGUAGES.length; i++) {
             if (key.equals(String.valueOf(i + 1))) {
-                App.getInstance().sendBeeper(440, 250);
                 Language.getInstance().changeLanguage(Config.LANGUAGES[i]);
                 Navigator.getInstance().changePage(new WelcomePage());
             }
@@ -78,6 +77,7 @@ public class WelcomePage extends Page {
             }
         }
 
-        Navigator.getInstance().changePage(new WithdrawPincodePage(account_id, rfid_uid));
+        App.getInstance().sendBeeper(880, 250);
+        Navigator.getInstance().changePage(new WithdrawPincodePage(account_id, rfid_uid), false);
     }
 }

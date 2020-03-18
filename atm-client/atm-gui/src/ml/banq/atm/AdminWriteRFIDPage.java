@@ -41,6 +41,7 @@ public class AdminWriteRFIDPage extends Page {
         BanqAPI.getInstance().createCard(account_id, rfid_uid, pincode);
         BanqAPI.getInstance().logout();
 
-        Navigator.getInstance().changePage(new AdminWriteDonePage());
+        App.getInstance().sendBeeper(880, 250);
+        Navigator.getInstance().changePage(new AdminWriteDonePage(), false);
     }
 }

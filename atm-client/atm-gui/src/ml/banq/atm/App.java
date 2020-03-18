@@ -47,7 +47,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         frame.setVisible(true);
 
         frame.add(Navigator.getInstance());
-        Navigator.getInstance().changePage(new WelcomePage());
+        Navigator.getInstance().changePage(new WelcomePage(), false);
 
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         if (serialPorts.length > 0) {
@@ -94,12 +94,10 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
                             }
 
                             if (message.getString("type").equals("rfid_read")) {
-                                sendBeeper(440, 250);
                                 Navigator.getInstance().getPage().onRFIDRead(message.getString("account_id"), message.getString("rfid_uid"));
                             }
 
                             if (message.getString("type").equals("rfid_write")) {
-                                sendBeeper(880, 250);
                                 Navigator.getInstance().getPage().onRFIDWrite(message.getString("account_id"), message.getString("rfid_uid"));
                             }
                         }

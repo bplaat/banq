@@ -49,7 +49,6 @@ public class WithdrawReceiptPage extends Page {
 
     public void onKeypad(String key) {
         if (key.equals("1")) {
-            App.getInstance().sendBeeper(880, 250);
 
             App.getInstance().sendPrinter(new String[] {
                 Utils.printerHorizontalLine(),
@@ -68,13 +67,13 @@ public class WithdrawReceiptPage extends Page {
                 ""
             });
 
-            Navigator.getInstance().changePage(new WithdrawDonePage());
+            App.getInstance().sendBeeper(880, 250);
+            Navigator.getInstance().changePage(new WithdrawDonePage(), false);
         }
 
         if (key.equals("2")) {
             App.getInstance().sendBeeper(880, 250);
-
-            Navigator.getInstance().changePage(new WithdrawDonePage());
+            Navigator.getInstance().changePage(new WithdrawDonePage(), false);
         }
     }
 }

@@ -69,7 +69,7 @@ public class AdminWriteLoginPage extends Page {
             public void actionPerformed(ActionEvent event) {
                 if (BanqAPI.getInstance().login(loginInput.getText(), new String(passwordInput.getPassword()))) {
                     App.getInstance().sendBeeper(880, 250);
-                    Navigator.getInstance().changePage(new AdminWriteAccountsPage());
+                    Navigator.getInstance().changePage(new AdminWriteAccountsPage(), false);
                 } else {
                     App.getInstance().sendBeeper(110, 250);
                     JOptionPane.showMessageDialog(null, Language.getString("admin_write_login_page_error"));

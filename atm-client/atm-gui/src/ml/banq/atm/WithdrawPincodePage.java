@@ -83,10 +83,10 @@ public class WithdrawPincodePage extends Page {
             BanqAPI.Account account = BanqAPI.getInstance().getAccount(accountId, rfid_uid, pincode);
             if (account != null) {
                 App.getInstance().sendBeeper(880, 250);
-                Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
+                Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account), false);
             } else {
                 App.getInstance().sendBeeper(110, 250);
-                messageLabel.setText(Language.getString("withdraw_pincode_message_error"));
+                messageLabel.setText(Language.getString("withdraw_pincode_page_error"));
                 pincodeInput.setText("");
             }
         }

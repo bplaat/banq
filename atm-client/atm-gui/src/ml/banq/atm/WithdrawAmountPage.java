@@ -76,7 +76,6 @@ public class WithdrawAmountPage extends Page {
                     String name = Language.getString("withdraw_amount_page_transaction_prefix") + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                     BanqAPI.Transaction transaction = BanqAPI.getInstance().createTransaction(accountId, rfid_uid, pincode, name, "SU-BANQ-00000001", amount);
                     if (transaction != null) {
-                        App.getInstance().sendBeeper(880, 250);
                         Navigator.getInstance().changePage(new WithdrawReceiptPage(transaction));
                     } else {
                         App.getInstance().sendBeeper(110, 250);
