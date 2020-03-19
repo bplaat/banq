@@ -6,18 +6,22 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 
+// The Admin write accounts page
 public class AdminWriteAccountsPage extends Page {
     private static final long serialVersionUID = 1;
 
+    // A arraylist to hold the user payment accounts
     private ArrayList<BanqAPI.Account> accounts;
 
     public AdminWriteAccountsPage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
+        // Select all the payment accounts of the logged user
         accounts = BanqAPI.getInstance().getPaymentAccounts();
 
         add(Box.createVerticalGlue());
 
+        // Create the page title
         JLabel titleLabel = new JLabel(Language.getString("admin_write_accounts_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
@@ -25,6 +29,7 @@ public class AdminWriteAccountsPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the menu options for every account
         for (int i = 0; i < accounts.size(); i++) {
             BanqAPI.Account account = accounts.get(i);
             JLabel accountLabel = new JLabel(String.format("%d. %s \u20ac %.2f", i + 1, account.getName(), account.getAmount()));
@@ -39,6 +44,7 @@ public class AdminWriteAccountsPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the back menu option
         JLabel backLabel = new JLabel("D. " + Language.getString("admin_write_accounts_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         backLabel.setFont(Fonts.NORMAL);
@@ -48,11 +54,13 @@ public class AdminWriteAccountsPage extends Page {
     }
 
     public void onKeypad(String key) {
+        // When the D is pressed logout and go back
         if (key.equals("D")) {
             BanqAPI.getInstance().logout();
             Navigator.getInstance().changePage(new AdminWriteLoginPage());
         }
 
+        // When a menu option is selected go the the admin write pincode page with the account id string
         for (int i = 0; i < accounts.size(); i++) {
             if (key.equals(String.valueOf(i + 1))) {
                 Navigator.getInstance().changePage(new AdminWritePincodePage(String.format("SU-BANQ-%08d", accounts.get(i).getId())));

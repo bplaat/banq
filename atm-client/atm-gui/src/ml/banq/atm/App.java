@@ -6,39 +6,43 @@ import com.fazecast.jSerialComm.SerialPortMessageListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.SwingUtilities;
 import org.json.JSONObject;
 
+// The singleton App root class
 public class App implements Runnable, ComponentListener, SerialPortMessageListener {
+    // The app singleton instance
     private static App instance = new App();
 
     private JFrame frame;
     private SerialPort serialPort;
-    private JLabel infoLabel;
 
     private App() {}
 
+    // A method to get a App intance
     public static App getInstance() {
         return instance;
     }
 
+    // The run method that creates the UI
     public void run() {
+        // Init the api and the language
         BanqAPI.getInstance().setKey(Config.DEVICE_KEY);
         Language.getInstance().changeLanguage(Config.LANGUAGES[0]);
 
+        // Select the native UI theme for Java Swing
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {}
 
+        // Create the Java Swing window
         frame = new JFrame("Banq ATM GUI");
-        frame.setIconImage(Utils.loadImage("logo.png", 96, 96).getImage());
+        frame.setIconImage(ImageUtils.loadImage("logo.png", 96, 96).getImage());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         if (Config.FULLSCREEN_MODE) {
             frame.setUndecorated(true);
@@ -51,9 +55,11 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         frame.addComponentListener(this);
         frame.setVisible(true);
 
+        // Add the navigator system to the java swing class
         frame.add(Navigator.getInstance());
         Navigator.getInstance().changePage(new WelcomePage(), false);
 
+        // Open the first serial port
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         if (serialPorts.length > 0) {
             serialPort = serialPorts[0];
@@ -62,7 +68,9 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         }
     }
 
+    // Listen to resize and move events of the window to resize the navigator
     public void componentShown(ComponentEvent event) {}
+
     public void componentHidden(ComponentEvent event) {}
 
     public void componentMoved(ComponentEvent event) {
@@ -73,6 +81,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         Navigator.getInstance().resizePage(frame.getWidth(), frame.getHeight());
     }
 
+    // Set up some options for the serial port listener
     public int getListeningEvents() {
         return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
     }
@@ -85,6 +94,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         return true;
     }
 
+    // Listen to serial port data messages
     public void serialEvent(SerialPortEvent event) {
         if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED) {
             String line = new String(event.getReceivedData());
@@ -94,6 +104,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
                     JSONObject message = new JSONObject(line);
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
+                            // Give all the events to the current page of the navigator
                             if (message.getString("type").equals("keypad")) {
                                 Navigator.getInstance().getPage().onKeypad(message.getString("key"));
                             }
@@ -114,27 +125,33 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         }
     }
 
+    // A method that shows the default cursor
     void showCursor() {
         frame.setCursor(Cursor.getDefaultCursor());
     }
 
+    // A method that hides the cursor
     void hideCursor() {
         frame.setCursor(frame.getToolkit().createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), null));
     }
 
+    // A method that returns the window width
     public int getWindowWidth() {
         return frame.getWidth();
     }
 
+    // A method that returns to window height
     public int getWindowHeight() {
         return frame.getHeight();
     }
 
+    // A method that forces the window to repaint
     public void repaintWindow() {
         frame.getContentPane().validate();
         frame.getContentPane().repaint();
     }
 
+    // A method that sends a RFID write message
     public void sendWriteRFID(String account_id) {
         JSONObject message = new JSONObject();
         message.put("type", "rfid_write");
@@ -142,6 +159,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         sendMessage(message);
     }
 
+    // A method that sends a beeper message
     public void sendBeeper(int frequency, int duration) {
         JSONObject message = new JSONObject();
         message.put("type", "beeper");
@@ -150,6 +168,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         sendMessage(message);
     }
 
+    // A method that sends a printer message
     public void sendPrinter(String[] lines) {
         JSONObject message = new JSONObject();
         message.put("type", "printer");
@@ -157,6 +176,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         sendMessage(message);
     }
 
+    // A method that writes the message to the serial port
     public void sendMessage(JSONObject message) {
         String line = message.toString() + "\n";
         byte[] bytes = line.getBytes();

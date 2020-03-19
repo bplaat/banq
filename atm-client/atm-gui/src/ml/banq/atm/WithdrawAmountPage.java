@@ -7,6 +7,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 
+// The withdraw amount page
 public class WithdrawAmountPage extends Page {
     private static final long serialVersionUID = 1;
 
@@ -27,12 +28,14 @@ public class WithdrawAmountPage extends Page {
 
         add(Box.createVerticalGlue());
 
+        // Create the page title
         JLabel titleLabel = new JLabel(Language.getString("withdraw_amount_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the page message label
         messageLabel = new JLabel(Language.getString("withdraw_amount_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
@@ -40,6 +43,7 @@ public class WithdrawAmountPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
+        // Create the amount options
         for (int i = 0; i < Config.DEFAULT_AMOUNTS.length; i++) {
             JLabel amountLabel = new JLabel((i + 1) + ". \u20ac " + Config.DEFAULT_AMOUNTS[i]);
             amountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -48,6 +52,7 @@ public class WithdrawAmountPage extends Page {
             add(Box.createVerticalStrut(Paddings.NORMAL));
         }
 
+        // Create the custom amount option
         JLabel customLabel = new JLabel((Config.DEFAULT_AMOUNTS.length + 1) + ". " + Language.getString("withdraw_amount_page_custom"));
         customLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         customLabel.setFont(Fonts.NORMAL);
@@ -55,6 +60,7 @@ public class WithdrawAmountPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the back option
         JLabel backLabel = new JLabel("D. " + Language.getString("withdraw_amount_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         backLabel.setFont(Fonts.NORMAL);
@@ -64,10 +70,12 @@ public class WithdrawAmountPage extends Page {
     }
 
     public void onKeypad(String key) {
+        // When back is pressed go back
         if (key.equals("D")) {
             Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
         }
 
+        // Check if one of the amount is pressed and create the transaction
         for (int i = 0; i < Config.DEFAULT_AMOUNTS.length; i++) {
             if (key.equals(String.valueOf(i + 1))) {
                 float amount = Config.DEFAULT_AMOUNTS[i];
@@ -88,6 +96,7 @@ public class WithdrawAmountPage extends Page {
             }
         }
 
+        // When the custom amount is selected go to the page
         if (key.equals(String.valueOf(Config.DEFAULT_AMOUNTS.length + 1))) {
             Navigator.getInstance().changePage(new WithdrawCustomAmountPage(accountId, rfid_uid, pincode, account));
         }

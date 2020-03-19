@@ -10,7 +10,9 @@ import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+// The singleton BanqAPI class
 public class BanqAPI {
+    // The Banq Account Data class
     public static class Account {
         public static final int TYPE_SAVE = 1;
         public static final int TYPE_PAYMENT = 2;
@@ -50,6 +52,7 @@ public class BanqAPI {
         }
     }
 
+    // The Banq transaction data class
     public static class Transaction {
         private final int id;
         private final String name;
@@ -92,37 +95,41 @@ public class BanqAPI {
         }
     }
 
+    // The BanqAPI singleton instance
     private static BanqAPI instance = new BanqAPI();
 
+    // The data fields
     private String key;
     private String session;
 
     private BanqAPI() {}
 
+    // A method to get a BanqAPI instance
     public static BanqAPI getInstance() {
         return instance;
     }
 
-    public String getKey() {
-        return key;
-    }
-
+    // A method that sets the Banq device API key
     public void setKey(String key) {
         key = key;
     }
 
+    // A static function that parses a account id string
     public static int parseAccountId(String account_id) {
         return Integer.parseInt(account_id.substring(8));
     }
 
+    // A static function that formats a account id string
     public static String formatAccountId(int account_id) {
         return String.format("SU-BANQ-%08d", account_id);
     }
 
+    // A static function that parses a MySQL date
     public static Date parseDate(String date) throws Exception {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date);
     }
 
+    // A static function that fetches a URL and return a JSONObject
     private static JSONObject fetch(String url) throws Exception {
         System.out.println("[INFO] Fetch url: " + url);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
@@ -143,6 +150,7 @@ public class BanqAPI {
         return null;
     }
 
+    // The API login method
     public boolean login(String login, String password) {
         try {
             JSONObject data = fetch(Config.BANQ_API_URL + "/auth/login?key=" + key + "&login=" + URLEncoder.encode(login, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8"));
@@ -156,6 +164,7 @@ public class BanqAPI {
         return false;
     }
 
+    // The API logout method
     public boolean logout() {
         try {
             JSONObject data = fetch(Config.BANQ_API_URL + "/auth/logout?key=" + key + "&session=" + session);
@@ -169,6 +178,7 @@ public class BanqAPI {
         return false;
     }
 
+    // The API get payment accounts
     public ArrayList<Account> getPaymentAccounts() {
         if (session != null) {
             try {
@@ -197,6 +207,7 @@ public class BanqAPI {
         return null;
     }
 
+    // The API create card
     public boolean createCard(String accountId, String rfid_uid, String pincode) {
         if (session != null) {
             try {
@@ -211,6 +222,7 @@ public class BanqAPI {
         return false;
     }
 
+    // The ATM API get account info
     public Account getAccount(String accountId, String rfid_uid, String pincode) {
         try {
             JSONObject data = fetch(Config.BANQ_API_URL + "/atm/accounts/" + accountId + "?key=" + key + "&rfid=" + rfid_uid + "&pincode=" + pincode);
@@ -231,6 +243,7 @@ public class BanqAPI {
         return null;
     }
 
+    // The ATM API create a transaction
     public Transaction createTransaction(String fromAccountId, String rfid_uid, String pincode, String name, String toAccountId, float amount) {
         try {
             JSONObject data = fetch(Config.BANQ_API_URL + "/atm/transactions/create?key=" + key + "&name=" + URLEncoder.encode(name, "UTF-8") +

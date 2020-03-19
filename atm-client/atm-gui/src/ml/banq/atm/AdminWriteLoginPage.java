@@ -14,6 +14,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+// The admin write login page
 public class AdminWriteLoginPage extends Page {
     private static final long serialVersionUID = 1;
 
@@ -22,6 +23,7 @@ public class AdminWriteLoginPage extends Page {
 
         add(Box.createVerticalGlue());
 
+        // Create the page title
         JLabel titleLabel = new JLabel(Language.getString("admin_write_login_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
@@ -29,6 +31,7 @@ public class AdminWriteLoginPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the page login input label
         JLabel loginLabel = new JLabel(Language.getString("admin_write_login_page_login_input"));
         loginLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginLabel.setFont(Fonts.NORMAL);
@@ -36,6 +39,7 @@ public class AdminWriteLoginPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
+        // Create the page login input field
         JTextField loginInput = new JTextField(16);
         loginInput.setFont(Fonts.NORMAL);
         loginInput.setHorizontalAlignment(JTextField.CENTER);
@@ -44,6 +48,7 @@ public class AdminWriteLoginPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the page password input label
         JLabel passwordLabel = new JLabel(Language.getString("admin_write_login_page_password_input"));
         passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         passwordLabel.setFont(Fonts.NORMAL);
@@ -51,6 +56,7 @@ public class AdminWriteLoginPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
+        // Create the page password input field
         JPasswordField passwordInput = new JPasswordField(16);
         passwordInput.setFont(Fonts.NORMAL);
         passwordInput.setHorizontalAlignment(JPasswordField.CENTER);
@@ -59,14 +65,17 @@ public class AdminWriteLoginPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the buttons box
         JPanel buttonsBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
         buttonsBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, 0));
         add(buttonsBox);
 
+        // Create the login button
         JButton loginButton = new JButton(Language.getString("admin_write_login_page_login_button"));
         loginButton.setFont(Fonts.NORMAL);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
+                // Try to login
                 if (BanqAPI.getInstance().login(loginInput.getText(), new String(passwordInput.getPassword()))) {
                     App.getInstance().sendBeeper(880, 250);
                     Navigator.getInstance().changePage(new AdminWriteAccountsPage(), false);
@@ -78,11 +87,13 @@ public class AdminWriteLoginPage extends Page {
         });
         buttonsBox.add(loginButton);
 
+        // Create the back button
         JButton backButton = new JButton(Language.getString("admin_write_login_page_back_button"));
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(Fonts.NORMAL);
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
+                // When pressed go back
                 Navigator.getInstance().changePage(new AdminMenuPage());
             }
         });
@@ -92,6 +103,7 @@ public class AdminWriteLoginPage extends Page {
     }
 
     public void onKeypad(String key) {
+        // When pressed go back
         if (key.equals("D")) {
             Navigator.getInstance().changePage(new AdminMenuPage());
         }

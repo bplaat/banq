@@ -1,5 +1,6 @@
 package ml.banq.atm;
 
+// The static config class
 public class Config {
     public static final String BANK_NAME = "Banq";
     public static final String BANQ_API_URL = "http://banq.local/api";

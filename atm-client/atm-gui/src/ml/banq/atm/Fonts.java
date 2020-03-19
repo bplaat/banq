@@ -3,6 +3,7 @@ package ml.banq.atm;
 import java.awt.Font;
 import javax.swing.JLabel;
 
+// The static fonts class
 public class Fonts {
     public static final Font DEFAULT = new JLabel().getFont();
     public static final Font LOGO = new Font(DEFAULT.getName(), Font.BOLD, 40);

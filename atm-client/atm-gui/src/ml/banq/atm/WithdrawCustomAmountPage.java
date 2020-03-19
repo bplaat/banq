@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+// The withdraw custom amount page
 public class WithdrawCustomAmountPage extends Page {
     private static final long serialVersionUID = 1;
 
@@ -30,12 +31,14 @@ public class WithdrawCustomAmountPage extends Page {
 
         add(Box.createVerticalGlue());
 
+        // Create the page title label
         JLabel titleLabel = new JLabel(Language.getString("withdraw_custom_amount_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the page message label
         messageLabel = new JLabel(Language.getString("withdraw_custom_amount_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
@@ -43,14 +46,17 @@ public class WithdrawCustomAmountPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the page amount box
         JPanel amountBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
         amountBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, 0));
         add(amountBox);
 
-        JLabel pincodeLabel = new JLabel(Language.getString("withdraw_custom_amount_page_amount_input") + " \u20ac");
-        pincodeLabel.setFont(Fonts.NORMAL);
-        amountBox.add(pincodeLabel);
+        // Create the page amount input label
+        JLabel amountLabel = new JLabel(Language.getString("withdraw_custom_amount_page_amount_input") + " \u20ac");
+        amountLabel.setFont(Fonts.NORMAL);
+        amountBox.add(amountLabel);
 
+        // Create the amount input field
         amountInput = new JTextField(4);
         amountInput.setFont(Fonts.NORMAL);
         amountInput.setHorizontalAlignment(JTextField.CENTER);
@@ -59,6 +65,7 @@ public class WithdrawCustomAmountPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the back label menu option
         JLabel backLabel = new JLabel("D. " + Language.getString("withdraw_custom_amount_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         backLabel.setFont(Fonts.NORMAL);
@@ -68,10 +75,12 @@ public class WithdrawCustomAmountPage extends Page {
     }
 
     public void onKeypad(String key) {
+        // When back is pressed go to the amount page
         if (key.equals("D")) {
             Navigator.getInstance().changePage(new WithdrawAmountPage(accountId, rfid_uid, pincode, account));
         }
 
+        // The amount edit stuff
         String amount = amountInput.getText();
 
         if (key.matches("[0-9]")) {
@@ -83,9 +92,10 @@ public class WithdrawCustomAmountPage extends Page {
         }
 
         if (key.equals("#") && amount.length() > 0) {
+            // Show a comming soon label
             int amountNumber = Integer.parseInt(amount);
-                App.getInstance().sendBeeper(110, 250);
-                messageLabel.setText("Comming soon...");
+            App.getInstance().sendBeeper(110, 250);
+            messageLabel.setText("Comming soon...");
         }
     }
 }

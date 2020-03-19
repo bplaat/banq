@@ -3,7 +3,9 @@ package ml.banq.atm;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+// The language singleton class
 public class Language {
+    // The language singleton instance
     private static Language instance = new Language();
 
     private String language;
@@ -11,14 +13,17 @@ public class Language {
 
     private Language() {}
 
+    // Get a language instance
     public static Language getInstance() {
         return instance;
     }
 
+    // Get the current language
     public String getLanguage() {
         return language;
     }
 
+    // Change the current language and read the properties file
     public void changeLanguage(String language) {
         this.language = language;
 
@@ -30,6 +35,7 @@ public class Language {
         }
     }
 
+    // Get a language string from the current language
     public static String getString(String key) {
         try {
             return instance.properties.getProperty(key);
