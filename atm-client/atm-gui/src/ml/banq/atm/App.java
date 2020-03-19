@@ -31,10 +31,6 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
 
     // The run method that creates the UI
     public void run() {
-        // Init the api and the language
-        BanqAPI.getInstance().setKey(Config.DEVICE_KEY);
-        Language.getInstance().changeLanguage(Config.LANGUAGES[0]);
-
         // Select the native UI theme for Java Swing
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -98,7 +94,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
     public void serialEvent(SerialPortEvent event) {
         if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED) {
             String line = new String(event.getReceivedData());
-            System.out.print("[INFO] Read: " + line);
+            Log.debug("Read: " + line);
             if (line.charAt(0) == '{') {
                 try {
                     JSONObject message = new JSONObject(line);
@@ -118,8 +114,8 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
                             }
                         }
                     });
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception exception) {
+                    Log.error(exception);
                 }
             }
         }
@@ -181,6 +177,6 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         String line = message.toString() + "\n";
         byte[] bytes = line.getBytes();
         serialPort.writeBytes(bytes, bytes.length);
-        System.out.print("[INFO] Write: " + line);
+        Log.debug("Write: " + line);
     }
 }

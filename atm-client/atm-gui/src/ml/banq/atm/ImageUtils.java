@@ -12,8 +12,8 @@ public class ImageUtils {
         try {
             BufferedImage image = ImageIO.read(ImageUtils.class.getResource("/resources/images/" + filename));
             return new ImageIcon(image.getScaledInstance(width, height, Image.SCALE_SMOOTH));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            Log.error(exception);
             return null;
         }
     }

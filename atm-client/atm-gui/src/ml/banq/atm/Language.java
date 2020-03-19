@@ -11,7 +11,9 @@ public class Language {
     private String language;
     private Properties properties;
 
-    private Language() {}
+    private Language() {
+        changeLanguage(Config.LANGUAGES[0][0]);
+    }
 
     // Get a language instance
     public static Language getInstance() {
@@ -30,8 +32,8 @@ public class Language {
         try {
             properties = new Properties();
             properties.load(new InputStreamReader(getClass().getResource("/resources/languages/strings_" + language + ".properties").openStream(), "UTF8"));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            Log.error(exception);
         }
     }
 

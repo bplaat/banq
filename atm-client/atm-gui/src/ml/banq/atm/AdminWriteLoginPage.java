@@ -11,7 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 // The admin write login page
@@ -28,6 +27,14 @@ public class AdminWriteLoginPage extends Page {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
+
+        add(Box.createVerticalStrut(Paddings.LARGE));
+
+        // Create the page message label
+        JLabel messageLabel = new JLabel(Language.getString("admin_write_login_page_message"));
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        messageLabel.setFont(Fonts.NORMAL);
+        add(messageLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
@@ -81,7 +88,7 @@ public class AdminWriteLoginPage extends Page {
                     Navigator.getInstance().changePage(new AdminWriteAccountsPage(), false);
                 } else {
                     App.getInstance().sendBeeper(110, 250);
-                    JOptionPane.showMessageDialog(null, Language.getString("admin_write_login_page_error"));
+                    messageLabel.setText(Language.getString("admin_write_login_page_error"));
                 }
             }
         });
@@ -103,7 +110,7 @@ public class AdminWriteLoginPage extends Page {
     }
 
     public void onKeypad(String key) {
-        // When pressed go back
+        // When pressed go back to the previous page
         if (key.equals("D")) {
             Navigator.getInstance().changePage(new AdminMenuPage());
         }

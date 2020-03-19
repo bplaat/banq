@@ -11,7 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JOptionPane;
 
 // The admin write pincode page
 public class AdminWritePincodePage extends Page {
@@ -27,6 +26,14 @@ public class AdminWritePincodePage extends Page {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
+
+        add(Box.createVerticalStrut(Paddings.LARGE));
+
+        // Create the page message label
+        JLabel messageLabel = new JLabel(Language.getString("admin_write_pincode_page_message"));
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        messageLabel.setFont(Fonts.NORMAL);
+        add(messageLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
@@ -81,10 +88,10 @@ public class AdminWritePincodePage extends Page {
                     if (pincode.equals(new String(pincodeConfirmationInput.getPassword()))) {
                         Navigator.getInstance().changePage(new AdminWriteRFIDPage(accountId, pincode));
                     } else {
-                        JOptionPane.showMessageDialog(null, Language.getString("admin_write_pincode_page_error_same"));
+                        messageLabel.setText(Language.getString("admin_write_pincode_page_error"));
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, Language.getString("admin_write_pincode_page_error_digits"));
+                    messageLabel.setText(Language.getString("admin_write_pincode_page_message"));
                 }
             }
         });
