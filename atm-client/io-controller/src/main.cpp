@@ -12,7 +12,7 @@
 #include <MFRC522.h>
 #include <ArduinoJson.h>
 #include <Adafruit_Thermal.h>
-#include "printer_logo.h"
+#include "printer_logo.hpp"
 
 #define KEYPAD_ROWS 4
 #define KEYPAD_COLUMNS 4

@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Cursor;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
+import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.SwingUtilities;
@@ -61,6 +62,12 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
             serialPort = serialPorts[0];
             serialPort.openPort();
             serialPort.addDataListener(this);
+        }
+
+        // Show an error message when not connected
+        else {
+            Log.error("Can't connect with a serial port!");
+            System.exit(0);
         }
     }
 
@@ -169,6 +176,14 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         JSONObject message = new JSONObject();
         message.put("type", "printer");
         message.put("lines", lines);
+        sendMessage(message);
+    }
+
+    // A method that sends a money dispencer message
+    public void sendMoney(HashMap<String, Integer> money) {
+        JSONObject message = new JSONObject();
+        message.put("type", "money");
+        message.put("money", money);
         sendMessage(message);
     }
 

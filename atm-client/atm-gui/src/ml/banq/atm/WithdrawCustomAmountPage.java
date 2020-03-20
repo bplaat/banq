@@ -52,7 +52,7 @@ public class WithdrawCustomAmountPage extends Page {
         add(amountBox);
 
         // Create the page amount input label
-        JLabel amountLabel = new JLabel(Language.getString("withdraw_custom_amount_page_amount_input") + " \u20ac");
+        JLabel amountLabel = new JLabel(Language.getString("withdraw_custom_amount_page_amount_input") + " \u20bd");
         amountLabel.setFont(Fonts.NORMAL);
         amountBox.add(amountLabel);
 
@@ -92,10 +92,23 @@ public class WithdrawCustomAmountPage extends Page {
         }
 
         if (key.equals("#") && amount.length() > 0) {
-            // Show a comming soon label
-            int amountNumber = Integer.parseInt(amount);
-            App.getInstance().sendBeeper(110, 250);
-            messageLabel.setText("Comming soon...");
+            // Check if the amount is a multiple of five
+            float amountFloat = Float.parseFloat(amount);
+            if (amountFloat % 5 == 0) {
+                if (account.getAmount() - amountFloat >= 0) {
+                    Navigator.getInstance().changePage(new WithdrawMoneyPage(accountId, rfid_uid, pincode, account, amountFloat));
+                } else {
+                    App.getInstance().sendBeeper(110, 250);
+                    messageLabel.setText(Language.getString("withdraw_amount_page_not_enough"));
+                }
+            }
+
+            // If not show a error message
+            else {
+                App.getInstance().sendBeeper(110, 250);
+                messageLabel.setText(Language.getString("withdraw_custom_amount_page_error"));
+                amountInput.setText("");
+            }
         }
     }
 }

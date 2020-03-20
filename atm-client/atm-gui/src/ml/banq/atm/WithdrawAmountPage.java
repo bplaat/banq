@@ -1,8 +1,6 @@
 package ml.banq.atm;
 
 import java.awt.Component;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -45,7 +43,7 @@ public class WithdrawAmountPage extends Page {
 
         // Create the amount options
         for (int i = 0; i < Config.DEFAULT_AMOUNTS.length; i++) {
-            JLabel amountLabel = new JLabel((i + 1) + ". \u20ac " + Config.DEFAULT_AMOUNTS[i]);
+            JLabel amountLabel = new JLabel((i + 1) + ". \u20bd " + Config.DEFAULT_AMOUNTS[i]);
             amountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             amountLabel.setFont(Fonts.NORMAL);
             add(amountLabel);
@@ -75,20 +73,11 @@ public class WithdrawAmountPage extends Page {
             Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
         }
 
-        // Check if one of the amount is pressed and create the transaction
+        // Check if one of the amount is pressed and go to the money page
         for (int i = 0; i < Config.DEFAULT_AMOUNTS.length; i++) {
             if (key.equals(String.valueOf(i + 1))) {
-                float amount = Config.DEFAULT_AMOUNTS[i];
-
                 if (account.getAmount() - Config.DEFAULT_AMOUNTS[i] >= 0) {
-                    String name = Language.getString("withdraw_amount_page_transaction_prefix") + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                    BanqAPI.Transaction transaction = BanqAPI.getInstance().createTransaction(accountId, rfid_uid, pincode, name, "SU-BANQ-00000001", amount);
-                    if (transaction != null) {
-                        Navigator.getInstance().changePage(new WithdrawReceiptPage(transaction));
-                    } else {
-                        App.getInstance().sendBeeper(110, 250);
-                        messageLabel.setText(Language.getString("withdraw_amount_page_error"));
-                    }
+                    Navigator.getInstance().changePage(new WithdrawMoneyPage(accountId, rfid_uid, pincode, account, Config.DEFAULT_AMOUNTS[i]));
                 } else {
                     App.getInstance().sendBeeper(110, 250);
                     messageLabel.setText(Language.getString("withdraw_amount_page_not_enough"));

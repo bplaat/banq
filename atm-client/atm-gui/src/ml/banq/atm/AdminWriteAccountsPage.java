@@ -32,7 +32,7 @@ public class AdminWriteAccountsPage extends Page {
         // Create the menu options for every account
         for (int i = 0; i < accounts.size(); i++) {
             BanqAPI.Account account = accounts.get(i);
-            JLabel accountLabel = new JLabel(String.format("%d. %s \u20ac %.2f", i + 1, account.getName(), account.getAmount()));
+            JLabel accountLabel = new JLabel(String.format("%d. %s \u20bd %.2f", i + 1, account.getName(), account.getAmount()));
             accountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             accountLabel.setFont(Fonts.NORMAL);
             add(accountLabel);

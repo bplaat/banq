@@ -33,7 +33,7 @@ public class WithdrawAccountPage extends Page {
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
         // Create the page amount line
-        JLabel amountLabel = new JLabel(String.format("\u20ac %.2f", account.getAmount()));
+        JLabel amountLabel = new JLabel(String.format("\u20bd %.2f", account.getAmount()));
         amountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         amountLabel.setFont(Fonts.NORMAL);
         add(amountLabel);
