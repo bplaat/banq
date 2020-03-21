@@ -5,12 +5,15 @@ import java.util.HashMap;
 
 // The static money utils class
 public class MoneyUtils {
+    private MoneyUtils() {}
+
     // A function the generates the diffrent money pares
     public static ArrayList<HashMap<String, Integer>> getMoneyPares(int amount) {
         ArrayList<HashMap<String, Integer>> moneyPares = new ArrayList<HashMap<String, Integer>>();
 
         int valuesCount = Config.ISSUE_AMOUNTS.length;
 
+        // Create rounds
         int[][] rounds = new int[valuesCount][valuesCount];
         for (int i = 0; i < valuesCount; i++) {
             int[] newRound = new int[valuesCount];
@@ -20,6 +23,7 @@ public class MoneyUtils {
             rounds[i] = newRound;
         }
 
+        // Run diffrent rounds
         for (int[] round : rounds) {
             int new_amount = amount;
             HashMap<String, Integer> moneyPare = new HashMap<String, Integer>();

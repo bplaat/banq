@@ -2,6 +2,8 @@ package ml.banq.atm;
 
 // The static config class
 public class Config {
+    private Config() {}
+
     public static final boolean DEBUG = true;
 
     public static final boolean FULLSCREEN_MODE = true;

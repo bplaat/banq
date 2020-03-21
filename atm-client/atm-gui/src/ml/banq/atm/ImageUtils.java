@@ -7,6 +7,8 @@ import javax.swing.ImageIcon;
 
 // The image utils class
 public class ImageUtils {
+    private ImageUtils() {}
+
     // Load a image resource and resize it
     public static ImageIcon loadImage(String filename, int width, int height) {
         try {

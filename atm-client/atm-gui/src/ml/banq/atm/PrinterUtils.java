@@ -2,6 +2,8 @@ package ml.banq.atm;
 
 // The static printer utils class
 public class PrinterUtils {
+    private PrinterUtils() {}
+
     // Pad a left and right string with the right amount of spaces
     public static String pad(String left, String right) {
         int spaces = Config.PRINTER_PAPER_WIDTH - left.length() - right.length();
