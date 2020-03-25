@@ -13,7 +13,6 @@ class ApiATMTransactionsController {
 
         // Convert to account id string to banq id
         $to_account_id = request('to_account_id');
-        $banqCode = 'SU-BANQ-';
         if (substr($to_account_id, 0, strlen($banqCode)) != $banqCode) {
             return 'This API supports only Banq cards';
         }

@@ -4,7 +4,7 @@ package ml.banq.atm;
 public class Config {
     private Config() {}
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     public static final boolean FULLSCREEN_MODE = true;
     public static final String BANK_NAME = "Banq";

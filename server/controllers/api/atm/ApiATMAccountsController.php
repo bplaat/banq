@@ -8,6 +8,7 @@ class ApiATMAccountsController {
         if (substr($account_id, 0, strlen($banqCode)) != $banqCode) {
             return [
                 'success' => false,
+                'blocked' => false,
                 'message' => 'This API supports only Banq cards'
             ];
         }
@@ -24,6 +25,7 @@ class ApiATMAccountsController {
         if ($cardQuery->rowCount() == 0) {
             return [
                 'success' => false,
+                'blocked' => false,
                 'message' => 'This card is not found in the Banq database'
             ];
         }
@@ -32,6 +34,7 @@ class ApiATMAccountsController {
         if ($card->blocked) {
             return [
                 'success' => false,
+                'blocked' => true,
                 'message' => 'This card is blocked'
             ];
         } else {
@@ -47,6 +50,7 @@ class ApiATMAccountsController {
                     Cards::update($card->id, [ 'blocked' => 1 ]);
                     return [
                         'success' => false,
+                        'blocked' => true,
                         'message' => 'This card is now blocked'
                     ];
                 }
@@ -56,6 +60,7 @@ class ApiATMAccountsController {
                     Cards::update($card->id, [ 'attempts' => $attempts ]);
                     return [
                         'success' => false,
+                        'blocked' => false,
                         'message' => 'Pincode false'
                     ];
                 }
@@ -66,6 +71,7 @@ class ApiATMAccountsController {
 
         return [
             'success' => true,
+            'blocked' => false,
             'account' => $account
         ];
     }

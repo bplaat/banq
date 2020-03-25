@@ -90,13 +90,23 @@ public class WithdrawPincodePage extends Page {
 
         if (pincode.length() == 4 && key.equals("#")) {
             // Get account information / check pincode and go to the next page
-            BanqAPI.Account account = BanqAPI.getInstance().getAccount(accountId, rfid_uid, pincode);
-            if (account != null) {
+            try {
+                BanqAPI.Account account = BanqAPI.getInstance().getAccount(accountId, rfid_uid, pincode);
                 App.getInstance().sendBeeper(880, 250);
                 Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account), false);
-            } else {
+            }
+
+            // Show error when wrong pincode
+            catch (BanqAPI.WrongPincodeException exception) {
                 App.getInstance().sendBeeper(110, 250);
-                messageLabel.setText(Language.getString("withdraw_pincode_page_error"));
+                messageLabel.setText(Language.getString("withdraw_pincode_page_pincode_error"));
+                pincodeInput.setText("");
+            }
+
+            // Show error message when card is blocked
+            catch (BanqAPI.BlockedCardException exception) {
+                App.getInstance().sendBeeper(110, 250);
+                messageLabel.setText(Language.getString("withdraw_pincode_page_blocked_error"));
                 pincodeInput.setText("");
             }
         }

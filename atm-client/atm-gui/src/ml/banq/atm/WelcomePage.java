@@ -32,7 +32,15 @@ public class WelcomePage extends Page {
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
 
-        add(Box.createVerticalStrut(Paddings.LARGE * 3));
+        add(Box.createVerticalStrut(Paddings.LARGE));
+
+        // Create the page controls label
+        JLabel controlsLabel = new JLabel(Language.getString("welcome_page_controls"));
+        controlsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        controlsLabel.setFont(Fonts.NORMAL);
+        add(controlsLabel);
+
+        add(Box.createVerticalStrut(Paddings.LARGE * 2));
 
         // Create the page language message label
         JLabel languageLabel = new JLabel(Language.getString("welcome_page_language_input"));

@@ -109,7 +109,12 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
                         public void run() {
                             // Give all the events to the current page of the navigator
                             if (message.getString("type").equals("keypad")) {
-                                Navigator.getInstance().getPage().onKeypad(message.getString("key"));
+                                String key = message.getString("key");
+                                if (key.equals("C")) {
+                                    Navigator.getInstance().changePage(new WelcomePage());
+                                } else {
+                                    Navigator.getInstance().getPage().onKeypad(key);
+                                }
                             }
 
                             if (message.getString("type").equals("rfid_read")) {

@@ -220,10 +220,19 @@ public class BanqAPI {
     }
 
     // The ATM API get account info
-    public Account getAccount(String accountId, String rfid_uid, String pincode) {
+    public static class WrongPincodeException extends Exception {
+        private static final long serialVersionUID = 1;
+    }
+
+    public static class BlockedCardException extends Exception {
+        private static final long serialVersionUID = 1;
+    }
+
+    public Account getAccount(String accountId, String rfid_uid, String pincode) throws WrongPincodeException, BlockedCardException {
         try {
             JSONObject data = fetch(Config.BANQ_API_URL + "/atm/accounts/" + accountId + "?key=" + Config.BANQ_API_DEVICE_KEY + "&rfid=" + rfid_uid + "&pincode=" + pincode);
             if (data.getBoolean("success")) {
+                // Read the account data
                 JSONObject json_account = data.getJSONObject("account");
                 return new Account(
                     json_account.getInt("id"),
@@ -232,8 +241,26 @@ public class BanqAPI {
                     json_account.getFloat("amount"),
                     parseDate(json_account.getString("created_at"))
                 );
+            } else {
+                // Check if account is blocked
+                if (data.getBoolean("blocked")) {
+                    throw new BlockedCardException();
+                } else {
+                    throw new WrongPincodeException();
+                }
             }
-        } catch (Exception exception) {
+        }
+
+        // Throw these exceptions down
+        catch (WrongPincodeException exception) {
+            throw exception;
+        }
+        catch (BlockedCardException exception) {
+            throw exception;
+        }
+
+        // Log all other exceptions
+        catch (Exception exception) {
             Log.error(exception);
         }
 
