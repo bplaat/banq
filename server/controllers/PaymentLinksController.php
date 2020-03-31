@@ -18,7 +18,7 @@ class PaymentLinksController {
 
         // Select the account of every payment link
         foreach ($payment_links as $payment_link) {
-            $payment_link->account = Accounts::select($payment_link->account_id)->fetch();
+            $payment_link->account = Accounts::select($payment_link->to_account_id)->fetch();
         }
 
         // Give all the data to the view
@@ -34,7 +34,7 @@ class PaymentLinksController {
         $accounts = Accounts::select([ 'user_id' => Auth::id(), 'type' => Accounts::TYPE_PAYMENT ])->fetchAll();
         return view('payment-links.create', [
             'accounts' => $accounts,
-            'account_id' => request('account_id')
+            'to_account_id' => request('to_account_id')
         ]);
     }
 
@@ -43,7 +43,7 @@ class PaymentLinksController {
         // Validate the users input fields
         validate([
             'name' => PaymentLinks::NAME_VALIDATION,
-            'account_id' => PaymentLinks::ACCOUNT_ID_VALIDATION,
+            'to_account_id' => PaymentLinks::TO_ACCOUNT_ID_VALIDATION,
             'amount' => PaymentLinks::AMOUNT_VALIDATION
         ]);
 
@@ -51,7 +51,7 @@ class PaymentLinksController {
         PaymentLinks::insert([
             'name' => request('name'),
             'link' => PaymentLinks::generateLink(),
-            'account_id' => request('account_id'),
+            'to_account_id' => request('to_account_id'),
             'amount' => parse_money_number(request('amount'))
         ]);
 
@@ -62,7 +62,7 @@ class PaymentLinksController {
     // The payment links show page
     public static function show ($payment_link) {
         // Check if the payment link is from authed user
-        $payment_link->account = Accounts::select($payment_link->account_id)->fetch();
+        $payment_link->account = Accounts::select($payment_link->to_account_id)->fetch();
         if ($payment_link->account->user_id == Auth::id()) {
             $payment_link->absolute_link = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . '/pay/' . $payment_link->link;
             return view('payment-links.show', [ 'payment_link' => $payment_link ]);
@@ -75,7 +75,7 @@ class PaymentLinksController {
     // The payment links delete page
     public static function delete ($payment_link) {
         // Check if the payment link is from authed user
-        $payment_link->account = Accounts::select($payment_link->account_id)->fetch();
+        $payment_link->account = Accounts::select($payment_link->to_account_id)->fetch();
         if ($payment_link->account->user_id == Auth::id()) {
             PaymentLinks::delete($payment_link->id);
             Router::redirect('/payment-links');
@@ -89,7 +89,7 @@ class PaymentLinksController {
     public static function pay ($link) {
         // Select the payment link by the link provided and select its account
         $payment_link = PaymentLinks::select([ 'link' => $link ])->fetch();
-        $payment_link->account = Accounts::select($payment_link->account_id)->fetch();
+        $payment_link->account = Accounts::select($payment_link->to_account_id)->fetch();
 
         // Check if the user is authed then fetch his payment accounts
         if (Auth::check()) {
@@ -110,7 +110,7 @@ class PaymentLinksController {
         $payment_link = PaymentLinks::select([ 'link' => $link ])->fetch();
 
         // Validate the user input
-        $_REQUEST['to_account_id'] = $payment_link->account_id;
+        $_REQUEST['to_account_id'] = $payment_link->to_account_id;
         validate([
             'from_account_id' => Transactions::FROM_ACCOUNT_ID_VALIDATION,
         ]);
@@ -118,21 +118,21 @@ class PaymentLinksController {
         // Update the effected accounts
         $from_account = Accounts::select(request('from_account_id'))->fetch();
         $from_account->amount -= $payment_link->amount;
-        $to_account = Accounts::select($payment_link->account_id)->fetch();
+        $to_account = Accounts::select($payment_link->to_account_id)->fetch();
         $to_account->amount += $payment_link->amount;
 
         // Create the transaction in the database
         Transactions::insert([
             'name' => $payment_link->name,
             'from_account_id' => request('from_account_id'),
-            'to_account_id' => $payment_link->account_id,
+            'to_account_id' => $payment_link->to_account_id,
             'amount' => $payment_link->amount
         ]);
         $transaction_id = Database::lastInsertId();
 
         // Update the accounts in the database
         Accounts::update(request('from_account_id'), [ 'amount' => $from_account->amount ]);
-        Accounts::update($payment_link->account_id, [ 'amount' => $to_account->amount ]);
+        Accounts::update($payment_link->to_account_id, [ 'amount' => $to_account->amount ]);
 
         // Redirect to the transactions page
         Router::redirect('/transactions/' . $transaction_id);

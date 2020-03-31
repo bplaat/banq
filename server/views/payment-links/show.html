@@ -9,7 +9,7 @@
 </div>
 
 <h1 class="title">{{ $payment_link->name }}</h1>
-<p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $payment_link->account_id }}">{{ $payment_link->account->name }}</a></p>
+<p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $payment_link->to_account_id }}">{{ $payment_link->account->name }}</a></p>
 <p style="margin-bottom: 16px;">Amount: {!! format_money($payment_link->amount) !!}</p>
 
 <p style="margin-bottom: 16px;">Link: <a href="{{ $payment_link->absolute_link }}" target="_blank" rel="noreferrer"><b>{{ $payment_link->absolute_link }}</b></a></p>

@@ -46,7 +46,7 @@ class ApiAdminPaymentLinksController {
         // Validate the input vars
         api_validate([
             'name' => PaymentLinks::NAME_VALIDATION,
-            'account_id' => PaymentLinks::ACCOUNT_ID_ADMIN_VALIDATION,
+            'to_account_id' => PaymentLinks::TO_ACCOUNT_ID_ADMIN_VALIDATION,
             'amount' => PaymentLinks::AMOUNT_VALIDATION
         ]);
 
@@ -54,7 +54,7 @@ class ApiAdminPaymentLinksController {
         PaymentLinks::insert([
             'name' => request('name'),
             'link' => PaymentLinks::generateLink(),
-            'account_id' => request('account_id'),
+            'to_account_id' => request('to_account_id'),
             'amount' => parse_money_number(request('amount'))
         ]);
 

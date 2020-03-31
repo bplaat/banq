@@ -46,7 +46,7 @@ class ApiPaymentLinksController {
         // Validate the input vars
         api_validate([
             'name' => PaymentLinks::NAME_VALIDATION,
-            'account_id' => PaymentLinks::ACCOUNT_ID_VALIDATION,
+            'to_account_id' => PaymentLinks::TO_ACCOUNT_ID_VALIDATION,
             'amount' => PaymentLinks::AMOUNT_VALIDATION
         ]);
 
@@ -54,7 +54,7 @@ class ApiPaymentLinksController {
         PaymentLinks::insert([
             'name' => request('name'),
             'link' => PaymentLinks::generateLink(),
-            'account_id' => request('account_id'),
+            'to_account_id' => request('to_account_id'),
             'amount' => parse_money_number(request('amount'))
         ]);
 
@@ -68,7 +68,7 @@ class ApiPaymentLinksController {
     // The API payment links show route
     public static function show ($payment_link) {
         // Check if the account is from the authed user
-        $account = Accounts::select($payment_link->account_id)->fetch();
+        $account = Accounts::select($payment_link->to_account_id)->fetch();
         if ($account->user_id == Auth::id()) {
             return $payment_link;
         }
@@ -84,7 +84,7 @@ class ApiPaymentLinksController {
     // The API payment links delete route
     public static function delete ($payment_link) {
         // Check if the account is from the authed user
-        $account = Accounts::select($payment_link->account_id)->fetch();
+        $account = Accounts::select($payment_link->to_account_id)->fetch();
         if ($account->user_id == Auth::id()) {
             // Delete the payment link
             PaymentLinks::delete($payment_link->id);

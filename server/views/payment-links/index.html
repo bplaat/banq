@@ -35,7 +35,7 @@
             <h2 class="title is-4">
                 <a href="/payment-links/{{ $payment_link->id }}">{{ $payment_link->name }}</a>
             </h2>
-            <p>For: <a href="/accounts/{{ $payment_link->account_id }}">{{ $payment_link->account->name }}</a></p>
+            <p>For: <a href="/accounts/{{ $payment_link->to_account_id }}">{{ $payment_link->account->name }}</a></p>
             <p>Amount: {!! format_money($payment_link->amount) !!}</p>
         </div>
     @endforeach
