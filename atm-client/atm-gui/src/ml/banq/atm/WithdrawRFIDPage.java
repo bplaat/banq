@@ -1,12 +1,11 @@
 package ml.banq.atm;
 
 import java.awt.Component;
-import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
+// The withdraw RFID page
 public class WithdrawRFIDPage extends Page {
     private static final long serialVersionUID = 1;
 
@@ -15,21 +14,24 @@ public class WithdrawRFIDPage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Authenticate yourself");
+        // Create the page title
+        JLabel titleLabel = new JLabel(Language.getString("withdraw_rfid_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel messageLabel = new JLabel("Scan your Banq card...");
+        // Create the page message label
+        JLabel messageLabel = new JLabel(Language.getString("withdraw_rfid_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel backLabel = new JLabel("Press the 'D' key to go back to the welcome page");
+        // Create the page back label
+        JLabel backLabel = new JLabel(Language.getString("withdraw_rfid_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         backLabel.setFont(Fonts.NORMAL);
         add(backLabel);
@@ -38,14 +40,15 @@ public class WithdrawRFIDPage extends Page {
     }
 
     public void onKeypad(String key) {
+        // When back is pressed go back
         if (key.equals("D")) {
-            Navigator.changePage(new WelcomePage());
+            Navigator.getInstance().changePage(new WelcomePage());
         }
     }
 
-    public void onRFIDRead(String rfid_uid, String account_id) {
-        BanqAPI.setRfidUid(rfid_uid);
-        BanqAPI.setAccountId(account_id);
-        Navigator.changePage(new WithdrawPincodePage());
+    public void onRFIDRead(String account_id, String rfid_uid) {
+        // Else wait for RFID and continue to the pincode page
+        App.getInstance().sendBeeper(880, 250);
+        Navigator.getInstance().changePage(new WithdrawPincodePage(account_id, rfid_uid), false);
     }
 }

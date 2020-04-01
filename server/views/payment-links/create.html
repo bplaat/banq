@@ -21,11 +21,11 @@
     </div>
 
     <div class="field">
-        <label class="label" for="account_id">Account</label>
-        <select class="input" id="account_id" name="account_id" required>
-            <option value="" disabled {{ old('account_id', $account_id) == '' ? 'selected' : '' }}>Choose a account</option>
+        <label class="label" for="to_account_id">Account</label>
+        <select class="input" id="to_account_id" name="to_account_id" required>
+            <option value="" disabled {{ old('to_account_id', $to_account_id) == '' ? 'selected' : '' }}>Choose a account</option>
             @foreach ($accounts as $account):
-                <option value="{{ $account->id }}" {{ $account->id == old('account_id', $account_id) ? 'selected' : '' }}>{{ $account->name }}</option>
+                <option value="{{ $account->id }}" {{ $account->id == old('to_account_id', $to_account_id) ? 'selected' : '' }}>{{ $account->name }}</option>
             @endforeach
         </select>
     </div>

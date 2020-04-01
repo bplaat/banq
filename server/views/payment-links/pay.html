@@ -8,30 +8,32 @@
 </div>
 
 <h1 class="title">{{ $payment_link->name }}</h1>
-<p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $payment_link->account_id }}">{{ $payment_link->account->name }}</a></p>
+<p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $payment_link->to_account_id }}">{{ $payment_link->account->name }}</a></p>
 <p style="margin-bottom: 16px;">Amount: {!! format_money($payment_link->amount) !!}</p>
 
-@if ($payment_link->account->user_id == Auth::id()):
-    <p><b>You can't pay your own payment links!</b></p>
-@elseif (Auth::check()):
-    @view('errors')
+@if (Auth::check()):
+    @if ($payment_link->account->user_id == Auth::id()):
+        <p><b>You can't pay your own payment links!</b></p>
+    @else:
+        @view('errors')
 
-    <form method="post" action="/pay/{{ $payment_link->link }}">
-        @view('csrf_token')
+        <form method="post" action="/pay/{{ $payment_link->link }}">
+            @view('csrf_token')
 
-        <div class="field">
-            <label class="label" for="from_account_id">From account</label>
-            <select class="input" id="from_account_id" name="from_account_id" required>
-                @foreach ($from_accounts as $account):
-                    <option value="{{ $account->id }}" {{ $account->id == old('from_account_id', $from_account_id) ? 'selected' : '' }}>{{ $account->name }}</option>
-                @endforeach
-            </select>
-        </div>
+            <div class="field">
+                <label class="label" for="from_account_id">From account</label>
+                <select class="input" id="from_account_id" name="from_account_id" required>
+                    @foreach ($from_accounts as $account):
+                        <option value="{{ $account->id }}" {{ $account->id == old('from_account_id', $from_account_id) ? 'selected' : '' }}>{{ $account->name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-        <div class="field">
-            <button class="button is-link" type="submit">Pay</button>
-        </div>
-    </form>
+            <div class="field">
+                <button class="button is-link" type="submit">Pay</button>
+            </div>
+        </form>
+    @endif
 @else:
     <p style="margin-bottom: 16px;">Login or register to Banq to pay this payment link:</p>
     <div class="buttons">

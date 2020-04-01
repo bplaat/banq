@@ -3,56 +3,67 @@ package ml.banq.atm;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
+// The withdraw pincode page
 public class WithdrawPincodePage extends Page {
     private static final long serialVersionUID = 1;
+
+    private String accountId;
+    private String rfid_uid;
 
     private JLabel messageLabel;
     private JPasswordField pincodeInput;
 
-    public WithdrawPincodePage() {
+    public WithdrawPincodePage(String accountId, String rfid_uid) {
+        this.accountId = accountId;
+        this.rfid_uid = rfid_uid;
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("Enter your pincode");
+        // Create the page title
+        JLabel titleLabel = new JLabel(Language.getString("withdraw_pincode_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        messageLabel = new JLabel("Enter your pincode press '#' when you are finished");
+        // Create the page message label
+        messageLabel = new JLabel(Language.getString("withdraw_pincode_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JPanel pincodeBox = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
-        pincodeBox.setMaximumSize(new Dimension(320, 64));
+        // Create the pincode input box
+        JPanel pincodeBox = new JPanel(new FlowLayout(FlowLayout.CENTER, Paddings.NORMAL, 0));
+        pincodeBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 2, 0));
         add(pincodeBox);
 
-        JLabel pincodeLabel = new JLabel("Pincode: ");
-        pincodeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Create the pincode input label
+        JLabel pincodeLabel = new JLabel(Language.getString("withdraw_pincode_page_pincode_input"));
         pincodeLabel.setFont(Fonts.NORMAL);
         pincodeBox.add(pincodeLabel);
 
+        // Create the pincode input field
         pincodeInput = new JPasswordField(4);
         pincodeInput.setFont(Fonts.NORMAL);
         pincodeInput.setHorizontalAlignment(JPasswordField.CENTER);
         pincodeInput.setMaximumSize(pincodeInput.getPreferredSize());
         pincodeBox.add(pincodeInput);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel backLabel = new JLabel("Press the 'D' key to go back to the welcome page");
+        // Create the back menu option
+        JLabel backLabel = new JLabel(Language.getString("withdraw_pincode_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         backLabel.setFont(Fonts.NORMAL);
         add(backLabel);
@@ -61,10 +72,12 @@ public class WithdrawPincodePage extends Page {
     }
 
     public void onKeypad(String key) {
+        // When back is pressed go to the welcome page
         if (key.equals("D")) {
-            Navigator.changePage(new WelcomePage());
+            Navigator.getInstance().changePage(new WelcomePage());
         }
 
+        // Pincode input field stuff
         String pincode = new String(pincodeInput.getPassword());
 
         if (key.matches("[0-9]") && pincode.length() < 4) {
@@ -76,14 +89,24 @@ public class WithdrawPincodePage extends Page {
         }
 
         if (pincode.length() == 4 && key.equals("#")) {
-            BanqAPI.setPincode(pincode);
-            String message = BanqAPI.loadActiveAccount();
-            if (message.equals("success")) {
-                App.sendBeeper(880, 250);
-                Navigator.changePage(new WithdrawAccountPage());
-            } else {
-                App.sendBeeper(110, 250);
-                messageLabel.setText("Error: " + message);
+            // Get account information / check pincode and go to the next page
+            try {
+                BanqAPI.Account account = BanqAPI.getInstance().getAccount(accountId, rfid_uid, pincode);
+                App.getInstance().sendBeeper(880, 250);
+                Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account), false);
+            }
+
+            // Show error when wrong pincode
+            catch (BanqAPI.WrongPincodeException exception) {
+                App.getInstance().sendBeeper(110, 250);
+                messageLabel.setText(Language.getString("withdraw_pincode_page_pincode_error"));
+                pincodeInput.setText("");
+            }
+
+            // Show error message when card is blocked
+            catch (BanqAPI.BlockedCardException exception) {
+                App.getInstance().sendBeeper(110, 250);
+                messageLabel.setText(Language.getString("withdraw_pincode_page_blocked_error"));
                 pincodeInput.setText("");
             }
         }

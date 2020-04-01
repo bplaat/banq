@@ -18,7 +18,7 @@ class AdminPaymentLinksController {
 
         // Select the account of every payment link
         foreach ($payment_links as $payment_link) {
-            $payment_link->account = Accounts::select($payment_link->account_id)->fetch();
+            $payment_link->account = Accounts::select($payment_link->to_account_id)->fetch();
         }
 
         // Give all the data to the view
@@ -34,7 +34,7 @@ class AdminPaymentLinksController {
         $accounts = Accounts::select([ 'type' => Accounts::TYPE_PAYMENT ])->fetchAll();
         return view('admin.payment-links.create', [
             'accounts' => $accounts,
-            'account_id' => request('account_id')
+            'to_account_id' => request('to_account_id')
         ]);
     }
 
@@ -43,7 +43,7 @@ class AdminPaymentLinksController {
         // Validate the user input
         validate([
             'name' => PaymentLinks::NAME_VALIDATION,
-            'account_id' => PaymentLinks::ACCOUNT_ID_ADMIN_VALIDATION,
+            'to_account_id' => PaymentLinks::TO_ACCOUNT_ID_ADMIN_VALIDATION,
             'amount' => PaymentLinks::AMOUNT_VALIDATION
         ]);
 
@@ -51,7 +51,7 @@ class AdminPaymentLinksController {
         PaymentLinks::insert([
             'name' => request('name'),
             'link' => PaymentLinks::generateLink(),
-            'account_id' => request('account_id'),
+            'to_account_id' => request('to_account_id'),
             'amount' => parse_money_number(request('amount'))
         ]);
 
@@ -61,7 +61,7 @@ class AdminPaymentLinksController {
 
     // The payment links show page
     public static function show ($payment_link) {
-        $payment_link->account = Accounts::select($payment_link->account_id)->fetch();
+        $payment_link->account = Accounts::select($payment_link->to_account_id)->fetch();
         $payment_link->absolute_link = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . '/pay/' . $payment_link->link;
         return view('admin.payment-links.show', [ 'payment_link' => $payment_link ]);
     }

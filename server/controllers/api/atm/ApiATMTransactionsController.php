@@ -13,7 +13,6 @@ class ApiATMTransactionsController {
 
         // Convert to account id string to banq id
         $to_account_id = request('to_account_id');
-        $banqCode = 'SU-BANQ-';
         if (substr($to_account_id, 0, strlen($banqCode)) != $banqCode) {
             return 'This API supports only Banq cards';
         }
@@ -22,7 +21,7 @@ class ApiATMTransactionsController {
         // Validate the user input
         api_validate([
             'name' => Transactions::NAME_VALIDATION,
-            'from_account_id' => Transactions::FROM_ACCOUNT_ID_VALIDATION,
+            'from_account_id' => Transactions::FROM_ACCOUNT_ID_ADMIN_VALIDATION,
             'rfid' => Cards::RFID_VALIDATION,
             'pincode' => Cards::PINCODE_VALIDATION,
             'to_account_id' => Transactions::TO_ACCOUNT_ID_VALIDATION,
@@ -79,8 +78,8 @@ class ApiATMTransactionsController {
 
         // Return a confirmation message
         return [
-            'message' => 'The transaction has been created successfully',
-            'transaction_id' => $transaction_id
+            'success' => true,
+            'transaction' => Transactions::select($transaction_id)->fetch()
         ];
     }
 }

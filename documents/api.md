@@ -11,6 +11,8 @@ All the routes where you get a list of data are paged. This means that the data 
 - `page` The number of the page you want to see, one based
 - `limit` The limit of items per page, minimal 1 and maximal 50
 
+---
+
 ## ATM Accounts
 *The following routes don't need authentication via an user session*
 

@@ -100,6 +100,9 @@ function validate ($values) {
 function api_validate ($values) {
     $errors = validate_errors($values);
     if (count($errors) > 0) {
-        Router::handleResponse([ 'errors' => $errors ]);
+        Router::handleResponse([
+            'success' => false,
+            'errors' => $errors
+        ]);
     }
 }

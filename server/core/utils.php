@@ -25,7 +25,7 @@ function format_money_number ($money) {
 
 // A function which formats money with HTML
 function format_money ($money) {
-    return '<b>&euro; ' . format_money_number($money) . '</b>';
+    return '<b>&#8381; ' . format_money_number($money) . '</b>';
 }
 
 // A function which cuts a long string with dots

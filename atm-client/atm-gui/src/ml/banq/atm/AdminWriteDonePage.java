@@ -1,12 +1,11 @@
 package ml.banq.atm;
 
 import java.awt.Component;
-import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
+// The admin write done page
 public class AdminWriteDonePage extends Page {
     private static final long serialVersionUID = 1;
 
@@ -15,14 +14,16 @@ public class AdminWriteDonePage extends Page {
 
         add(Box.createVerticalGlue());
 
-        JLabel titleLabel = new JLabel("The card has been written succesfully");
+        // Create the page title
+        JLabel titleLabel = new JLabel(Language.getString("admin_write_done_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
 
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        JLabel messageLabel = new JLabel("Press any key on the keypad to go back to the admin menu page...");
+        // Create the page message label
+        JLabel messageLabel = new JLabel(Language.getString("admin_write_done_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
@@ -31,6 +32,7 @@ public class AdminWriteDonePage extends Page {
     }
 
     public void onKeypad(String key) {
-        Navigator.changePage(new AdminMenuPage());
+        // Go to the admin menu page when a key is pressed
+        Navigator.getInstance().changePage(new AdminMenuPage());
     }
 }
