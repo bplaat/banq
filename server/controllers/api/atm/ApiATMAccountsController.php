@@ -4,15 +4,14 @@ class ApiATMAccountsController {
     // The API ATM actions show route
     public static function show ($account_id) {
         // Convert account id string to banq id
-        $banqCode = 'SU-BANQ-';
-        if (substr($account_id, 0, strlen($banqCode)) != $banqCode) {
+        if (substr($account_id, 0, strlen(BANK_CODE_PREFIX)) != BANK_CODE_PREFIX) {
             return [
                 'success' => false,
                 'blocked' => false,
                 'message' => 'This API supports only Banq cards'
             ];
         }
-        $account_id = floatval(substr($account_id, strlen($banqCode)));
+        $account_id = floatval(substr($account_id, strlen(BANK_CODE_PREFIX)));
 
         // Validate the user input
         api_validate([

@@ -51,17 +51,63 @@ Router::get('/debug/compile', function () {
     return 'All resources are compiled successfull';
 });
 
+// A function that drops a model and all depened on it
+$models = [];
+$dropped_models = [];
+function drop_model($model) {
+    global $models, $dropped_models;
+
+    if (!in_array($model, $dropped_models)) {
+        foreach ($models as $other_model) {
+            if (in_array($model, $other_model::dependencies())) {
+                drop_model($other_model);
+            }
+        }
+
+        echo 'Drop ' . $model . '<br>';
+        $model::drop();
+        $dropped_models[] = $model;
+    }
+}
+
+// A function that creates a model and all its depencies
+$created_models = [];
+function create_model($model) {
+    global $created_models;
+
+    if (!in_array($model, $created_models)) {
+        foreach ($model::dependencies() as $other_model) {
+            create_model($other_model);
+        }
+
+        echo 'Create ' . $model . '<br>';
+        $model::create();
+        $created_models[] = $model;
+    }
+}
+
 // This route migrates the database by deleting all models and recreating them
 Router::get('/debug/migrate', function () {
+    global $models;
+
     $paths = glob(ROOT . '/models/*');
     foreach ($paths as $path) {
-        $class = pathinfo($path, PATHINFO_FILENAME);
-        call_user_func($class . '::drop');
-        call_user_func($class . '::create');
-        if (method_exists($class, 'fill')) {
-            call_user_func($class . '::fill');
+        $filename = pathinfo($path, PATHINFO_FILENAME);
+        if ($filename != 'fill') {
+            $models[] = $filename;
         }
     }
+
+    foreach ($models as $model) {
+        drop_model($model);
+    }
+
+    foreach ($models as $model) {
+        create_model($model);
+    }
+
+    require_once ROOT . '/models/fill.php';
+
     return 'Database migration run successfull';
 });
 

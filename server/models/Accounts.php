@@ -1,6 +1,9 @@
 <?php
 
 class Accounts extends Model {
+    // Set the table dependencies of this model
+    protected static $dependencies = [ 'Users' ];
+
     // The table fields validation rules
     const NAME_VALIDATION = 'required|min:3|max:35';
     const TYPE_VALIDATION = 'required|int|number_between:1,2';
@@ -47,13 +50,15 @@ class Accounts extends Model {
     // The accounts create table function
     public static function create () {
         return Database::query('CREATE TABLE `accounts` (
-            `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `id` INT UNSIGNED AUTO_INCREMENT,
             `name` VARCHAR(255) NOT NULL,
             `type` INT UNSIGNED NOT NULL,
             `user_id` INT UNSIGNED NOT NULL,
             `amount` DECIMAL(15,2) UNSIGNED NOT NULL,
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
         )');
     }
 

@@ -1,6 +1,9 @@
 <?php
 
 class Cards extends Model {
+    // Set the table dependencies of this model
+    protected static $dependencies = [ 'Accounts' ];
+
     // The table fields validation rules
     const NAME_VALIDATION = 'required|min:3|max:35';
     const ACCOUNT_ID_VALIDATION = 'required|int|exists:Accounts,id';
@@ -11,7 +14,7 @@ class Cards extends Model {
     // The cards create table function
     public static function create () {
         Database::query('CREATE TABLE `cards` (
-            `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `id` INT UNSIGNED AUTO_INCREMENT,
             `name` VARCHAR(255) NOT NULL,
             `account_id` INT UNSIGNED NOT NULL,
             `rfid` VARCHAR(255) NOT NULL,
@@ -19,7 +22,9 @@ class Cards extends Model {
             `attempts` INT UNSIGNED NOT NULL DEFAULT 0,
             `blocked` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            FOREIGN KEY (`account_id`) REFERENCES `accounts`(`id`)
         )');
     }
 

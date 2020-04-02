@@ -7,20 +7,13 @@ class Devices extends Model {
     // The devices create table function
     public static function create () {
         Database::query('CREATE TABLE `devices` (
-            `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `id` INT UNSIGNED AUTO_INCREMENT,
             `name` VARCHAR(35) NOT NULL,
             `key` CHAR(32) NOT NULL,
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
         )');
-    }
-
-    // The devices model fill table function
-    public static function fill () {
-        static::insert([
-            'name' => 'API Test Device',
-            'key' => static::generateKey()
-        ]);
     }
 
     // A function that generates a new device key

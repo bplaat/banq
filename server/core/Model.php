@@ -5,6 +5,9 @@ abstract class Model {
     // The standard primary key field is the id field
     protected static $primaryKey = 'id';
 
+    // The dependencies field
+    protected static $dependencies = [];
+
     // A function whichs returns the table name
     public static function table () {
         return isset(static::$table) ? static::$table : strtolower(static::class);
@@ -13,6 +16,11 @@ abstract class Model {
     // A function whichs returns the primary key field name of the model
     public static function primaryKey () {
         return static::$primaryKey;
+    }
+
+    // A function whichs returns the dependencies
+    public static function dependencies () {
+        return static::$dependencies;
     }
 
     // A model must have an create function

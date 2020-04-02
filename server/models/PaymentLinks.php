@@ -1,8 +1,9 @@
 <?php
 
 class PaymentLinks extends Model {
-    // Set the table name of this model
+    // Set the table name and dependencies of this model
     protected static $table = 'payment_links';
+    protected static $dependencies = [ 'Accounts' ];
 
     // The table fields validation rules
     const NAME_VALIDATION = 'required|min:3|max:35';
@@ -13,13 +14,16 @@ class PaymentLinks extends Model {
     // The payment links create table function
     public static function create () {
         return Database::query('CREATE TABLE `payment_links` (
-            `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `id` INT UNSIGNED AUTO_INCREMENT,
             `name` VARCHAR(255) NOT NULL,
-            `link` VARCHAR(32) UNIQUE NOT NULL,
+            `link` VARCHAR(32) NOT NULL,
             `to_account_id` INT UNSIGNED NOT NULL,
             `amount` DECIMAL(15,2) UNSIGNED NOT NULL,
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            UNIQUE (`link`),
+            FOREIGN KEY (`to_account_id`) REFERENCES `accounts`(`id`)
         )');
     }
 

@@ -11,13 +11,14 @@ class Transactions extends Model {
     // The transactions create table function
     public static function create () {
         return Database::query('CREATE TABLE `transactions` (
-            `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `id` INT UNSIGNED AUTO_INCREMENT,
             `name` VARCHAR(255) NOT NULL,
-            `from_account_id` INT UNSIGNED NOT NULL,
-            `to_account_id` INT UNSIGNED NOT NULL,
+            `from_account_id` CHAR(16) NOT NULL,
+            `to_account_id` CHAR(16) NOT NULL,
             `amount` DECIMAL(15,2) UNSIGNED NOT NULL,
             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
         )');
     }
 

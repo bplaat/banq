@@ -5,18 +5,18 @@ class ApiATMTransactionsController {
     public static function create () {
         // Convert from account id string to banq id
         $from_account_id = request('from_account_id');
-        $banqCode = 'SU-BANQ-';
-        if (substr($from_account_id, 0, strlen($banqCode)) != $banqCode) {
+
+        if (substr($from_account_id, 0, strlen(BANK_CODE_PREFIX)) != BANK_CODE_PREFIX) {
             return 'This API supports only Banq cards';
         }
-        $_REQUEST['from_account_id'] = floatval(substr($from_account_id, strlen($banqCode)));
+        $_REQUEST['from_account_id'] = floatval(substr($from_account_id, strlen(BANK_CODE_PREFIX)));
 
         // Convert to account id string to banq id
         $to_account_id = request('to_account_id');
-        if (substr($to_account_id, 0, strlen($banqCode)) != $banqCode) {
+        if (substr($to_account_id, 0, strlen(BANK_CODE_PREFIX)) != BANK_CODE_PREFIX) {
             return 'This API supports only Banq cards';
         }
-        $_REQUEST['to_account_id'] = floatval(substr($to_account_id, strlen($banqCode)));
+        $_REQUEST['to_account_id'] = floatval(substr($to_account_id, strlen(BANK_CODE_PREFIX)));
 
         // Validate the user input
         api_validate([
