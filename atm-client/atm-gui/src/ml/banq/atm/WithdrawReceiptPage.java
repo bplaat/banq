@@ -64,7 +64,7 @@ public class WithdrawReceiptPage extends Page {
                 PrinterUtils.pad(Language.getString("withdraw_receipt_bank_name"), Config.BANK_NAME),
                 PrinterUtils.pad(Language.getString("withdraw_receipt_account_name"), transaction.getFromAccountId()),
                 PrinterUtils.pad(Language.getString("withdraw_receipt_transaction_number"), String.format("%08d", transaction.getId())),
-                PrinterUtils.pad(Language.getString("withdraw_receipt_amount"), String.format("$ %.02f", transaction.getAmount())),
+                PrinterUtils.pad(Language.getString("withdraw_receipt_amount"), String.format("P %.02f", transaction.getAmount())),
                 PrinterUtils.pad(Language.getString("withdraw_receipt_location"), Config.DEVICE_LOCATION),
                 PrinterUtils.pad(Language.getString("withdraw_receipt_time"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transaction.getCreatedAt())),
                 "",

@@ -41,6 +41,22 @@ class CardsController {
         }
     }
 
+    // The admin card block page
+    public static function block ($card) {
+        // Check if the card is from authed user
+        $card->account = Accounts::select($card->account_id)->fetch();
+        if ($card->account->user_id == Auth::id()) {
+            // Block card
+            Cards::update($card->id, [
+                'blocked' => 1
+            ]);
+            Router::redirect('/cards/' . $card->id);
+        } else {
+            // Else return 404 page
+            return false;
+        }
+    }
+
     // The card delete page
     public static function delete ($card) {
         // Check if the card is from authed user

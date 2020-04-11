@@ -1,0 +1,53 @@
+@view('header', [ 'title' => 'Create card - Cards - Admin' ])
+
+<div class="breadcrumb">
+    <ul>
+        <li><a href="/">Banq</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li><a href="/admin/cards">Cards</a></li>
+        <li class="is-active"><a href="/admin/cards/create">Create</a></li>
+    </ul>
+</div>
+
+<h1 class="title">Create card</h1>
+
+@view('errors')
+
+<form method="post" action="/admin/cards">
+    @view('csrf_token')
+
+    <div class="field">
+        <label class="label" for="name">Name</label>
+        <input class="input" type="text" id="name" name="name" value="{{ old('name') }}" {{ !isset($errors) ? 'autofocus' : '' }} required>
+    </div>
+
+    <div class="field">
+        <label class="label" for="rfid">RFID UID</label>
+        <input class="input" type="text" id="rfid" name="rfid" value="{{ old('rfid') }}" required>
+    </div>
+
+    <div class="field">
+        <label class="label" for="account_id">Account</label>
+        <select class="input" id="account_id" name="account_id" required>
+            @foreach ($accounts as $account):
+                <option value="{{ $account->id }}" {{ $account->id == old('account_id', $account_id) ? 'selected' : ''}}>{{ $account->name }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="field">
+        <label class="label" for="pincode">Pincode</label>
+        <input class="input" type="password" id="pincode" name="pincode" required>
+    </div>
+
+    <div class="field">
+        <label class="label" for="pincode_confirmation">Pincode confirmation</label>
+        <input class="input" type="password" id="pincode_confirmation" name="pincode_confirmation" required>
+    </div>
+
+    <div class="field">
+        <button class="button is-link" type="submit">Create card</button>
+    </div>
+</form>
+
+@view('footer')

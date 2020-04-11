@@ -12,8 +12,13 @@
 
 <p style="margin-bottom: 16px;">For: <a href="/accounts/{{ $card->account_id }}">{{ $card->account->name }}</a></p>
 <p style="margin-bottom: 16px;">RFID: <code>{{ $card->rfid }}</code></p>
+<p style="margin-bottom: 16px;">False attempts: <b>{{ $card->attempts }}</b></p>
+<p style="margin-bottom: 16px;">Blocked: <b>{{ $card->blocked ? 'true' : 'false' }}</b></p>
 
 <div class="buttons">
+    @if (!$card->blocked):
+        <a class="button is-warning" href="/cards/{{ $card->id }}/block">Block</a>
+    @endif
     <a class="button is-danger" href="/cards/{{ $card->id }}/delete">Delete</a>
 </div>
 
