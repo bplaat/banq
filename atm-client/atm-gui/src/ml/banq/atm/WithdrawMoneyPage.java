@@ -57,7 +57,7 @@ public class WithdrawMoneyPage extends Page {
             for (int j = 0; j < Config.ISSUE_AMOUNTS.length; j++) {
                 int count = moneyPare.get(String.valueOf(Config.ISSUE_AMOUNTS[j]));
                 if (count > 0) {
-                    moneyPareString += "    \u20bd " + Config.ISSUE_AMOUNTS[j] + " = " + count + "x";
+                    moneyPareString += "    " + MoneyUtils.MONEY_SYMBOL + " " + Config.ISSUE_AMOUNTS[j] + " = " + count + "x";
                 }
             }
 

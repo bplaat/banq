@@ -43,7 +43,7 @@ public class WithdrawAmountPage extends Page {
 
         // Create the amount options
         for (int i = 0; i < Config.DEFAULT_AMOUNTS.length; i++) {
-            JLabel amountLabel = new JLabel((i + 1) + ". \u20bd " + Config.DEFAULT_AMOUNTS[i]);
+            JLabel amountLabel = new JLabel((i + 1) + ". " + MoneyUtils.MONEY_SYMBOL + " " + Config.DEFAULT_AMOUNTS[i]);
             amountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             amountLabel.setFont(Fonts.NORMAL);
             add(amountLabel);

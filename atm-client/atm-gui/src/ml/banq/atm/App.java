@@ -56,6 +56,9 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         frame.add(Navigator.getInstance());
         Navigator.getInstance().changePage(new WelcomePage(), false);
 
+        // Check the money symbol
+        MoneyUtils.checkMoneySymbol();
+
         // Open the first serial port
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         if (serialPorts.length > 0) {

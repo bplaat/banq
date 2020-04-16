@@ -33,7 +33,7 @@ public class WithdrawBalancePage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         // Create the amount label
-        JLabel amountLabel = new JLabel(String.format("%s \u20bd %.02f", Language.getString("withdraw_balance_page_amount_prefix"), this.account.getAmount()));
+        JLabel amountLabel = new JLabel(String.format("%s " + MoneyUtils.MONEY_SYMBOL + " %.02f", Language.getString("withdraw_balance_page_amount_prefix"), this.account.getAmount()));
         amountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         amountLabel.setFont(Fonts.NORMAL);
         add(amountLabel);
