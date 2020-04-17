@@ -6,16 +6,20 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import org.json.JSONObject;
 
+// The settings persitent storage
 public class Settings {
+    // The singleton instance
     private static Settings instance = new Settings();
 
     public static Settings getInstance() {
         return instance;
     }
 
+    // The json hashmap settings storage
     private JSONObject settings;
 
     private Settings() {
+        // Try to read the settings.json file if it exists
         File settingsFile = new File("settings.json");
         if (settingsFile.exists() && !settingsFile.isDirectory()) {
             try {
@@ -29,16 +33,21 @@ public class Settings {
                 bufferedReader.close();
 
                 settings = new JSONObject(stringBuilder.toString());
-            } catch (Exception exception) {
+            }
+
+            // When error with reading the json create an empty settings storage
+            catch (Exception exception) {
                 Log.error(exception);
                 settings = new JSONObject();
             }
         } else {
+            // Create an empty settings storage
             settings = new JSONObject();
         }
     }
 
-    private void saveSettings() {
+    // Saves the json settings to the settings.json file
+    public void saveSettings() {
         try {
             FileWriter settingsFileWriter = new FileWriter("settings.json");
             settingsFileWriter.write(settings.toString());
@@ -48,6 +57,7 @@ public class Settings {
         }
     }
 
+    // Get an string item form the settings with a defaultValue
     public String getItem(String key, String defaultValue) {
         if (settings.has(key)) {
             return settings.getString(key);
@@ -56,9 +66,22 @@ public class Settings {
         }
     }
 
+    // Set an string item of the settings
     public void setItem(String key, String value) {
         settings.put(key, value);
+    }
 
-        saveSettings();
+    // Get an int item form the settings with a defaultValue
+    public int getItem(String key, int defaultValue) {
+        if (settings.has(key)) {
+            return settings.getInt(key);
+        } else {
+            return defaultValue;
+        }
+    }
+
+    // Set an int item of the settings
+    public void setItem(String key, int value) {
+        settings.put(key, value);
     }
 }

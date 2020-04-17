@@ -33,7 +33,7 @@ public class AdminMenuPage extends Page {
         menu1Label.setFont(Fonts.NORMAL);
         add(menu1Label);
 
-        add(Box.createVerticalStrut(Paddings.NORMAL));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
         // Create the second menu option
         JLabel menu2Label = new JLabel("2. " + Language.getString("admin_menu_page_location"));
@@ -41,13 +41,21 @@ public class AdminMenuPage extends Page {
         menu2Label.setFont(Fonts.NORMAL);
         add(menu2Label);
 
-        add(Box.createVerticalStrut(Paddings.NORMAL));
+        add(Box.createVerticalStrut(Paddings.LARGE));
 
-        // Create the third menu / back option
-        JLabel menu3Label = new JLabel("D. " + Language.getString("admin_menu_page_back"));
+        // Create the third menu option
+        JLabel menu3Label = new JLabel("3. " + Language.getString("admin_menu_page_bills"));
         menu3Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu3Label.setFont(Fonts.NORMAL);
         add(menu3Label);
+
+        add(Box.createVerticalStrut(Paddings.LARGE));
+
+        // Create the second menu / back option
+        JLabel menu4Label = new JLabel("D. " + Language.getString("admin_menu_page_back"));
+        menu4Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        menu4Label.setFont(Fonts.NORMAL);
+        add(menu4Label);
 
         add(Box.createVerticalGlue());
     }
@@ -61,6 +69,11 @@ public class AdminMenuPage extends Page {
         // When menu option 2 is selected go to the admin location page
         if (key.equals("2")) {
             Navigator.getInstance().changePage(new AdminLocationPage());
+        }
+
+        // When menu option 3 is selected go to the admin bills page
+        if (key.equals("3")) {
+            Navigator.getInstance().changePage(new AdminBillsPage());
         }
 
         // When menu option 3 / back is selected go back to the welcome page and hide the cursor again

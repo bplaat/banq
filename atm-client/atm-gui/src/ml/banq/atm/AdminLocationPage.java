@@ -38,7 +38,7 @@ public class AdminLocationPage extends Page {
         locationLabel.setFont(Fonts.NORMAL);
         locationBox.add(locationLabel);
 
-        // Create the pincode input field
+        // Create the location input field
         locationInput = new JTextField(16);
         locationInput.setText(Settings.getInstance().getItem("location", Config.DEFAULT_LOCATION));
         locationInput.setFont(Fonts.NORMAL);
@@ -57,11 +57,12 @@ public class AdminLocationPage extends Page {
     }
 
     public void onKeypad(String key) {
-        // Save the location
-        Settings.getInstance().setItem("location", locationInput.getText());
-
-        // When pressed go back to the previous page
+        // When pressed save and go back to the previous page
         if (key.equals("D")) {
+            // Save the location
+            Settings.getInstance().setItem("location", locationInput.getText());
+            Settings.getInstance().saveSettings();
+
             Navigator.getInstance().changePage(new AdminMenuPage());
         }
     }
