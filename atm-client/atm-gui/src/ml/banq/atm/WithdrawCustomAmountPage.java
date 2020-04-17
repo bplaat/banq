@@ -52,7 +52,7 @@ public class WithdrawCustomAmountPage extends Page {
         add(amountBox);
 
         // Create the page amount input label
-        JLabel amountLabel = new JLabel(Language.getString("withdraw_custom_amount_page_amount_input") + " " + MoneyUtils.MONEY_SYMBOL);
+        JLabel amountLabel = new JLabel(Language.getString("withdraw_custom_amount_page_amount_input") + " " + MoneyUtils.getMoneySymbol());
         amountLabel.setFont(Fonts.NORMAL);
         amountBox.add(amountLabel);
 

@@ -35,11 +35,19 @@ public class AdminMenuPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
-        // Create the second menu / back option
-        JLabel menu2Label = new JLabel("D. " + Language.getString("admin_menu_page_back"));
+        // Create the second menu option
+        JLabel menu2Label = new JLabel("2. " + Language.getString("admin_menu_page_location"));
         menu2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu2Label.setFont(Fonts.NORMAL);
         add(menu2Label);
+
+        add(Box.createVerticalStrut(Paddings.NORMAL));
+
+        // Create the third menu / back option
+        JLabel menu3Label = new JLabel("D. " + Language.getString("admin_menu_page_back"));
+        menu3Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        menu3Label.setFont(Fonts.NORMAL);
+        add(menu3Label);
 
         add(Box.createVerticalGlue());
     }
@@ -50,7 +58,12 @@ public class AdminMenuPage extends Page {
             Navigator.getInstance().changePage(new AdminWriteLoginPage());
         }
 
-        // When menu option 2 / back is selected go back to the welcome page and hide the cursor again
+        // When menu option 2 is selected go to the admin location page
+        if (key.equals("2")) {
+            Navigator.getInstance().changePage(new AdminLocationPage());
+        }
+
+        // When menu option 3 / back is selected go back to the welcome page and hide the cursor again
         if (key.equals("D")) {
             if (Config.FULLSCREEN_MODE) {
                 App.getInstance().hideCursor();

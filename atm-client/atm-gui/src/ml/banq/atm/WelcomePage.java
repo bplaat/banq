@@ -68,6 +68,14 @@ public class WelcomePage extends Page {
         }
 
         add(Box.createVerticalGlue());
+
+        // Create the device location label
+        JLabel locationLabel = new JLabel("ATM Location: " + Settings.getInstance().getItem("location", Config.DEFAULT_LOCATION));
+        locationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        locationLabel.setFont(Fonts.SMALL);
+        add(locationLabel);
+
+        add(Box.createVerticalStrut(Paddings.NORMAL));
     }
 
     public void onKeypad(String key) {

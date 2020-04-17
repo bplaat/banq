@@ -7,12 +7,9 @@ import java.util.HashMap;
 public class MoneyUtils {
     private MoneyUtils() {}
 
-    // The active money symbol
-    public static String MONEY_SYMBOL;
-
-    // Check if the used font can display the ruble symbol
-    public static void checkMoneySymbol() {
-        MONEY_SYMBOL = Fonts.DEFAULT.canDisplay('\u20bd') ? "\u20bd" : "P";
+    // Get ruble money symbol if the font support it
+    public static String getMoneySymbol() {
+        return Fonts.DEFAULT.canDisplay('\u20bd') ? "\u20bd" : "P";
     }
 
     // A function the generates the diffrent money pares

@@ -12,4 +12,5 @@ public class Fonts {
     public static final Font HEADER = DEFAULT.deriveFont(Font.BOLD).deriveFont((float)(App.getInstance().getWindowWidth() / 200 * 7));
     public static final Font NORMAL = DEFAULT.deriveFont((float)(App.getInstance().getWindowWidth() / 200 * 4));
     public static final Font NORMAL_BOLD = NORMAL.deriveFont(Font.BOLD);
+    public static final Font SMALL = DEFAULT.deriveFont((float)(App.getInstance().getWindowWidth() / 200 * 3));
 }
