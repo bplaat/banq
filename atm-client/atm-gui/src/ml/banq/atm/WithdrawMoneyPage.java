@@ -41,13 +41,21 @@ public class WithdrawMoneyPage extends Page {
         add(titleLabel);
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        // Create the page message label
-        messageLabel = new JLabel(Language.getString("withdraw_money_page_message"));
-        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        messageLabel.setFont(Fonts.NORMAL);
-        add(messageLabel);
+        if (moneyPares.size() > 0) {
+            // Create the page message label
+            messageLabel = new JLabel(Language.getString("withdraw_money_page_message"));
+            messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            messageLabel.setFont(Fonts.NORMAL);
+            add(messageLabel);
 
-        add(Box.createVerticalStrut(Paddings.NORMAL));
+            add(Box.createVerticalStrut(Paddings.LARGE));
+        } else {
+            // Create the page no pares label
+            messageLabel = new JLabel(Language.getString("withdraw_money_page_no_pares"));
+            messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            messageLabel.setFont(Fonts.NORMAL_BOLD);
+            add(messageLabel);
+        }
 
         // Create money pares
         for (int i = 0; i < moneyPares.size(); i++) {
@@ -93,6 +101,13 @@ public class WithdrawMoneyPage extends Page {
             if (key.equals(String.valueOf(i + 1))) {
                 // Send the money dispencer commands
                 App.getInstance().sendMoney(moneyPares.get(i));
+
+                // Distract the given money bills from the settings counter
+                for (int j = 0; j < Config.ISSUE_AMOUNTS.length; j++) {
+                    int new_amount = Settings.getInstance().getItem("bills_" + Config.ISSUE_AMOUNTS[j], 0) - moneyPares.get(i).get(String.valueOf(Config.ISSUE_AMOUNTS[j]));
+                    Settings.getInstance().setItem("bills_" + Config.ISSUE_AMOUNTS[j], new_amount);
+                }
+                Settings.getInstance().save();
 
                 // Create the transaction via the API
                 String name = Language.getString("withdraw_money_page_transaction_prefix") + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());

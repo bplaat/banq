@@ -87,7 +87,7 @@ public class AdminBillsPage extends Page {
 
                     Settings.getInstance().setItem("bills_" + Config.ISSUE_AMOUNTS[i], amount);
                 }
-                Settings.getInstance().saveSettings();
+                Settings.getInstance().save();
 
                 Navigator.getInstance().changePage(new AdminMenuPage());
             } catch (Exception exception) {

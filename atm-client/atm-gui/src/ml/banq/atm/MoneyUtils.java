@@ -43,6 +43,19 @@ public class MoneyUtils {
             moneyPares.add(moneyPare);
         }
 
+        // Check all money pares if the money bills are enough
+        for (int i = 0; i < moneyPares.size(); i++) {
+            HashMap<String, Integer> moneyPare = moneyPares.get(i);
+            for (int j = 0; j < Config.ISSUE_AMOUNTS.length; j++) {
+                int count = moneyPare.get(String.valueOf(Config.ISSUE_AMOUNTS[j]));
+                if (count > Settings.getInstance().getItem("bills_" + Config.ISSUE_AMOUNTS[j], 0)) {
+                    moneyPares.remove(i);
+                    i--;
+                    break;
+                }
+            }
+        }
+
         return moneyPares;
     }
 }

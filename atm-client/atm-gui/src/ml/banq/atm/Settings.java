@@ -47,7 +47,7 @@ public class Settings {
     }
 
     // Saves the json settings to the settings.json file
-    public void saveSettings() {
+    public void save() {
         try {
             FileWriter settingsFileWriter = new FileWriter("settings.json");
             settingsFileWriter.write(settings.toString());

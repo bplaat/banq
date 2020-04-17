@@ -61,7 +61,7 @@ public class AdminLocationPage extends Page {
         if (key.equals("D")) {
             // Save the location
             Settings.getInstance().setItem("location", locationInput.getText());
-            Settings.getInstance().saveSettings();
+            Settings.getInstance().save();
 
             Navigator.getInstance().changePage(new AdminMenuPage());
         }
