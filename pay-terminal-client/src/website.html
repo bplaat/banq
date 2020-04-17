@@ -65,6 +65,30 @@ button {
     <div id="app" class="container">
         <h1>Banq Payment Terminal Settings</h1>
 
+        <h2>Account Settings</h2>
+        <form id="account_info_form">
+            <div class="field">
+                <label class="label" for="account_id">Account ID</label>
+                <input class="input" type="text" id="account_id">
+            </div>
+
+            <div class="field">
+                <button class="button" type="submit">Save & restart</button>
+            </div>
+        </form>
+
+        <h2>Device Settings</h2>
+        <form id="device_settings_form">
+            <div class="field">
+                <label class="label" for="api_key">API key</label>
+                <input class="input" type="text" id="api_key">
+            </div>
+
+            <div class="field">
+                <button class="button" type="submit">Save & restart</button>
+            </div>
+        </form>
+
         <h2>Local Wifi Settings</h2>
         <form id="local_wifi_form">
             <div class="field">
@@ -109,6 +133,7 @@ xhr.onload = function () {
     local_wifi_password.value = data.local_wifi_password;
     wifi_ssid.value = data.wifi_ssid;
     wifi_password.value = data.wifi_password;
+    account_id.value = data.account_id;
 };
 xhr.open('GET', '/api/config', true);
 xhr.send();
@@ -126,6 +151,22 @@ wifi_form.onsubmit = function (event) {
 
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/api/config/edit?wifi_ssid=' + encodeURIComponent(wifi_ssid.value) + '&wifi_password=' + encodeURIComponent(wifi_password.value), true);
+    xhr.send();
+};
+
+account_info_form.onsubmit = function (event) {
+    event.preventDefault();
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/config/edit?account_id=' + encodeURIComponent(account_id.value), true);
+    xhr.send();
+};
+
+device_settings_form.onsubmit = function (event) {
+    event.preventDefault();
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/config/edit?api_key=' + encodeURIComponent(api_key.value), true);
     xhr.send();
 };
 </script>
