@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.6, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 2568.3 3410.2" style="enable-background:new 0 0 2568.3 3410.2;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#FF0000;stroke-width:0.1;stroke-linecap:round;}
+	.st1{fill:none;stroke:#FF0000;}
+	.st2{fill:none;stroke:#0000FF;stroke-width:0.1;stroke-linecap:round;}
+	.st3{fill:#FFFFFF;stroke:#0000FF;stroke-miterlimit:10;}
+</style>
+<title>ATMaidesign</title>
+<g id="svgGroup">
+	<path id="front_outsideCutPath" class="st0" d="M0,1992.8v115.5h8.5v129H0v129h8.5v129H0v129h8.5v129H0v129h8.5v129H0v115.5h135
+		v-5.8h193.5v5.7H522v-5.7h193.5v5.7h135v-115.5h-8.5v-129h8.5v-129h-8.5v-129h8.5v-129h-8.5v-129h8.5v-129h-8.5v-129h8.5v-115.3H0z
+		"/>
+	<path id="left_outsideCutPath" class="st0" d="M867.5,1709.3v173.3h-8.5v193.5h8.5v193.5h-8.5V2463h8.5v193.5h-8.5v193.5h8.5v193.5
+		h-8.5v193.5h8.5v173.3h126.5v-8.5h193.5v8.5h193.5v-8.5h193.5v8.5h126.5v-173.3h8.5v-193.5h-8.5v-193.5h8.5v-193.5h-8.5V2463h8.5
+		v-193.5h-8.5v-193.5h8.5v-193.5h-8.5v-173.3h-126.5v8.5h-193.5v-8.5h-193.5v8.5H993.9v-8.5H867.5z"/>
+	<path id="back_outsideCutPath" class="st0" d="M0,0v173.3h8.5v193.5H0v193.5h8.5v193.5H0v193.5h8.5v193.5H0v193.5h8.5v193.5H0
+		v173.3h135v-8.5h193.5v8.5H522v-8.5h193.5v8.5h135v-173.3h-8.5v-193.5h8.5v-193.5h-8.5V947.2h8.5V753.7h-8.5V560.3h8.5V366.8h-8.5
+		V173.3h8.5V0h-135v8.5H522V0H328.5v8.5H135.1V0H0z"/>
+	<path id="right_outsideCutPath" class="st0" d="M867.5,0v173.3h-8.5v193.5h8.5v193.5h-8.5v193.5h8.5v193.5h-8.5v193.5h8.5v193.5
+		h-8.5v193.5h8.5v173.3h126.5v-8.5h193.5v8.5h193.5v-8.5h193.5v8.5h126.5v-173.3h8.5v-193.5h-8.5v-193.5h8.5V947.2h-8.5V753.7h8.5
+		V560.3h-8.5V366.8h8.5V173.3h-8.5V0h-126.5v8.5h-193.5V0h-193.5v8.5H993.9V0H867.5z"/>
+	<path id="bottom_outsideCutPath" class="st0" d="M1726.3,1709.3v126.5h-8.5v193.5h8.5v193.5h-8.5v193.5h8.5v126.5h126.5v8.5h193.5
+		v-8.5h193.5v8.5h193.5v-8.5h126.5v-126.5h8.5v-193.5h-8.5v-193.5h8.5v-193.5h-8.5v-126.5h-126.5v-8.5h-193.5v8.5h-193.5v-8.5
+		h-193.5v8.5H1726.3z"/>
+</g>
+<rect x="1726.3" y="749.8" class="st1" width="834.5" height="470"/>
+<rect x="1726.3" y="279.3" class="st1" width="834.5" height="350"/>
+<rect x="1728" y="2843.1" class="st0" width="830" height="220"/>
+<rect x="2122.1" y="314.6" class="st2" width="50" height="50"/>
+<rect x="1893.4" y="915.9" class="st2" width="100" height="150"/>
+<rect x="2087.1" y="899.8" class="st2" width="120" height="170"/>
+<rect x="105.2" y="2129.6" class="st2" width="200" height="50"/>
+<rect x="175.2" y="2891.4" class="st3" width="500" height="100"/>
+</svg>
