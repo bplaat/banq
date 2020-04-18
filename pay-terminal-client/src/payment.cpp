@@ -28,32 +28,46 @@ bool CommunicationData::key_pressed(char key) {
 }
 
 void lcd_print_payment_amount() {
+
+    int printed_chars = 0;
+
     lcd.print("Amount: P");
+    printed_chars += 9;
     
     int length = payment_amount.length();
     
     // start with a zero if there are only decimals
     if (length - 2 <= 0) {
         lcd.print('0');
+        printed_chars++;
     }
 
     // if there are non-decimals, print them
     else {
         for (int i = 0; i < length - 2; i++) {
             lcd.print(payment_amount[i]);
+            printed_chars++;
         }
     }
     
     lcd.print('.');
+    printed_chars++;
     
     // print zeroes to pad decimals (if there are less than 2 decimals)
     for (int i = 0; i < max(0, 2 - length); i++) {
         lcd.print('0');
+        printed_chars++;
     }
     
     // print decimals
     for (int i = max(0, length - 2); i < length; i++) {
         lcd.print(payment_amount[i]);
+        printed_chars++;
+    }
+
+    // padding
+    for (int i = printed_chars; i < 16; i++) {
+        lcd.print(' ');
     }
     
 }
@@ -313,18 +327,28 @@ void do_transaction() {
 
             // call api and print result on lcd
             api_response = call_api();
-            lcd.setCursor(0, 1);
-            switch (api_response) {
-                case success: lcd.print("Success"); break;
-                case wrong_pin_code: lcd.print("Wrong pin code"); break;
-                case card_blocked: lcd.print("Card blocked"); break;
-                case error: lcd.print("API Error"); break;
+
+            if (api_response == ApiResponse::success) {
+                lcd.setCursor(0, 1);
+                lcd.print("Success         ");
+            } else {
+                lcd.setCursor(0, 0);
+                if (api_response == wrong_pin_code) {
+                    lcd.print("Wrong pin code  ");
+                } else if (api_response == card_blocked) {
+                    lcd.print("Card blocked    ");
+                } else {
+                    lcd.print("API Error       ");
+                }
+
+                lcd.setCursor(0, 1);
+                lcd.print("Press any key   ");
             }
 
             state = transaction_done_blocking;
             post_transaction_reset_time = millis();
             break;
-
+            
         case transaction_done_blocking:
 
             // do nothing for BLOCKING_RESET_TIME ms
