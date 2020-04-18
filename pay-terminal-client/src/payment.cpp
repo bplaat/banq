@@ -33,12 +33,13 @@ void lcd_print_payment_amount() {
     int length = payment_amount.length();
     
     // start with a zero if there are only decimals
-    if(length - 2 <= 0) {
+    if (length - 2 == 0) {
         lcd.print('0');
-    
+    }
+
     // if there are non-decimals, print them
-    } else {
-        for(int i = 0; i < length - 2; i++) {
+    else {
+        for (int i = 0; i < length - 2; i++) {
             lcd.print(payment_amount[i]);
         }
     }
@@ -46,12 +47,12 @@ void lcd_print_payment_amount() {
     lcd.print('.');
     
     // print zeroes to pad decimals (if there are less than 2 decimals)
-    for(int i = 0; i < max(0, 2 - length); i++) {
+    for (int i = 0; i < max(0, 2 - length); i++) {
         lcd.print('0');
     }
     
     // print decimals
-    for(int i = max(0, length - 2); i < length; i++) {
+    for (int i = max(0, length - 2); i < length; i++) {
         lcd.print(payment_amount[i]);
     }
     
@@ -60,16 +61,18 @@ void lcd_print_payment_amount() {
 State input_payment_amount() {
 
     // remove the last character in the string on backspace
-    if(communication_data.key_pressed(KEY_BACKSPACE) && payment_amount.length() != 0) {
+    if (communication_data.key_pressed(KEY_BACKSPACE) && payment_amount.length() != 0) {
         payment_amount.remove(payment_amount.length() - 1, 1);
+    }
 
     // on enter, the new state will be user_scan_card but only if the payment amount is not empty
-    } else if(communication_data.key_pressed(KEY_ENTER) && payment_amount != "") {
+    else if (communication_data.key_pressed(KEY_ENTER) && payment_amount != "") {
         return user_scan_card;
-
+    }
+    
     // else check if the last key is a digit, append it to the string if it's not full
-    } else if(communication_data.new_key && isdigit(communication_data.key) &&
-              payment_amount.length() < PAYMENT_AMOUNT_LENGTH)
+    else if (communication_data.new_key && isdigit(communication_data.key) &&
+             payment_amount.length() < PAYMENT_AMOUNT_LENGTH)
     {
         payment_amount += communication_data.key;
     }
@@ -81,11 +84,11 @@ State input_payment_amount() {
 State scan_card_info() {
 
     // if a new card is found, read the data and go to the pin code state
-    if(communication_data.new_card) {
-        for(int i = 0; i < 16; i++) {
+    if (communication_data.new_card) {
+        for (int i = 0; i < 16; i++) {
             card_info += (char)communication_data.block_data[i];
         }
-        for(int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             card_id += (char)communication_data.uid[i];
         }
 
@@ -99,16 +102,18 @@ State scan_card_info() {
 State input_pin_code() {
 
     // remove the last character in the string on backspace
-    if(communication_data.key_pressed(KEY_BACKSPACE) && pin_code.length() != 0) {
+    if (communication_data.key_pressed(KEY_BACKSPACE) && pin_code.length() != 0) {
         pin_code.remove(pin_code.length() - 1, 1);
+    }
 
     // on enter, call api (but only if the pin code is complete)
-    } else if(communication_data.key_pressed(KEY_ENTER) && pin_code.length() == PIN_CODE_LENGTH) {
+    else if (communication_data.key_pressed(KEY_ENTER) && pin_code.length() == PIN_CODE_LENGTH) {
         return calling_api;
+    }
 
     // else check if the last key is a digit, append it to the string if it's not full
-    } else if(communication_data.new_key && isdigit(communication_data.key) &&
-              pin_code.length() < PIN_CODE_LENGTH)
+    else if (communication_data.new_key && isdigit(communication_data.key) &&
+             pin_code.length() < PIN_CODE_LENGTH)
     {
         pin_code += communication_data.key;
     }
@@ -126,14 +131,14 @@ ApiResponse call_api() {
     int length = payment_amount.length(); // easier to read + signed for max()
 
     // add non-decimals
-    for(int i = 0; i < length - 2; i++) {
+    for (int i = 0; i < length - 2; i++) {
         payment_amount_with_separator += payment_amount[i];
     }
 
     payment_amount_with_separator += '.';
 
     // add decimals
-    for(int i = max(0, length - 2); i < length; i++) {
+    for (int i = max(0, length - 2); i < length; i++) {
         payment_amount_with_separator += payment_amount[i];
     }
 
@@ -180,7 +185,7 @@ ApiResponse call_api() {
     DeserializationError err = deserializeJson(document, json_raw);
 
     // return error on failure
-    if(err != DeserializationError::Ok) {
+    if (err != DeserializationError::Ok) {
         Serial.print("json error: ");
         Serial.println(err.c_str());
         return ApiResponse::error;
@@ -205,8 +210,14 @@ ApiResponse call_api() {
     Serial.println("Amount: " + payment_amount + " ruble cents or whatever they're called");
 
     // return response depending on success and blocked
-    if(success) return ApiResponse::success;
-    if(blocked) return ApiResponse::card_blocked;
+    if (success) {
+        return ApiResponse::success;
+    }
+
+    if (blocked) {
+        return ApiResponse::card_blocked;
+    }
+
     return ApiResponse::wrong_pin_code;
 }
 
@@ -220,11 +231,11 @@ void do_transaction() {
     static bool show_payment_amount = false, show_pin_code = false;
 
     // always reset on cancel
-    if(communication_data.key_pressed(KEY_CANCEL)) {
+    if (communication_data.key_pressed(KEY_CANCEL)) {
         state = begin;
     }
     
-    switch(state) {
+    switch (state) {
 
         case begin:
 
@@ -248,11 +259,11 @@ void do_transaction() {
             state = input_payment_amount();
 
             // print the amount when something happened to the string
-            if(payment_amount != "") {
+            if (payment_amount != "") {
                 show_payment_amount = true;
             }
 
-            if(show_payment_amount) {
+            if (show_payment_amount) {
                 lcd.clear();
                 lcd.setCursor(0, 0);
                 lcd_print_payment_amount();
@@ -280,9 +291,11 @@ void do_transaction() {
         case user_input_pin_code:
             state = input_pin_code();
 
-            if(pin_code != "") show_pin_code = true;
+            if (pin_code != "") {
+                show_pin_code = true;
+            }
 
-            if(show_pin_code) {
+            if (show_pin_code) {
 
                 // print payment amount of first line
                 lcd.clear();
@@ -301,7 +314,7 @@ void do_transaction() {
             // call api and print result on lcd
             api_response = call_api();
             lcd.setCursor(0, 1);
-            switch(api_response) {
+            switch (api_response) {
                 case success: lcd.print("Success"); break;
                 case wrong_pin_code: lcd.print("Wrong pin code"); break;
                 case card_blocked: lcd.print("Card blocked"); break;
@@ -315,7 +328,7 @@ void do_transaction() {
         case transaction_done_blocking:
 
             // do nothing for BLOCKING_RESET_TIME ms
-            if(millis() >= post_transaction_reset_time + BLOCKING_RESET_TIME) {
+            if (millis() >= post_transaction_reset_time + BLOCKING_RESET_TIME) {
                 state = transaction_done;
             }
             break;
@@ -323,20 +336,21 @@ void do_transaction() {
         case transaction_done:
 
             // timeout after RESET_TIME ms, always goes back to start
-            if(millis() >= post_transaction_reset_time + RESET_TIME) {
+            if (millis() >= post_transaction_reset_time + RESET_TIME) {
                 state = begin;
             }
 
             // also reset if a key is pressed
-            if(communication_data.new_key) {
+            if (communication_data.new_key) {
 
                 // go back to the beginning if the last payment was successful
-                if(api_response == success) {
+                if (api_response == success) {
                     state = begin;
+                }
 
                 // go back to the card scan state if the last payment was not successful
                 // and reset the pin code
-                } else {
+                else {
                     pin_code = "";
                     show_pin_code = false;
                     state = user_scan_card;
@@ -354,10 +368,10 @@ bool request_data() {
     // very short delay to give the nano time to respond
     delay(2);
 
-    if(Wire.available()) {
+    if (Wire.available()) {
 
         // replace old communicationdata with new data
-        for(unsigned i = 0; i < sizeof(CommunicationData); i++) {
+        for (unsigned i = 0; i < sizeof(CommunicationData); i++) {
             *((char*)&communication_data + i) = Wire.read();
         }
 
