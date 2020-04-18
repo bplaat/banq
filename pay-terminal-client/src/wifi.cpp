@@ -62,7 +62,6 @@ void webserver_init(ESP8266WebServer& webserver) {
         document["wifi_ssid"] = wifi_ssid;
         document["wifi_password"] = wifi_password;
         document["account_id"] = account_id;
-        document["api_key"] = api_key;
         serializeJson(document, buffer);
         Serial.println(buffer);
 
@@ -90,10 +89,6 @@ void webserver_init(ESP8266WebServer& webserver) {
 
         if (webserver.arg("account_id") != "") {
             account_id = webserver.arg("account_id");
-        }
-
-        if (webserver.arg("api_key") != "") {
-            api_key = webserver.arg("api_key");
         }
 
         // Return a confirmation message

@@ -26,7 +26,6 @@ void load_config() {
             wifi_ssid = String((const char *)document["wifi_ssid"]);
             wifi_password = String((const char *)document["wifi_password"]);
             account_id = String((const char*)document["account_id"]);
-            api_key = String((const char*)document["api_key"]);
         }
     }
 }
@@ -42,7 +41,6 @@ void save_config() {
     document["wifi_ssid"] = wifi_ssid;
     document["wifi_password"] = wifi_password;
     document["account_id"] = account_id;
-    document["api_key"] = api_key;
     serializeJson(document, buffer);
 
     // Write the buffer to the EEPROM

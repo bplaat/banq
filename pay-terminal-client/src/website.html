@@ -73,19 +73,7 @@ button {
             </div>
 
             <div class="field">
-                <button class="button" type="submit">Save & restart</button>
-            </div>
-        </form>
-
-        <h2>Device Settings</h2>
-        <form id="device_settings_form">
-            <div class="field">
-                <label class="label" for="api_key">API key</label>
-                <input class="input" type="text" id="api_key">
-            </div>
-
-            <div class="field">
-                <button class="button" type="submit">Save & restart</button>
+                <button class="button" type="submit">Save</button>
             </div>
         </form>
 
@@ -159,14 +147,6 @@ account_info_form.onsubmit = function (event) {
 
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/api/config/edit?account_id=' + encodeURIComponent(account_id.value), true);
-    xhr.send();
-};
-
-device_settings_form.onsubmit = function (event) {
-    event.preventDefault();
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/api/config/edit?api_key=' + encodeURIComponent(api_key.value), true);
     xhr.send();
 };
 </script>

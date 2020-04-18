@@ -38,6 +38,13 @@ struct CommunicationData {
     bool key_pressed(char key);
 };
 
+enum ApiResponse {
+    success,
+    wrong_pin_code,
+    card_blocked,
+    error
+};
+
 void lcd_print_payment_amount();
 
 State input_payment_amount();
@@ -46,7 +53,7 @@ State scan_card_info();
 
 State input_pin_code();
 
-bool call_api();
+ApiResponse call_api();
 
 void do_transaction();
 

@@ -2,6 +2,9 @@
 
 #include <Wire.h>
 #include <LiquidCrystal.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClientSecure.h>
+#include <ArduinoJson.h>
 
 #include "config.hpp"
 
@@ -114,14 +117,85 @@ State input_pin_code() {
     return user_input_pin_code;
 }
 
-// call api, dummy function for now
-bool call_api() {
+// call api
+ApiResponse call_api() {
+
+    // create new string with separator (original string should be kept in case
+    // of payment failure)
+    String payment_amount_with_separator = "";
+    int length = payment_amount.length(); // easier to read + signed for max()
+
+    // add non-decimals
+    for(int i = 0; i < length - 2; i++) {
+        payment_amount_with_separator += payment_amount[i];
+    }
+
+    payment_amount_with_separator += '.';
+
+    // add decimals
+    for(int i = max(0, length - 2); i < length; i++) {
+        payment_amount_with_separator += payment_amount[i];
+    }
+
+    // wifi client with fingerprint
+    WiFiClientSecure wifi_client;
+    wifi_client.setFingerprint(fingerprint.c_str());
+
+    // http client with api url
+    HTTPClient http;
+    http.begin(
+        wifi_client,
+        "https://banq.ml/api/atm/transactions/create?key=" + api_key +
+        "&name=Payment%20Terminal%20Transaction" +
+        "&from_account_id=" + card_info +
+        "&to_account_id=" + account_id +
+        "&rfid=" + card_id +
+        "&pincode=" + pin_code +
+        "&amount=" + payment_amount_with_separator
+    );
+
+    // get json from server
+    String json_raw;
+    int http_code = http.GET();
+    Serial.println(http_code);
+    if (http_code == HTTP_CODE_OK) {
+        Serial.print("HTTP request response: ");
+        json_raw = http.getString();
+        Serial.println(json_raw);
+    }
+    
+    // return error on failure
+    else {
+        Serial.print("HTTP request failed, error: ");
+        Serial.println(http.errorToString(http_code));
+        return error;
+    }
+
+    http.end();
+
+    // deserialize json
+    StaticJsonDocument<JSON_BUFFER_SIZE> document;
+    
+
+    DeserializationError err = deserializeJson(document, json_raw);
+
+    // return error on failure
+    if(err != DeserializationError::Ok) {
+        Serial.print("json error: ");
+        Serial.println(err.c_str());
+        return ApiResponse::error;
+    }
+
+    // extract success and blocked booleans
+    bool success = document["success"];
+    bool blocked = document["blocked"];
+
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd_print_payment_amount();
     lcd.setCursor(0, 1);
 
-    Serial.println("API call should be made");
+    Serial.println("API call made");
     Serial.println("API key: " + api_key);
     Serial.println("Rfid: " + card_id);
     Serial.println("Pin code: " + pin_code);
@@ -130,7 +204,10 @@ bool call_api() {
     Serial.println("To account id: " + account_id);
     Serial.println("Amount: " + payment_amount + " ruble cents or whatever they're called");
 
-    return !pin_code.compareTo("1235");
+    // return response depending on success and blocked
+    if(success) return ApiResponse::success;
+    if(blocked) return ApiResponse::card_blocked;
+    return ApiResponse::wrong_pin_code;
 }
 
 void do_transaction() {
@@ -138,7 +215,7 @@ void do_transaction() {
     request_data();
 
     static unsigned long post_transaction_reset_time = 0;
-    static bool payment_success = true;
+    static ApiResponse api_response = success;
 
     // always reset on cancel
     if(communication_data.key_pressed(KEY_CANCEL)) {
@@ -212,8 +289,14 @@ void do_transaction() {
         case calling_api:
 
             // call api and print result on lcd
-            payment_success = call_api();
-            lcd.print(payment_success ? "Success" : "Failure");
+            api_response = call_api();
+            lcd.setCursor(0, 1);
+            switch(api_response) {
+                case success: lcd.print("Success"); break;
+                case wrong_pin_code: lcd.print("Wrong pin code"); break;
+                case card_blocked: lcd.print("Card blocked"); break;
+                case error: lcd.print("API Error"); break;
+            }
 
             state = transaction_done_blocking;
             post_transaction_reset_time = millis();
@@ -238,11 +321,13 @@ void do_transaction() {
             if(communication_data.new_key) {
 
                 // go back to the beginning if the last payment was successful
-                if(payment_success) {
+                if(api_response == success) {
                     state = begin;
 
                 // go back to the card scan state if the last payment was not successful
+                // and reset the pin code
                 } else {
+                    pin_code = "";
                     state = user_scan_card;
                 }
             }

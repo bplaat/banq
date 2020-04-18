@@ -13,9 +13,6 @@
 /*  Problems
     - Any account ID can be used in the settings page,
         there is no check to see if it's correct
-    - include/website.hpp should start #pragma once but idk where its generated
-    - current API key is not displayed on settings page
-
 */
 
 // The web server object
