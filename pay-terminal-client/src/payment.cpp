@@ -33,7 +33,7 @@ void lcd_print_payment_amount() {
     int length = payment_amount.length();
     
     // start with a zero if there are only decimals
-    if (length - 2 == 0) {
+    if (length - 2 <= 0) {
         lcd.print('0');
     }
 
