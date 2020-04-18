@@ -64,7 +64,7 @@ State input_payment_amount() {
         payment_amount.remove(payment_amount.length() - 1, 1);
 
     // on enter, the new state will be user_scan_card but only if the payment amount is not empty
-    } else if(communication_data.key_pressed(KEY_ENTER) && payment_amount.compareTo("") != 0) {
+    } else if(communication_data.key_pressed(KEY_ENTER) && payment_amount != "") {
         return user_scan_card;
 
     // else check if the last key is a digit, append it to the string if it's not full
@@ -217,6 +217,8 @@ void do_transaction() {
     static unsigned long post_transaction_reset_time = 0;
     static ApiResponse api_response = success;
 
+    static bool show_payment_amount = false, show_pin_code = false;
+
     // always reset on cancel
     if(communication_data.key_pressed(KEY_CANCEL)) {
         state = begin;
@@ -231,6 +233,8 @@ void do_transaction() {
             card_info = "";
             card_id = "";
             pin_code = "";
+            show_payment_amount = false;
+            show_pin_code = false;
 
             // print info and immediately go to next state
             lcd.clear();
@@ -243,8 +247,12 @@ void do_transaction() {
         case user_input_payment_amount:
             state = input_payment_amount();
 
-            // print the amount when the string is not empty
-            if(payment_amount.compareTo("") != 0) {
+            // print the amount when something happened to the string
+            if(payment_amount != "") {
+                show_payment_amount = true;
+            }
+
+            if(show_payment_amount) {
                 lcd.clear();
                 lcd.setCursor(0, 0);
                 lcd_print_payment_amount();
@@ -272,7 +280,9 @@ void do_transaction() {
         case user_input_pin_code:
             state = input_pin_code();
 
-            if(pin_code.compareTo("") != 0) {
+            if(pin_code != "") show_pin_code = true;
+
+            if(show_pin_code) {
 
                 // print payment amount of first line
                 lcd.clear();
@@ -328,6 +338,7 @@ void do_transaction() {
                 // and reset the pin code
                 } else {
                     pin_code = "";
+                    show_pin_code = false;
                     state = user_scan_card;
                 }
             }
