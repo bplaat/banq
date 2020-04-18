@@ -375,6 +375,8 @@ void do_transaction() {
                 // go back to the card scan state if the last payment was not successful
                 // and reset the pin code
                 else {
+                    card_info = "";
+                    card_id = "";
                     pin_code = "";
                     show_pin_code = false;
                     state = user_scan_card;
