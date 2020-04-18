@@ -7,14 +7,22 @@ class ApiATMTransactionsController {
         $from_account_id = request('from_account_id');
 
         if (substr($from_account_id, 0, strlen(BANK_CODE_PREFIX)) != BANK_CODE_PREFIX) {
-            return 'This API supports only Banq cards';
+            return [
+                'success' => false,
+                'blocked' => false,
+                'message' => 'This API supports only Banq cards'
+            ];
         }
         $_REQUEST['from_account_id'] = floatval(substr($from_account_id, strlen(BANK_CODE_PREFIX)));
 
         // Convert to account id string to banq id
         $to_account_id = request('to_account_id');
         if (substr($to_account_id, 0, strlen(BANK_CODE_PREFIX)) != BANK_CODE_PREFIX) {
-            return 'This API supports only Banq cards';
+            return [
+                'success' => false,
+                'blocked' => false,
+                'message' => 'This API supports only Banq cards'
+            ];
         }
         $_REQUEST['to_account_id'] = floatval(substr($to_account_id, strlen(BANK_CODE_PREFIX)));
 
@@ -31,7 +39,11 @@ class ApiATMTransactionsController {
         // Check if card is blocked
         $card = Cards::select([ 'rfid' => request('rfid') ])->fetch();
         if ($card->blocked) {
-            return 'This card is blocked';
+            return [
+                'success' => false,
+                'blocked' => true,
+                'message' => 'This card is blocked'
+            ];
         } else {
             // Check if the pincode matches
             if (!password_verify(request('pincode'), $card->pincode)) {
@@ -40,13 +52,21 @@ class ApiATMTransactionsController {
                 // Check if the attempts max
                 if ($attempts == CARD_MAX_ATTEMPTS) {
                     Cards::update($card->id, [ 'blocked' => 1 ]);
-                    return 'Pincode ' . CARD_MAX_ATTEMPTS . ' times false, blocked the card';
+                    return [
+                        'success' => false,
+                        'blocked' => true,
+                        'message' => 'This card is now blocked'
+                    ];
                 }
 
                 // Increment the card attempts var
                 else {
                     Cards::update($card->id, [ 'attempts' => $attempts ]);
-                    return 'Pincode false';
+                    return [
+                        'success' => false,
+                        'blocked' => false,
+                        'message' => 'Pincode false'
+                    ];
                 }
             } else {
                 // The pincode is good reset attempts
@@ -79,6 +99,7 @@ class ApiATMTransactionsController {
         // Return a confirmation message
         return [
             'success' => true,
+            'blocked' => false,
             'transaction' => Transactions::select($transaction_id)->fetch()
         ];
     }

@@ -128,7 +128,6 @@ public class BanqAPI {
     private static JSONObject fetch(String url) throws Exception {
         Log.debug("Fetch url: " + url);
         URLConnection connection = new URL(url).openConnection();
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0");
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         StringBuilder stringBuilder = new StringBuilder();
         String line;
