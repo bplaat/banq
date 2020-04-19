@@ -20,7 +20,7 @@ public class Settings {
 
     private Settings() {
         // Try to read the settings.json file if it exists
-        File settingsFile = new File("settings.json");
+        File settingsFile = new File(System.getProperty("user.home") + "/banq-atm-settings.json");
         if (settingsFile.exists() && !settingsFile.isDirectory()) {
             try {
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(settingsFile));
@@ -49,7 +49,7 @@ public class Settings {
     // Saves the json settings to the settings.json file
     public void save() {
         try {
-            FileWriter settingsFileWriter = new FileWriter("settings.json");
+            FileWriter settingsFileWriter = new FileWriter(System.getProperty("user.home") + "/banq-atm-settings.json");
             settingsFileWriter.write(settings.toString());
             settingsFileWriter.close();
         } catch (Exception exception) {

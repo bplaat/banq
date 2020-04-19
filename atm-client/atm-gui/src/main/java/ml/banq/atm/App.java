@@ -75,11 +75,13 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
             frame.setLocationRelativeTo(null);
         }
         frame.addComponentListener(this);
-        frame.setVisible(true);
 
         // Add the navigator system to the java swing class
         frame.add(Navigator.getInstance());
         Navigator.getInstance().changePage(new WelcomePage(), false);
+
+        // Made the window visible
+        frame.setVisible(true);
     }
 
     // Listen to resize and move events of the window to resize the navigator

@@ -67,7 +67,7 @@ public class WelcomePage extends Page {
             languageBox.add(languageOptionLabel);
         }
 
-        add(Box.createVerticalGlue());
+        add(Box.createVerticalStrut(Paddings.LARGE * 2));
 
         // Create the device location label
         JLabel locationLabel = new JLabel(Language.getString("welcome_page_location") + " " + Settings.getInstance().getItem("location", Config.DEFAULT_LOCATION));
@@ -75,7 +75,7 @@ public class WelcomePage extends Page {
         locationLabel.setFont(Fonts.SMALL);
         add(locationLabel);
 
-        add(Box.createVerticalStrut(Paddings.NORMAL));
+        add(Box.createVerticalGlue());
     }
 
     public void onKeypad(String key) {
