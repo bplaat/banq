@@ -86,7 +86,7 @@ Users::createUser([
     'lastname' => 'Luijendijk ',
     'username' => 'don',
     'email' => 'don@mail.com',
-    'password' => '$2y$10$PpwUe0xSRkhbYnVOQVC9s.PJA8fl8UIU0lS6p2f6n0F4osrIiY.I2',
+    'password' => '$2y$10$Lw/qnKPp.0.aPNQuEc6JLeLth2jR8ID/jXsr0Hw3jaCvjfTrbO9UW',
     'phone_number' => '+31 6 1234 5678',
     'sex' => 'M',
     'birth_date' => '2000-01-01',
