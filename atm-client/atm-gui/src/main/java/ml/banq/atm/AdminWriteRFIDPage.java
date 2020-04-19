@@ -1,7 +1,6 @@
 package ml.banq.atm;
 
 import java.awt.Component;
-import java.util.ArrayList;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -11,11 +10,9 @@ public class AdminWriteRFIDPage extends Page {
     private static final long serialVersionUID = 1;
 
     // The page fields
-    private String accountId;
     private String pincode;
 
     public AdminWriteRFIDPage(String accountId, String pincode) {
-        this.accountId = accountId;
         this.pincode = pincode;
 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

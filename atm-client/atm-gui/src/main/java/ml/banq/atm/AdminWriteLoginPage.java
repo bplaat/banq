@@ -31,7 +31,7 @@ public class AdminWriteLoginPage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         // Create the page message label
-        JLabel messageLabel = new JLabel(Language.getString("admin_write_login_page_message"));
+        final JLabel messageLabel = new JLabel(Language.getString("admin_write_login_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
@@ -47,7 +47,7 @@ public class AdminWriteLoginPage extends Page {
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
         // Create the page login input field
-        JTextField loginInput = new JTextField(16);
+        final JTextField loginInput = new JTextField(16);
         loginInput.setFont(Fonts.NORMAL);
         loginInput.setHorizontalAlignment(JTextField.CENTER);
         loginInput.setMaximumSize(loginInput.getPreferredSize());
@@ -64,7 +64,7 @@ public class AdminWriteLoginPage extends Page {
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
         // Create the page password input field
-        JPasswordField passwordInput = new JPasswordField(16);
+        final JPasswordField passwordInput = new JPasswordField(16);
         passwordInput.setFont(Fonts.NORMAL);
         passwordInput.setHorizontalAlignment(JPasswordField.CENTER);
         passwordInput.setMaximumSize(passwordInput.getPreferredSize());

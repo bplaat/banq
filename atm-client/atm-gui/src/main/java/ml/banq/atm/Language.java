@@ -31,7 +31,7 @@ public class Language {
 
         try {
             properties = new Properties();
-            properties.load(new InputStreamReader(getClass().getResource("/resources/languages/strings_" + language + ".properties").openStream(), "UTF8"));
+            properties.load(new InputStreamReader(getClass().getResource("/languages/strings_" + language + ".properties").openStream(), "UTF8"));
         } catch (Exception exception) {
             Log.error(exception);
         }

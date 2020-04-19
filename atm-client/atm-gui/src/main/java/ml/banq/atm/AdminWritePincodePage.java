@@ -16,7 +16,7 @@ import javax.swing.JPasswordField;
 public class AdminWritePincodePage extends Page {
     private static final long serialVersionUID = 1;
 
-    public AdminWritePincodePage(String accountId) {
+    public AdminWritePincodePage(final String accountId) {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -30,7 +30,7 @@ public class AdminWritePincodePage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         // Create the page message label
-        JLabel messageLabel = new JLabel(Language.getString("admin_write_pincode_page_message"));
+        final JLabel messageLabel = new JLabel(Language.getString("admin_write_pincode_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
@@ -46,7 +46,7 @@ public class AdminWritePincodePage extends Page {
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
         // Create the page new pincode input field
-        JPasswordField pincodeInput = new JPasswordField(4);
+        final JPasswordField pincodeInput = new JPasswordField(4);
         pincodeInput.setFont(Fonts.NORMAL);
         pincodeInput.setHorizontalAlignment(JPasswordField.CENTER);
         pincodeInput.setMaximumSize(pincodeInput.getPreferredSize());
@@ -63,7 +63,7 @@ public class AdminWritePincodePage extends Page {
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
         // Create the page new pincode cofirmation input field
-        JPasswordField pincodeConfirmationInput = new JPasswordField(4);
+        final JPasswordField pincodeConfirmationInput = new JPasswordField(4);
         pincodeConfirmationInput.setFont(Fonts.NORMAL);
         pincodeConfirmationInput.setHorizontalAlignment(JPasswordField.CENTER);
         pincodeConfirmationInput.setMaximumSize(pincodeConfirmationInput.getPreferredSize());

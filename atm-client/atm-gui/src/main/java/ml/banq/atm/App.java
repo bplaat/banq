@@ -104,7 +104,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
             Log.debug("Read: " + line);
             if (line.charAt(0) == '{') {
                 try {
-                    JSONObject message = new JSONObject(line);
+                    final JSONObject message = new JSONObject(line);
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             // Give all the events to the current page of the navigator

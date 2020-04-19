@@ -12,7 +12,7 @@ public class ImageUtils {
     // Load a image resource and resize it
     public static ImageIcon loadImage(String filename, int width, int height) {
         try {
-            BufferedImage image = ImageIO.read(ImageUtils.class.getResource("/resources/images/" + filename));
+            BufferedImage image = ImageIO.read(ImageUtils.class.getResource("/images/" + filename));
             return new ImageIcon(image.getScaledInstance(width, height, Image.SCALE_SMOOTH));
         } catch (Exception exception) {
             Log.error(exception);
