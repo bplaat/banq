@@ -9,8 +9,11 @@ import java.awt.image.BufferedImage;
 import java.awt.Cursor;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.util.HashMap;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.SwingUtilities;
 import org.json.JSONObject;
@@ -37,6 +40,28 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {}
 
+        // Open the first serial port
+        SerialPort[] serialPorts = SerialPort.getCommPorts();
+        if (serialPorts.length > 0) {
+            serialPort = serialPorts[0];
+            serialPort.openPort();
+            serialPort.addDataListener(this);
+        }
+
+        // Show an error message when not connected
+        else {
+            // Show error dialog
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane optionPane = new JOptionPane("Can't connect with a serial port!", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Serial Port Error");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
+
+            // Print error log message and exit
+            Log.error("Can't connect with a serial port!");
+            System.exit(1);
+        }
+
         // Create the Java Swing window
         frame = new JFrame("Banq ATM GUI");
         frame.setIconImage(ImageUtils.loadImage("logo.png", 96, 96).getImage());
@@ -55,20 +80,6 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
         // Add the navigator system to the java swing class
         frame.add(Navigator.getInstance());
         Navigator.getInstance().changePage(new WelcomePage(), false);
-
-        // Open the first serial port
-        SerialPort[] serialPorts = SerialPort.getCommPorts();
-        if (serialPorts.length > 0) {
-            serialPort = serialPorts[0];
-            serialPort.openPort();
-            serialPort.addDataListener(this);
-        }
-
-        // Show an error message when not connected
-        else {
-            Log.error("Can't connect with a serial port!");
-            System.exit(0);
-        }
     }
 
     // Listen to resize and move events of the window to resize the navigator
