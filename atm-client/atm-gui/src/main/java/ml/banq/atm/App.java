@@ -54,6 +54,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
             Toolkit.getDefaultToolkit().beep();
             JOptionPane optionPane = new JOptionPane("Can't connect with a serial port!", JOptionPane.ERROR_MESSAGE);
             JDialog dialog = optionPane.createDialog("Serial Port Error");
+            dialog.setIconImage(ImageUtils.loadImage("logo.png", 96, 96).getImage());
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);
 
