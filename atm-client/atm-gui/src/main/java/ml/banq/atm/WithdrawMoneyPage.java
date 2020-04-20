@@ -1,9 +1,7 @@
 package ml.banq.atm;
 
 import java.awt.Component;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -99,25 +97,8 @@ public class WithdrawMoneyPage extends Page {
         // Loop trough the money pares
         for (int i = 0; i < moneyPares.size(); i++) {
             if (key.equals(String.valueOf(i + 1))) {
-                // Send the money dispencer commands
-                App.getInstance().sendMoney(moneyPares.get(i));
-
-                // Distract the given money bills from the settings counter
-                for (int j = 0; j < Config.ISSUE_AMOUNTS.length; j++) {
-                    int new_amount = Settings.getInstance().getItem("bills_" + Config.ISSUE_AMOUNTS[j], 0) - moneyPares.get(i).get(String.valueOf(Config.ISSUE_AMOUNTS[j]));
-                    Settings.getInstance().setItem("bills_" + Config.ISSUE_AMOUNTS[j], new_amount);
-                }
-                Settings.getInstance().save();
-
-                // Create the transaction via the API
-                String name = Language.getString("withdraw_money_page_transaction_prefix") + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                BanqAPI.Transaction transaction = BanqAPI.getInstance().createTransaction(accountId, rfid_uid, pincode, name, "SU-BANQ-00000001", amount);
-                if (transaction != null) {
-                    Navigator.getInstance().changePage(new WithdrawReceiptPage(transaction));
-                } else {
-                    App.getInstance().sendBeeper(110, 250);
-                    messageLabel.setText(Language.getString("withdraw_money_page_error"));
-                }
+                // Go to the withdraw confirm page
+                Navigator.getInstance().changePage(new WithdrawConfirmPage(accountId, rfid_uid, pincode, account, amount, moneyPares.get(i)));
             }
         }
     }
