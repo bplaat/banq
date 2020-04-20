@@ -43,6 +43,26 @@ public class MoneyUtils {
             moneyPares.add(moneyPare);
         }
 
+        // Remove all the same money pares
+        for (int i = 1; i < moneyPares.size(); i++) {
+            int same = 0;
+
+            HashMap<String, Integer> prevMoneyPare = moneyPares.get(i - 1);
+            HashMap<String, Integer> moneyPare = moneyPares.get(i);
+            for (int j = 0; j < Config.ISSUE_AMOUNTS.length; j++) {
+                int prev = prevMoneyPare.get(String.valueOf(Config.ISSUE_AMOUNTS[j]));
+                int count = moneyPare.get(String.valueOf(Config.ISSUE_AMOUNTS[j]));
+                if (prev == count) {
+                    same++;
+                }
+            }
+
+            if (same == Config.ISSUE_AMOUNTS.length) {
+                moneyPares.remove(i);
+                i--;
+            }
+        }
+
         // Check all money pares if the money bills are enough
         for (int i = 0; i < moneyPares.size(); i++) {
             HashMap<String, Integer> moneyPare = moneyPares.get(i);

@@ -18,8 +18,6 @@ public class WithdrawMoneyPage extends Page {
     private float amount;
     private ArrayList<HashMap<String, Integer>> moneyPares;
 
-    private JLabel messageLabel;
-
     public WithdrawMoneyPage(String accountId, String rfid_uid, String pincode, BanqAPI.Account account, float amount) {
         this.accountId = accountId;
         this.rfid_uid = rfid_uid;
@@ -39,6 +37,7 @@ public class WithdrawMoneyPage extends Page {
         add(titleLabel);
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        JLabel messageLabel;
         if (moneyPares.size() > 0) {
             // Create the page message label
             messageLabel = new JLabel(Language.getString("withdraw_money_page_message"));
