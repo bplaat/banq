@@ -91,7 +91,7 @@ public class AdminBillsPage extends Page {
 
                 Navigator.getInstance().changePage(new AdminMenuPage());
             } catch (Exception exception) {
-                Log.error(exception);
+                Log.warning(exception);
             }
         }
     }

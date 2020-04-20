@@ -37,7 +37,7 @@ public class Settings {
 
             // When error with reading the json create an empty settings storage
             catch (Exception exception) {
-                Log.error(exception);
+                Log.warning(exception);
                 settings = new JSONObject();
             }
         } else {

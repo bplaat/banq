@@ -17,8 +17,10 @@ public class Log {
 
     // Print debug throwable
     public static void debug(Throwable throwable) {
-        System.out.print("[DEBUG] ");
-        throwable.printStackTrace();
+        if (Config.DEBUG) {
+            System.out.print("[DEBUG] ");
+            throwable.printStackTrace();
+        }
     }
 
     // Print info message
@@ -58,11 +60,14 @@ public class Log {
         if (text.charAt(text.length() - 1) != '\n') {
             System.out.print('\n');
         }
+
+        System.exit(1);
     }
 
     // Print error throwable
     public static void error(Throwable throwable) {
         System.out.print("[ERROR] ");
         throwable.printStackTrace();
+        System.exit(1);
     }
 }

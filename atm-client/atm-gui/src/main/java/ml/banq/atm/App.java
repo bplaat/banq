@@ -35,14 +35,20 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
 
     // The run method that creates the UI
     public void run() {
+        // Print intro message
+        Log.info("Banq ATM GUI");
+
         // Select the native UI theme for Java Swing
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {}
+        } catch (Exception exception) {
+            Log.warning(exception);
+        }
 
         // Open the first serial port
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         if (serialPorts.length > 0) {
+            Log.debug("Opening the serial port");
             serialPort = serialPorts[0];
             serialPort.openPort();
             serialPort.addDataListener(this);
@@ -60,7 +66,6 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
 
             // Print error log message and exit
             Log.error("Can't connect with a serial port!");
-            System.exit(1);
         }
 
         // Create the Java Swing window

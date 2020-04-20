@@ -41,7 +41,8 @@ public class Language {
     public static String getString(String key) {
         try {
             return instance.properties.getProperty(key);
-        } catch (Exception e) {
+        } catch (Exception exception) {
+            Log.error(exception);
             return null;
         }
     }
