@@ -16,7 +16,9 @@ public class Config {
         { "nl", "Nederlands" },
         { "en", "English" },
         { "de", "Deutsche" },
-        { "fr", "Fran\u00E7aise" }
+        { "fr", "Français" },
+        { "es", "Español" },
+        { "ru", "Русский" }
     };
 
     public static final String[] ADMIN_RFID_UIDS = { "4a360c0b" };

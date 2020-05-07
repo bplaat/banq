@@ -9,7 +9,7 @@ public class MoneyUtils {
 
     // Get ruble money symbol if the font support it
     public static String getMoneySymbol() {
-        return Fonts.DEFAULT.canDisplay('\u20bd') ? "\u20bd" : "P";
+        return Fonts.DEFAULT.canDisplay('₽') ? "₽" : "P";
     }
 
     // A function the generates the diffrent money pares

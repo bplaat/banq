@@ -18,6 +18,8 @@ public class WelcomePage extends Page {
 
         add(Box.createVerticalGlue());
 
+        add(Box.createVerticalStrut(Paddings.LARGE * 3));
+
         // Create the page title
         JLabel titleLabel = new JLabel(Language.getString("welcome_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -52,7 +54,11 @@ public class WelcomePage extends Page {
 
         // Create the page languages box
         JPanel languagesBox = new JPanel(new GridLayout(0, Config.LANGUAGES.length / 2, Paddings.LARGE, Paddings.LARGE));
-        languagesBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 3 * 2, 0));
+        if (Config.FULLSCREEN_MODE) {
+            languagesBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() / 5 * 4, 0));
+        } else {
+            languagesBox.setMaximumSize(new Dimension(App.getInstance().getWindowWidth() - Paddings.LARGE * 2, 0));
+        }
         add(languagesBox);
 
         // Create the language menu options
