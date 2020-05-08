@@ -1,0 +1,14 @@
+{
+  "name": "gosbank-client",
+  "version": "0.1.0",
+  "description": "The Banq Gosbank websocket client",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Banq developers",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^7.2.5"
+  }
+}
