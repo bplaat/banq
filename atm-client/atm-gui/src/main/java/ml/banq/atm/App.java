@@ -26,8 +26,8 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
     private JFrame frame;
     private SerialPort serialPort;
 
-    // Mute beeper toggle variable
-    private boolean muteBeeper = false;
+    // Mute beeper toggle variable when in debug mode mute automatic
+    private boolean muteBeeper = !Config.DEBUG;
 
     private App() {}
 
@@ -150,6 +150,10 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
 
                             if (message.getString("type").equals("rfid_write")) {
                                 Navigator.getInstance().getPage().onRFIDWrite(message.getString("account_id"), message.getString("rfid_uid"));
+                            }
+
+                            if (message.getString("type").equals("money")) {
+                                Navigator.getInstance().getPage().onMoney();
                             }
                         }
                     });

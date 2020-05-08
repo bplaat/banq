@@ -11,4 +11,6 @@ abstract public class Page extends JPanel {
     public void onRFIDRead(String account_id, String rfid_uid) {}
 
     public void onRFIDWrite(String account_id, String rfid_uid) {}
+
+    public void onMoney() {}
 }

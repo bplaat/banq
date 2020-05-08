@@ -69,21 +69,11 @@ public class WithdrawConfirmPage extends Page {
     public void onKeypad(String key) {
         // When the first option is selected
         if (key.equals("1")) {
-            // Send the money dispencer commands
-            App.getInstance().sendMoney(moneyPare);
-
-            // Distract the given money bills from the settings counter
-            for (int j = 0; j < Config.ISSUE_AMOUNTS.length; j++) {
-                int new_amount = Settings.getInstance().getItem("bills_" + Config.ISSUE_AMOUNTS[j], 0) - moneyPare.get(String.valueOf(Config.ISSUE_AMOUNTS[j]));
-                Settings.getInstance().setItem("bills_" + Config.ISSUE_AMOUNTS[j], new_amount);
-            }
-            Settings.getInstance().save();
-
             // Create the transaction via the API
             String name = Language.getString("withdraw_confirm_page_transaction_prefix") + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             BanqAPI.Transaction transaction = BanqAPI.getInstance().createTransaction(accountId, rfid_uid, pincode, name, "SU-BANQ-00000001", amount);
             if (transaction != null) {
-                Navigator.getInstance().changePage(new WithdrawReceiptPage(transaction));
+                Navigator.getInstance().changePage(new WithdrawMoneyWaitPage(transaction, moneyPare));
             } else {
                 App.getInstance().sendBeeper(110, 250);
                 messageLabel.setText(Language.getString("withdraw_confirm_page_error"));

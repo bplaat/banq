@@ -1,19 +1,31 @@
 // The serial I/O Controller
-// -> Keypad input
-// -> RFID read
-// <- Beeper
-// <- RFID write
-// <- Printer commands
-// <- Money dispencer commands
 
+// Load all the libraries
 #include <Arduino.h>
 #include <Keypad.h>
 #include <SPI.h>
+#include <Stepper.h>
 #include <MFRC522.h>
 #include <ArduinoJson.h>
 #include <Adafruit_Thermal.h>
 #include "printer_logo.hpp"
 
+// Money steppers
+#define STEPPER_REVOLUTION 2048
+#define STEPPER_SPEED 10
+#define STEPPER_ROTATION_STEPS 2050
+
+#define ISSUE_AMOUNTS_LENGTH 4
+uint8_t issue_amounts[ISSUE_AMOUNTS_LENGTH] = { 5, 10, 20, 50 };
+
+Stepper steppers[ISSUE_AMOUNTS_LENGTH] = {
+    Stepper(STEPPER_REVOLUTION, 30, 31, 32, 33),
+    Stepper(STEPPER_REVOLUTION, 34, 35, 36, 37),
+    Stepper(STEPPER_REVOLUTION, 38, 39, 40, 41),
+    Stepper(STEPPER_REVOLUTION, 42, 43, 44, 45)
+};
+
+// Keypad
 #define KEYPAD_ROWS 4
 #define KEYPAD_COLUMNS 4
 
@@ -29,8 +41,10 @@ uint8_t keypad_column_pins[KEYPAD_COLUMNS] = { 26, 27, 28, 29 };
 
 Keypad keypad = Keypad(makeKeymap(keypad_keys), keypad_row_pins, keypad_column_pins, KEYPAD_ROWS, KEYPAD_COLUMNS);
 
+// Beeper
 #define BEEPER_PIN 2
 
+// RFID
 #define SS_PIN 53
 #define RST_PIN 49
 
@@ -41,37 +55,69 @@ MFRC522::MIFARE_Key mfrc522_keyA;
 #define ACCOUNT_ID_TRAILER_BLOCK 3
 #define ACOUNT_ID_LENGTH 16
 
+// Printer
 Adafruit_Thermal printer(&Serial1);
 
+// JSON
 char json_buffer[512];
 StaticJsonDocument<512> document;
 
+// Setup
 void setup() {
+    // Init computer serial com
     Serial.begin(9600);
     Serial.setTimeout(50);
 
+    // Init printer serial com
     Serial1.begin(9600);
     printer.begin();
     printer.sleep();
 
+    // Init RFID
     SPI.begin();
     mfrc522.PCD_Init();
-
-    for (byte i = 0; i < 6; i++) {
+    for (uint8_t i = 0; i < 6; i++) {
         mfrc522_keyA.keyByte[i] = 0xff;
+    }
+
+    // Init steppers
+    for (uint8_t i = 0; i < ISSUE_AMOUNTS_LENGTH; i++) {
+        steppers[i].setSpeed(STEPPER_SPEED);
     }
 }
 
+// Loop
 void loop() {
+    // Check if the computer send a message
     if (Serial.available() > 0) {
+        // Parse the JSON message
         document.clear();
         String line = Serial.readString();
         deserializeJson(document, line);
 
+        // Beeper command
         if (document["type"] == "beeper") {
             tone(BEEPER_PIN, document["frequency"], document["duration"]);
         }
 
+        // Money command
+        if (document["type"] == "money") {
+            // Eject money bills by rotating steppers
+            for (uint8_t i = 0; i < ISSUE_AMOUNTS_LENGTH; i++) {
+                uint32_t amount = document["money"][String(issue_amounts[i])];
+                for (uint8_t j = 0; j < amount; j++) {
+                    steppers[i].step(STEPPER_ROTATION_STEPS);
+                }
+            }
+
+            // Send money done message
+            document.clear();
+            document["type"] = "money";
+            serializeJson(document, json_buffer);
+            Serial.println(json_buffer);
+        }
+
+        // Printer command
         if (document["type"] == "printer") {
             printer.wake();
             printer.printBitmap(256, 64, printer_logo);
@@ -82,12 +128,13 @@ void loop() {
             printer.sleep();
         }
 
+        // RFID write command
         if (document["type"] == "rfid_write") {
             Serial.println("[INFO] Waiting for card...");
             while (!(mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()));
 
             String rfid_uid = "";
-            for (byte i = 0; i < mfrc522.uid.size; i++) {
+            for (uint8_t i = 0; i < mfrc522.uid.size; i++) {
                 rfid_uid += (mfrc522.uid.uidByte[i] < 0x10 ? "0" : "") + String(mfrc522.uid.uidByte[i], HEX);
             }
 
@@ -96,7 +143,7 @@ void loop() {
                 MFRC522::StatusCode status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, ACCOUNT_ID_TRAILER_BLOCK, &mfrc522_keyA, &(mfrc522.uid));
                 if (status == MFRC522::STATUS_OK) {
                     uint8_t write_account_id[ACOUNT_ID_LENGTH] = { 0 };
-                    for (int i = 0; i < ACOUNT_ID_LENGTH; i++) {
+                    for (uint8_t i = 0; i < ACOUNT_ID_LENGTH; i++) {
                         write_account_id[i] = account_id.charAt(i);
                     }
 
@@ -147,6 +194,7 @@ void loop() {
         }
     }
 
+    // Read the keypad and if a key is pressed send a message
     char key = keypad.getKey();
     if (key != NO_KEY) {
         document.clear();
@@ -156,9 +204,10 @@ void loop() {
         Serial.println(json_buffer);
     }
 
+    // Check for new RFID card read and if so send a message
     if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
         String rfid_uid = "";
-        for (byte i = 0; i < mfrc522.uid.size; i++) {
+        for (uint8_t i = 0; i < mfrc522.uid.size; i++) {
            rfid_uid += (mfrc522.uid.uidByte[i] < 0x10 ? "0" : "") + String(mfrc522.uid.uidByte[i], HEX);
         }
 

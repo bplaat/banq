@@ -31,7 +31,11 @@ public class Navigator extends JPanel {
 
         // Create the top right mute image
         muteImage = new JLabel(ImageUtils.loadImage("mute.png", 64, 64));
-        muteImage.setBounds(App.getInstance().getWindowWidth() - Paddings.NORMAL * 2 - 64, Paddings.NORMAL, 64, 64);
+        if (Config.FULLSCREEN_MODE) {
+            muteImage.setBounds(App.getInstance().getWindowWidth() - Paddings.NORMAL - 64, Paddings.NORMAL, 64, 64);
+        } else {
+            muteImage.setBounds(App.getInstance().getWindowWidth() - Paddings.NORMAL * 2 - 64, Paddings.NORMAL, 64, 64);
+        }
         muteImage.setVisible(false);
         add(muteImage);
     }
@@ -72,7 +76,12 @@ public class Navigator extends JPanel {
 
     // Resize the current page
     public void resizePage(int width, int height) {
-        muteImage.setBounds(width - Paddings.NORMAL * 2 - 64, Paddings.NORMAL, 64, 64);
+        if (Config.FULLSCREEN_MODE) {
+            muteImage.setBounds(width - Paddings.NORMAL - 64, Paddings.NORMAL, 64, 64);
+        } else {
+            muteImage.setBounds(width - Paddings.NORMAL * 2 - 64, Paddings.NORMAL, 64, 64);
+        }
+
         page.setBounds(0, 0, width, height);
     }
 
