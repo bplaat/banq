@@ -18,7 +18,7 @@ public class WelcomePage extends Page {
 
         add(Box.createVerticalGlue());
 
-        add(Box.createVerticalStrut(Paddings.LARGE * 3));
+        add(Box.createVerticalStrut(Paddings.LARGE * 2));
 
         // Create the page title
         JLabel titleLabel = new JLabel(Language.getString("welcome_page_title"));
@@ -33,6 +33,14 @@ public class WelcomePage extends Page {
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
+
+        add(Box.createVerticalStrut(Paddings.LARGE));
+
+        // Create the page mute label
+        JLabel muteLabel = new JLabel(Language.getString("welcome_page_mute"));
+        muteLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        muteLabel.setFont(Fonts.NORMAL);
+        add(muteLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 

@@ -26,6 +26,9 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
     private JFrame frame;
     private SerialPort serialPort;
 
+    // Mute beeper toggle variable
+    private boolean muteBeeper = false;
+
     private App() {}
 
     // A method to get a App intance
@@ -129,9 +132,14 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
                             // Give all the events to the current page of the navigator
                             if (message.getString("type").equals("keypad")) {
                                 String key = message.getString("key");
-                                if (key.equals("C")) {
+                                if (key.equals("A")) {
+                                    muteBeeper = !muteBeeper;
+                                    Navigator.getInstance().showMuteImage(muteBeeper);
+                                }
+                                else if (key.equals("C")) {
                                     Navigator.getInstance().changePage(new WelcomePage());
-                                } else {
+                                }
+                                else {
                                     Navigator.getInstance().getPage().onKeypad(key);
                                 }
                             }
@@ -188,11 +196,13 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
 
     // A method that sends a beeper message
     public void sendBeeper(int frequency, int duration) {
-        JSONObject message = new JSONObject();
-        message.put("type", "beeper");
-        message.put("frequency", frequency);
-        message.put("duration", duration);
-        sendMessage(message);
+        if (!muteBeeper) {
+            JSONObject message = new JSONObject();
+            message.put("type", "beeper");
+            message.put("frequency", frequency);
+            message.put("duration", duration);
+            sendMessage(message);
+        }
     }
 
     // A method that sends a printer message

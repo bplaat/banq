@@ -12,6 +12,8 @@ public class Navigator extends JPanel {
 
     private Page page;
 
+    private JLabel muteImage;
+
     private Navigator() {
         // Set the navigator to use absolute layout (for the logo)
         setLayout(null);
@@ -26,6 +28,12 @@ public class Navigator extends JPanel {
         logoLabel.setFont(Fonts.LOGO);
         logoLabel.setBounds(Paddings.NORMAL * 2 + 96, Paddings.NORMAL + 4, 256, 96);
         add(logoLabel);
+
+        // Create the top right mute image
+        muteImage = new JLabel(ImageUtils.loadImage("mute.png", 64, 64));
+        muteImage.setBounds(App.getInstance().getWindowWidth() - Paddings.NORMAL * 2 - 64, Paddings.NORMAL, 64, 64);
+        muteImage.setVisible(false);
+        add(muteImage);
     }
 
     // Get a navigator instance
@@ -64,6 +72,12 @@ public class Navigator extends JPanel {
 
     // Resize the current page
     public void resizePage(int width, int height) {
+        muteImage.setBounds(width - Paddings.NORMAL * 2 - 64, Paddings.NORMAL, 64, 64);
         page.setBounds(0, 0, width, height);
+    }
+
+    // Show the mute icon
+    public void showMuteImage(boolean show) {
+        muteImage.setVisible(show);
     }
 }
