@@ -10,8 +10,23 @@ const BANK_CODE = 'BANQ';
 const RECONNECT_TIMEOUT = 2 * 1000;
 
 // ########### CLIENT CODE ###########
+const http = require('http');
 const WebSocket = require('ws');
 
+// A wrapper function to do a http request and return the data
+function request(url, callback) {
+    http.get(url, function (response) {
+        let body = '';
+        response.on('data', function (data) {
+            body += data;
+        });
+        response.on('end', function () {
+            callback(body);
+        });
+    });
+}
+
+// A function that parses a standart account id string
 function parseAccountParts(account) {
     return {
         country: account.substring(0, 2),
@@ -20,11 +35,12 @@ function parseAccountParts(account) {
     };
 }
 
+// Connects to Gosbank
 function connectToGosbank() {
     const ws = new WebSocket('wss://ws.gosbank.ml/');
 
+    // Do a request and some callback logic
     const pendingCallbacks = [];
-
     function requestMessage(type, data, callback) {
         const id = Date.now();
         if (callback !== undefined) {
@@ -33,10 +49,12 @@ function connectToGosbank() {
         ws.send(JSON.stringify({ id: id, type: type, data: data }));
     }
 
+    // Reponse to a message
     function responseMessage(id, type, data) {
         ws.send(JSON.stringify({ id: id, type: type + '_response', data: data }));
     }
 
+    // A wrapper function for requesting a balance
     function requestBalance(account, pin, callback) {
         const to_account_parts = parseAccountParts(account);
 
@@ -54,6 +72,7 @@ function connectToGosbank() {
         }, callback);
     }
 
+    // A wrapper function for requesting a payment
     function requestPayment(from_account, to_account, pin, amount, callback) {
         const form_account_parts = parseAccountParts(from_account);
         const to_account_parts = parseAccountParts(to_account);
@@ -93,7 +112,9 @@ function connectToGosbank() {
         }
     }
 
+    // When connected to gosbank
     ws.on('open', function () {
+        // Try to register
         requestMessage('register', {
             header: {
                 originCountry: COUNTRY_CODE,
@@ -103,23 +124,23 @@ function connectToGosbank() {
             },
             body: {}
         }, function (data) {
-            if (data.body.success) {
+            if (data.body.code == 200) {
                 console.log('Connected with Gosbank with bank code: ' + BANK_CODE);
 
-                // We are connected to Gosbank
+                // Create HTTP API for the Banq website
             }
             else {
-                console.log('Error with connecting to Gosbank, reason: ' + data.body.message);
+                console.log('Error with connecting to Gosbank, reason: ' + data.body.code);
             }
         });
     });
 
-    ws.on('message', function (json_message) {
-        const message = JSON.parse(json_message);
-        const id = message.id;
-        const type = message.type;
-        const data = message.data;
+    // When we get a message
+    ws.on('message', function (message) {
+        // Parse the message
+        const { id, type, data } = JSON.parse(message);
 
+        // Try first to reslove a callback
         for (var i = 0; i < pendingCallbacks.length; i++) {
             if (pendingCallbacks[i].id === id && pendingCallbacks[i].type === type) {
                 pendingCallbacks[i].callback(data);
@@ -130,7 +151,7 @@ function connectToGosbank() {
         if (type === 'balance') {
             console.log('Balance request for: ' + data.body.account);
 
-            // Fetch balance info from database
+            // Fetch balance info from database via API
 
             setTimeout(function () {
                 responseMessage(id, 'balance', {
@@ -141,8 +162,7 @@ function connectToGosbank() {
                         receiveBank: data.header.originBank
                     },
                     body: {
-                        success: true,
-                        message: 'The pincode is right, here is the balance!',
+                        code: 200,
                         balance: parseFloat((Math.random() * 10000).toFixed(2))
                     }
                 });
@@ -152,7 +172,7 @@ function connectToGosbank() {
         if (type === 'payment') {
             console.log('Payment request for: ' + data.body.to_account);
 
-            // Add payment to database
+            // Add payment to database via API
 
             setTimeout(function () {
                 responseMessage(id, 'payment', {
@@ -163,22 +183,22 @@ function connectToGosbank() {
                         receiveBank: data.header.originBank
                     },
                     body: {
-                        success: true,
-                        message: 'The payment is processed!'
+                        code: 200
                     }
                 });
             }, Math.random() * 2000 + 500);
         }
     });
 
+    // When closed try to reconnected
     ws.on('close', function () {
         console.log('Disconnected, try to reconnect in ' + (RECONNECT_TIMEOUT / 1000).toFixed(0) + ' seconds!');
         setTimeout(connectToGosbank, RECONNECT_TIMEOUT);
     });
 
-    ws.on('error', function (error) {
-        // Ingnore connecting errors reconnect in the close handler
-    });
+    // Ingnore connecting errors because reconnect in the close handler
+    ws.on('error', function (error) {});
 }
 
+// Try to connect to gosbank
 connectToGosbank();
