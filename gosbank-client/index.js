@@ -145,7 +145,7 @@ function connectToGosbank() {
                 httpServer = http.createServer(function (req, res) {
                     const pathname = url.parse(req.url).pathname;
 
-                    if (pathname === '/api/gosbank/accounts') {
+                    if (pathname.startsWith('/api/gosbank/accounts/')) {
 
                     }
 
@@ -194,39 +194,18 @@ function connectToGosbank() {
         if (type === 'payment') {
             console.log('Payment request for: ' + data.body.toAccount);
 
-            // Parse the account parts
-            const formAccountParts = parseAccountParts(data.body.fromAccount);
-            const toAccountParts = parseAccountParts(data.body.toAccount);
-
-            // When pay money
-            if (formAccountParts.bank === BANK_CODE) {
-                fetch(BANQ_API_URL + '/gosbank/transactions/create?key=' + BANQ_API_DEVICE_KEY + '&from=' + data.body.fromAccount + '&to=' + data.body.toAccount + '&pincode=' + data.body.pincode + '&amount=' + data.body.amount, function (reponse) {
-                    responseMessage(id, 'payment', {
-                        header: {
-                            originCountry: COUNTRY_CODE,
-                            originBank: BANK_CODE,
-                            receiveCountry: data.header.originCountry,
-                            receiveBank: data.header.originBank
-                        },
-                        body: reponse
-                    });
+            // Send to Banq API
+            fetch(BANQ_API_URL + '/gosbank/transactions/create?key=' + BANQ_API_DEVICE_KEY + '&from=' + data.body.fromAccount + '&to=' + data.body.toAccount + '&pincode=' + data.body.pincode + '&amount=' + data.body.amount, function (reponse) {
+                responseMessage(id, 'payment', {
+                    header: {
+                        originCountry: COUNTRY_CODE,
+                        originBank: BANK_CODE,
+                        receiveCountry: data.header.originCountry,
+                        receiveBank: data.header.originBank
+                    },
+                    body: reponse
                 });
-            }
-
-            // We get money
-            else if (toAccountParts.bank === BANK_CODE) {
-                fetch(BANQ_API_URL + '/gosbank/transactions/create?key=' + BANQ_API_DEVICE_KEY + '&from=' + data.body.fromAccount + '&to=' + data.body.toAccount + '&pincode=' + data.body.pincode + '&amount=' + data.body.amount, function (reponse) {
-                    responseMessage(id, 'payment', {
-                        header: {
-                            originCountry: COUNTRY_CODE,
-                            originBank: BANK_CODE,
-                            receiveCountry: data.header.originCountry,
-                            receiveBank: data.header.originBank
-                        },
-                        body: reponse
-                    });
-                });
-            }
+            });
         }
     });
 
