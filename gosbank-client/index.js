@@ -1,27 +1,38 @@
 // ########### CLIENT CONFIG ###########
 
+// Enable the debug mode
+const DEBUG = true;
+
 // Your country code always 'SU'
 const COUNTRY_CODE = 'SU';
 
 // Your bank code
-const BANK_CODE = 'BANQ';
+const BANK_CODE = DEBUG ? 'BXXQ' : 'BANQ';
 
 // When disconnect try to reconnect timeout (in ms)
 const RECONNECT_TIMEOUT = 2 * 1000;
 
+// The local http server port
+const HTTP_SERVER_PORT = process.env.PORT || 8081;
+
+// Banq API keys
+const BANQ_API_URL = 'https://banq.ml/api';
+const BANQ_API_DEVICE_KEY = '5d19e2ac9ed1c9a4f14350b46a10bf25';
+
 // ########### CLIENT CODE ###########
 const http = require('http');
+const url = require('url');
 const WebSocket = require('ws');
 
 // A wrapper function to do a http request and return the data
-function request(url, callback) {
+function fetch(url, callback) {
     http.get(url, function (response) {
         let body = '';
         response.on('data', function (data) {
             body += data;
         });
         response.on('end', function () {
-            callback(body);
+            callback(JSON.parse(body));
         });
     });
 }
@@ -34,6 +45,9 @@ function parseAccountParts(account) {
         account: parseInt(account.substring(8))
     };
 }
+
+// The Banq Gosbank client http server
+let httpServer;
 
 // Connects to Gosbank
 function connectToGosbank() {
@@ -56,14 +70,14 @@ function connectToGosbank() {
 
     // A wrapper function for requesting a balance
     function requestBalance(account, pin, callback) {
-        const to_account_parts = parseAccountParts(account);
+        const toAccountParts = parseAccountParts(account);
 
         requestMessage('balance', {
             header: {
                 originCountry: COUNTRY_CODE,
                 originBank: BANK_CODE,
-                receiveCountry: to_account_parts.country,
-                receiveBank: to_account_parts.bank
+                receiveCountry: toAccountParts.country,
+                receiveBank: toAccountParts.bank
             },
             body: {
                 account: account,
@@ -73,38 +87,38 @@ function connectToGosbank() {
     }
 
     // A wrapper function for requesting a payment
-    function requestPayment(from_account, to_account, pin, amount, callback) {
-        const form_account_parts = parseAccountParts(from_account);
-        const to_account_parts = parseAccountParts(to_account);
+    function requestPayment(fromAccount, toAccount, pin, amount, callback) {
+        const formAccountParts = parseAccountParts(fromAccount);
+        const toAccountParts = parseAccountParts(toAccount);
 
-        if (form_account_parts.bank !== BANK_CODE) {
+        if (formAccountParts.bank !== BANK_CODE) {
             requestMessage('payment', {
                 header: {
                     originCountry: COUNTRY_CODE,
                     originBank: BANK_CODE,
-                    receiveCountry: form_account_parts.country,
-                    receiveBank: form_account_parts.bank
+                    receiveCountry: formAccountParts.country,
+                    receiveBank: formAccountParts.bank
                 },
                 body: {
-                    from_account: from_account,
-                    to_account: to_account,
+                    fromAccount: fromAccount,
+                    toAccount: toAccount,
                     pin: pin,
                     amount: amount
                 }
             }, callback);
         }
 
-        if (to_account_parts.bank !== BANK_CODE) {
+        if (toAccountParts.bank !== BANK_CODE) {
             requestMessage('payment', {
                 header: {
                     originCountry: COUNTRY_CODE,
                     originBank: BANK_CODE,
-                    receiveCountry: to_account_parts.country,
-                    receiveBank: to_account_parts.bank
+                    receiveCountry: toAccountParts.country,
+                    receiveBank: toAccountParts.bank
                 },
                 body: {
-                    from_account: from_account,
-                    to_account: to_account,
+                    fromAccount: fromAccount,
+                    toAccount: toAccount,
                     pin: pin,
                     amount: amount
                 }
@@ -124,10 +138,22 @@ function connectToGosbank() {
             },
             body: {}
         }, function (data) {
-            if (data.body.code == 200) {
+            if (data.body.code === 200) {
                 console.log('Connected with Gosbank with bank code: ' + BANK_CODE);
 
                 // Create HTTP API for the Banq website
+                httpServer = http.createServer(function (req, res) {
+                    const pathname = url.parse(req.url).pathname;
+
+                    if (pathname === '/api/gosbank/accounts') {
+
+                    }
+
+                    if (pathname === '/api/gosbank/transactions/create') {
+
+                    }
+                });
+                httpServer.listen(HTTP_SERVER_PORT);
             }
             else {
                 console.log('Error with connecting to Gosbank, reason: ' + data.body.code);
@@ -152,8 +178,7 @@ function connectToGosbank() {
             console.log('Balance request for: ' + data.body.account);
 
             // Fetch balance info from database via API
-
-            setTimeout(function () {
+            fetch(BANQ_API_URL + '/gosbank/accounts/' + data.body.account + '?key=' + BANQ_API_DEVICE_KEY + '&pincode=' + data.body.pincode, function (response) {
                 responseMessage(id, 'balance', {
                     header: {
                         originCountry: COUNTRY_CODE,
@@ -161,37 +186,57 @@ function connectToGosbank() {
                         receiveCountry: data.header.originCountry,
                         receiveBank: data.header.originBank
                     },
-                    body: {
-                        code: 200,
-                        balance: parseFloat((Math.random() * 10000).toFixed(2))
-                    }
+                    body: response
                 });
-            }, Math.random() * 2000 + 500);
+            });
         }
 
         if (type === 'payment') {
-            console.log('Payment request for: ' + data.body.to_account);
+            console.log('Payment request for: ' + data.body.toAccount);
 
-            // Add payment to database via API
+            // Parse the account parts
+            const formAccountParts = parseAccountParts(data.body.fromAccount);
+            const toAccountParts = parseAccountParts(data.body.toAccount);
 
-            setTimeout(function () {
-                responseMessage(id, 'payment', {
-                    header: {
-                        originCountry: COUNTRY_CODE,
-                        originBank: BANK_CODE,
-                        receiveCountry: data.header.originCountry,
-                        receiveBank: data.header.originBank
-                    },
-                    body: {
-                        code: 200
-                    }
+            // When pay money
+            if (formAccountParts.bank === BANK_CODE) {
+                fetch(BANQ_API_URL + '/gosbank/transactions/create?key=' + BANQ_API_DEVICE_KEY + '&from=' + data.body.fromAccount + '&to=' + data.body.toAccount + '&pincode=' + data.body.pincode + '&amount=' + data.body.amount, function (reponse) {
+                    responseMessage(id, 'payment', {
+                        header: {
+                            originCountry: COUNTRY_CODE,
+                            originBank: BANK_CODE,
+                            receiveCountry: data.header.originCountry,
+                            receiveBank: data.header.originBank
+                        },
+                        body: reponse
+                    });
                 });
-            }, Math.random() * 2000 + 500);
+            }
+
+            // We get money
+            else if (toAccountParts.bank === BANK_CODE) {
+                fetch(BANQ_API_URL + '/gosbank/transactions/create?key=' + BANQ_API_DEVICE_KEY + '&from=' + data.body.fromAccount + '&to=' + data.body.toAccount + '&pincode=' + data.body.pincode + '&amount=' + data.body.amount, function (reponse) {
+                    responseMessage(id, 'payment', {
+                        header: {
+                            originCountry: COUNTRY_CODE,
+                            originBank: BANK_CODE,
+                            receiveCountry: data.header.originCountry,
+                            receiveBank: data.header.originBank
+                        },
+                        body: reponse
+                    });
+                });
+            }
         }
     });
 
     // When closed try to reconnected
     ws.on('close', function () {
+        // Close the server if open
+        if (httpServer !== undefined) {
+            httpServer.close();
+        }
+
         console.log('Disconnected, try to reconnect in ' + (RECONNECT_TIMEOUT / 1000).toFixed(0) + ' seconds!');
         setTimeout(connectToGosbank, RECONNECT_TIMEOUT);
     });
