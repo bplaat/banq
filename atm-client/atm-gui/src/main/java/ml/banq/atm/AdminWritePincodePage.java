@@ -1,7 +1,6 @@
 package ml.banq.atm;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -16,7 +15,14 @@ import javax.swing.JPasswordField;
 public class AdminWritePincodePage extends Page {
     private static final long serialVersionUID = 1;
 
-    public AdminWritePincodePage(final String accountId) {
+    private String accountId;
+    private JLabel messageLabel;
+    private JPasswordField pincodeInput;
+    private JPasswordField pincodeConfirmationInput;
+
+    public AdminWritePincodePage(String accountId) {
+        this.accountId = accountId;
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
@@ -30,7 +36,7 @@ public class AdminWritePincodePage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         // Create the page message label
-        final JLabel messageLabel = new JLabel(Language.getString("admin_write_pincode_page_message"));
+        JLabel messageLabel = new JLabel(Language.getString("admin_write_pincode_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
@@ -46,7 +52,7 @@ public class AdminWritePincodePage extends Page {
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
         // Create the page new pincode input field
-        final JPasswordField pincodeInput = new JPasswordField(4);
+        pincodeInput = new JPasswordField(4);
         pincodeInput.setFont(Fonts.NORMAL);
         pincodeInput.setHorizontalAlignment(JPasswordField.CENTER);
         pincodeInput.setMaximumSize(pincodeInput.getPreferredSize());
@@ -63,7 +69,7 @@ public class AdminWritePincodePage extends Page {
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
         // Create the page new pincode cofirmation input field
-        final JPasswordField pincodeConfirmationInput = new JPasswordField(4);
+        pincodeConfirmationInput = new JPasswordField(4);
         pincodeConfirmationInput.setFont(Fonts.NORMAL);
         pincodeConfirmationInput.setHorizontalAlignment(JPasswordField.CENTER);
         pincodeConfirmationInput.setMaximumSize(pincodeConfirmationInput.getPreferredSize());
@@ -80,20 +86,8 @@ public class AdminWritePincodePage extends Page {
         JButton continueButton = new JButton(Language.getString("admin_write_pincode_page_continue_button"));
         continueButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         continueButton.setFont(Fonts.NORMAL);
-        continueButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                // Check the pincode then go to the next page
-                String pincode = new String(pincodeInput.getPassword());
-                if (pincode.matches("[0-9]{4}")) {
-                    if (pincode.equals(new String(pincodeConfirmationInput.getPassword()))) {
-                        Navigator.getInstance().changePage(new AdminWriteRFIDPage(accountId, pincode));
-                    } else {
-                        messageLabel.setText(Language.getString("admin_write_pincode_page_error"));
-                    }
-                } else {
-                    messageLabel.setText(Language.getString("admin_write_pincode_page_message"));
-                }
-            }
+        continueButton.addActionListener((ActionEvent event) -> {
+            checkPincode();
         });
         buttonsBox.add(continueButton);
 
@@ -101,18 +95,35 @@ public class AdminWritePincodePage extends Page {
         JButton backButton = new JButton(Language.getString("admin_write_pincode_page_back_button"));
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(Fonts.NORMAL);
-        backButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                // Go back to previous page
-                Navigator.getInstance().changePage(new AdminWriteAccountsPage());
-            }
+        backButton.addActionListener((ActionEvent event) -> {
+            // Go back to previous page
+            Navigator.getInstance().changePage(new AdminWriteAccountsPage());
         });
         buttonsBox.add(backButton);
 
         add(Box.createVerticalGlue());
     }
 
+    // Check the pincode then go to the next page
+    public void checkPincode() {
+        String pincode = new String(pincodeInput.getPassword());
+        if (pincode.matches("[0-9]{4}")) {
+            if (pincode.equals(new String(pincodeConfirmationInput.getPassword()))) {
+                Navigator.getInstance().changePage(new AdminWriteRFIDPage(accountId, pincode));
+            } else {
+                messageLabel.setText(Language.getString("admin_write_pincode_page_error"));
+            }
+        } else {
+            messageLabel.setText(Language.getString("admin_write_pincode_page_message"));
+        }
+    }
+
     public void onKeypad(String key) {
+        // When pressed continue to write page
+        if (key.equals("#")) {
+            checkPincode();
+        }
+
         // Go back to previous page
         if (key.equals("D")) {
             Navigator.getInstance().changePage(new AdminWriteAccountsPage());

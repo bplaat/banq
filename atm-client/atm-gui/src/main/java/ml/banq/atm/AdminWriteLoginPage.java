@@ -1,7 +1,6 @@
 package ml.banq.atm;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -17,6 +16,10 @@ import javax.swing.JTextField;
 public class AdminWriteLoginPage extends Page {
     private static final long serialVersionUID = 1;
 
+    private JLabel messageLabel;
+    private JTextField loginInput;
+    private JPasswordField passwordInput;
+
     public AdminWriteLoginPage() {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -31,7 +34,7 @@ public class AdminWriteLoginPage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         // Create the page message label
-        final JLabel messageLabel = new JLabel(Language.getString("admin_write_login_page_message"));
+        messageLabel = new JLabel(Language.getString("admin_write_login_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
@@ -47,7 +50,7 @@ public class AdminWriteLoginPage extends Page {
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
         // Create the page login input field
-        final JTextField loginInput = new JTextField(16);
+        loginInput = new JTextField(16);
         loginInput.setFont(Fonts.NORMAL);
         loginInput.setHorizontalAlignment(JTextField.CENTER);
         loginInput.setMaximumSize(loginInput.getPreferredSize());
@@ -64,7 +67,7 @@ public class AdminWriteLoginPage extends Page {
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
         // Create the page password input field
-        final JPasswordField passwordInput = new JPasswordField(16);
+        passwordInput = new JPasswordField(16);
         passwordInput.setFont(Fonts.NORMAL);
         passwordInput.setHorizontalAlignment(JPasswordField.CENTER);
         passwordInput.setMaximumSize(passwordInput.getPreferredSize());
@@ -80,17 +83,8 @@ public class AdminWriteLoginPage extends Page {
         // Create the login button
         JButton loginButton = new JButton(Language.getString("admin_write_login_page_login_button"));
         loginButton.setFont(Fonts.NORMAL);
-        loginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                // Try to login
-                if (BanqAPI.getInstance().login(loginInput.getText(), new String(passwordInput.getPassword()))) {
-                    App.getInstance().sendBeeper(880, 250);
-                    Navigator.getInstance().changePage(new AdminWriteAccountsPage(), false);
-                } else {
-                    App.getInstance().sendBeeper(110, 250);
-                    messageLabel.setText(Language.getString("admin_write_login_page_error"));
-                }
-            }
+        loginButton.addActionListener((ActionEvent event) -> {
+            tryToLogin();
         });
         buttonsBox.add(loginButton);
 
@@ -98,18 +92,32 @@ public class AdminWriteLoginPage extends Page {
         JButton backButton = new JButton(Language.getString("admin_write_login_page_back_button"));
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setFont(Fonts.NORMAL);
-        backButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                // When pressed go back
-                Navigator.getInstance().changePage(new AdminMenuPage());
-            }
+        backButton.addActionListener((ActionEvent event) -> {
+            // When pressed go back
+            Navigator.getInstance().changePage(new AdminMenuPage());
         });
         buttonsBox.add(backButton);
 
         add(Box.createVerticalGlue());
     }
 
+    // Try to login via BanqAPI
+    private void tryToLogin() {
+        if (BanqAPI.getInstance().login(loginInput.getText(), new String(passwordInput.getPassword()))) {
+            App.getInstance().sendBeeper(880, 250);
+            Navigator.getInstance().changePage(new AdminWriteAccountsPage(), false);
+        } else {
+            App.getInstance().sendBeeper(110, 250);
+            messageLabel.setText(Language.getString("admin_write_login_page_error"));
+        }
+    }
+
     public void onKeypad(String key) {
+        // When pressed try to login
+        if (key.equals("#")) {
+            tryToLogin();
+        }
+
         // When pressed go back to the previous page
         if (key.equals("D")) {
             Navigator.getInstance().changePage(new AdminMenuPage());

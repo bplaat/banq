@@ -48,6 +48,14 @@ public class WithdrawAccountPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
+        // Create the third menu option label
+        JLabel menu3Label = new JLabel("3. " + Language.getString("withdraw_account_page_70_quick_withdraw"));
+        menu3Label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        menu3Label.setFont(Fonts.NORMAL);
+        add(menu3Label);
+
+        add(Box.createVerticalStrut(Paddings.NORMAL));
+
         // Create the back menu option label
         JLabel backLabel = new JLabel("D. " + Language.getString("withdraw_account_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -66,6 +74,11 @@ public class WithdrawAccountPage extends Page {
         // Go to the withdraw amount page when the second menu option is selected
         if (key.equals("2")) {
             Navigator.getInstance().changePage(new WithdrawAmountPage(accountId, rfid_uid, pincode, account));
+        }
+
+        // Go to the withdraw money page with 70 as amount when the third menu option is selected
+        if (key.equals("3")) {
+            Navigator.getInstance().changePage(new WithdrawMoneyPage(accountId, rfid_uid, pincode, account, 70));
         }
 
         // Go back to the welcome page when the third / back menu option is selected

@@ -127,38 +127,36 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
             if (line.charAt(0) == '{') {
                 try {
                     final JSONObject message = new JSONObject(line);
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            // Give all the events to the current page of the navigator
-                            if (message.getString("type").equals("keypad")) {
-                                String key = message.getString("key");
-                                if (key.equals("A")) {
-                                    muteBeeper = !muteBeeper;
-                                    Navigator.getInstance().showMuteImage(muteBeeper);
-                                }
-                                else if (key.equals("C")) {
-                                    Navigator.getInstance().changePage(new WelcomePage());
-                                }
-                                else {
-                                    Navigator.getInstance().getPage().onKeypad(key);
-                                }
+                    SwingUtilities.invokeLater(() -> {
+                        // Give all the events to the current page of the navigator
+                        if (message.getString("type").equals("keypad")) {
+                            String key = message.getString("key");
+                            if (key.equals("A")) {
+                                muteBeeper = !muteBeeper;
+                                Navigator.getInstance().showMuteImage(muteBeeper);
                             }
+                            else if (key.equals("C")) {
+                                Navigator.getInstance().changePage(new WelcomePage());
+                            }
+                            else {
+                                Navigator.getInstance().getPage().onKeypad(key);
+                            }
+                        }
 
-                            if (message.getString("type").equals("rfid_read")) {
-                                Navigator.getInstance().getPage().onRFIDRead(message.getString("account_id"), message.getString("rfid_uid"));
-                            }
+                        if (message.getString("type").equals("rfid_read")) {
+                            Navigator.getInstance().getPage().onRFIDRead(message.getString("account_id"), message.getString("rfid_uid"));
+                        }
 
-                            if (message.getString("type").equals("rfid_write")) {
-                                Navigator.getInstance().getPage().onRFIDWrite(message.getString("account_id"), message.getString("rfid_uid"));
-                            }
+                        if (message.getString("type").equals("rfid_write")) {
+                            Navigator.getInstance().getPage().onRFIDWrite(message.getString("account_id"), message.getString("rfid_uid"));
+                        }
 
-                            if (message.getString("type").equals("money")) {
-                                Navigator.getInstance().getPage().onMoney();
-                            }
+                        if (message.getString("type").equals("money")) {
+                            Navigator.getInstance().getPage().onMoney();
+                        }
 
-                            if (message.getString("type").equals("printer")) {
-                                Navigator.getInstance().getPage().onPrinter();
-                            }
+                        if (message.getString("type").equals("printer")) {
+                            Navigator.getInstance().getPage().onPrinter();
                         }
                     });
                 } catch (Exception exception) {
