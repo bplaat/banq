@@ -1,13 +1,10 @@
 // ########### CLIENT CONFIG ###########
 
-// Enable the debug mode
-const DEBUG = true;
-
-// Your country code always 'SU'
+// Our country code
 const COUNTRY_CODE = 'SU';
 
-// Your bank code
-const BANK_CODE = DEBUG ? 'BXXQ' : 'BANQ';
+// Our bank code
+const BANK_CODE = 'BANQ';
 
 // When disconnect try to reconnect timeout (in ms)
 const RECONNECT_TIMEOUT = 2 * 1000;
@@ -20,13 +17,15 @@ const BANQ_API_URL = 'https://banq.ml/api';
 const BANQ_API_DEVICE_KEY = '5d19e2ac9ed1c9a4f14350b46a10bf25';
 
 // ########### CLIENT CODE ###########
+// Import http, https, url and websocket libs
 const http = require('http');
+const https = require('https');
 const url = require('url');
 const WebSocket = require('ws');
 
 // A wrapper function to do a http request and return the data
 function fetch(url, callback) {
-    http.get(url, function (response) {
+    https.get(url, function (response) {
         let body = '';
         response.on('data', function (data) {
             body += data;
@@ -55,11 +54,14 @@ function connectToGosbank() {
 
     // Do a request and some callback logic
     const pendingCallbacks = [];
+
     function requestMessage(type, data, callback) {
         const id = Date.now();
+
         if (callback !== undefined) {
             pendingCallbacks.push({ id: id, type: type + '_response', callback: callback });
         }
+
         ws.send(JSON.stringify({ id: id, type: type, data: data }));
     }
 
@@ -68,7 +70,20 @@ function connectToGosbank() {
         ws.send(JSON.stringify({ id: id, type: type + '_response', data: data }));
     }
 
-    // A wrapper function for requesting a balance
+    // A wrapper function to request register message
+    function requestRegister(callback) {
+        requestMessage('register', {
+            header: {
+                originCountry: COUNTRY_CODE,
+                originBank: BANK_CODE,
+                receiveCountry: 'SU',
+                receiveBank: 'GOSB'
+            },
+            body: {}
+        }, callback);
+    }
+
+    // A wrapper function for requesting a balance message
     function requestBalance(account, pin, callback) {
         const toAccountParts = parseAccountParts(account);
 
@@ -86,7 +101,7 @@ function connectToGosbank() {
         }, callback);
     }
 
-    // A wrapper function for requesting a payment
+    // A wrapper function for requesting a payment message
     function requestPayment(fromAccount, toAccount, pin, amount, callback) {
         const formAccountParts = parseAccountParts(fromAccount);
         const toAccountParts = parseAccountParts(toAccount);
@@ -129,34 +144,43 @@ function connectToGosbank() {
     // When connected to gosbank
     ws.on('open', function () {
         // Try to register
-        requestMessage('register', {
-            header: {
-                originCountry: COUNTRY_CODE,
-                originBank: BANK_CODE,
-                receiveCountry: 'SU',
-                receiveBank: 'GOSB'
-            },
-            body: {}
-        }, function (data) {
-            if (data.body.code === 200) {
+        requestRegister(function ({ body }) {
+            if (body.code === 200) {
                 console.log('Connected with Gosbank with bank code: ' + BANK_CODE);
 
-                // Create HTTP API for the Banq website
+                // Create local HTTP API for the Banq website API
                 httpServer = http.createServer(function (req, res) {
-                    const pathname = url.parse(req.url).pathname;
+                    const { pathname, query } = url.parse(req.url, true);
 
-                    if (pathname.startsWith('/api/gosbank/accounts/')) {
-
+                    if (pathname == '/') {
+                        res.writeHead(200, { 'Content-Type': 'text/html' });
+                        res.end('<h1>Banq Gosbank Client Local API</h1>');
                     }
 
-                    if (pathname === '/api/gosbank/transactions/create') {
+                    else if (pathname.startsWith('/api/gosbank/accounts/')) {
+                        const account = pathname.replace('/api/gosbank/accounts/', '');
+                        requestBalance(account, query.pin, function ({ body }) {
+                            res.writeHead(200, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify(body));
+                        });
+                    }
 
+                    else if (pathname === '/api/gosbank/transactions/create') {
+                        requestPayment(query.from, query.to, query.pin, query.amount, function ({ body }) {
+                            res.writeHead(200, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify(body));
+                        });
+                    }
+
+                    else {
+                        res.writeHead(200, { 'Content-Type': 'text/html' });
+                        res.end('<h1>404 Not Found</h1>');
                     }
                 });
                 httpServer.listen(HTTP_SERVER_PORT);
             }
             else {
-                console.log('Error with connecting to Gosbank, reason: ' + data.body.code);
+                console.log('Error with connecting to Gosbank, reason: ' + body.code);
             }
         });
     });
@@ -174,6 +198,7 @@ function connectToGosbank() {
             }
         }
 
+        // On balance request
         if (type === 'balance') {
             console.log('Balance request for: ' + data.body.account);
 
@@ -191,6 +216,7 @@ function connectToGosbank() {
             });
         }
 
+        // On payment request
         if (type === 'payment') {
             console.log('Payment request for: ' + data.body.toAccount);
 
@@ -216,7 +242,8 @@ function connectToGosbank() {
             httpServer.close();
         }
 
-        console.log('Disconnected, try to reconnect in ' + (RECONNECT_TIMEOUT / 1000).toFixed(0) + ' seconds!');
+        // Try to reconnect
+        console.log('Disconnected, try to reconnect in ' + Math.round(RECONNECT_TIMEOUT / 1000) + ' seconds!');
         setTimeout(connectToGosbank, RECONNECT_TIMEOUT);
     });
 
