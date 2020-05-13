@@ -126,6 +126,12 @@ void loop() {
                 printer.println((char *)lines[i]);
             }
             printer.sleep();
+
+            // Send printer done message
+            document.clear();
+            document["type"] = "printer";
+            serializeJson(document, json_buffer);
+            Serial.println(json_buffer);
         }
 
         // RFID write command

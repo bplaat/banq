@@ -155,6 +155,10 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
                             if (message.getString("type").equals("money")) {
                                 Navigator.getInstance().getPage().onMoney();
                             }
+
+                            if (message.getString("type").equals("printer")) {
+                                Navigator.getInstance().getPage().onPrinter();
+                            }
                         }
                     });
                 } catch (Exception exception) {

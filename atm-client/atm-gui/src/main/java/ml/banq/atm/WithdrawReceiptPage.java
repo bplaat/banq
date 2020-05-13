@@ -1,7 +1,6 @@
 package ml.banq.atm;
 
 import java.awt.Component;
-import java.text.SimpleDateFormat;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -55,33 +54,13 @@ public class WithdrawReceiptPage extends Page {
     public void onKeypad(String key) {
         // When the first option is selected print receipt
         if (key.equals("1")) {
-            // Send printer commands
-            App.getInstance().sendPrinter(new String[] {
-                PrinterUtils.horizontalLine(),
-                "",
-                PrinterUtils.center(Language.getString("withdraw_receipt_title")),
-                "",
-                PrinterUtils.pad(Language.getString("withdraw_receipt_bank_name"), Config.BANK_NAME),
-                PrinterUtils.pad(Language.getString("withdraw_receipt_account_name"), transaction.getFromAccountId()),
-                PrinterUtils.pad(Language.getString("withdraw_receipt_transaction_number"), String.format("%08d", transaction.getId())),
-                PrinterUtils.pad(Language.getString("withdraw_receipt_amount"), String.format("P %.02f", transaction.getAmount())),
-                PrinterUtils.pad(Language.getString("withdraw_receipt_location"), Settings.getInstance().getItem("location", Config.DEFAULT_LOCATION)),
-                PrinterUtils.pad(Language.getString("withdraw_receipt_time"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(transaction.getCreatedAt())),
-                "",
-                PrinterUtils.horizontalLine(),
-                "",
-                ""
-            });
-
-            // Go to the next page
-            App.getInstance().sendBeeper(880, 250);
-            Navigator.getInstance().changePage(new WithdrawDonePage(), false);
+            // Go to the printing page
+            Navigator.getInstance().changePage(new WithdrawPrintingPage(transaction));
         }
 
         // Go to the next page without printer commands
         if (key.equals("2")) {
-            App.getInstance().sendBeeper(880, 250);
-            Navigator.getInstance().changePage(new WithdrawDonePage(), false);
+            Navigator.getInstance().changePage(new WithdrawDonePage());
         }
     }
 }
