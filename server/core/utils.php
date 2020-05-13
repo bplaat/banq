@@ -50,3 +50,12 @@ function get_ip () {
         return $_SERVER['REMOTE_ADDR'];
     }
 }
+
+// A function that parses a standart account id string
+function parseAccountParts($account) {
+    return [
+        "country" => substr($account, 0, 2),
+        "bank" => substr($account, 3, 4),
+        "account" => (int)substr($account, 8)
+    ];
+}

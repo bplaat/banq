@@ -152,7 +152,7 @@ function connectToGosbank() {
                 httpServer = http.createServer(function (req, res) {
                     const { pathname, query } = url.parse(req.url, true);
 
-                    if (pathname == '/') {
+                    if (pathname === '/') {
                         res.writeHead(200, { 'Content-Type': 'text/html' });
                         res.end('<h1>Banq Gosbank Client Local API</h1>');
                     }

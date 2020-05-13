@@ -1,17 +1,22 @@
 <?php
 
 class ApiATMAccountsController {
-    // The API ATM actions show route
-    public static function show ($account_id) {
-        // Convert account id string to banq id
-        if (substr($account_id, 0, strlen(BANK_CODE_PREFIX)) != BANK_CODE_PREFIX) {
+    // The API ATM accounts show route
+    public static function show ($account) {
+        // Parse the account parts
+        $account_parts = parseAccountParts($account);
+
+        // Check if it is a banq account
+        if (
+            $account_parts['country'] != COUNTRY_CODE ||
+            $account_parts['bank'] != BANK_CODE
+        ) {
             return [
                 'success' => false,
                 'blocked' => false,
                 'message' => 'This API supports only Banq cards'
             ];
         }
-        $account_id = floatval(substr($account_id, strlen(BANK_CODE_PREFIX)));
 
         // Validate the user input
         api_validate([
@@ -66,7 +71,7 @@ class ApiATMAccountsController {
             }
         }
 
-        $account = Accounts::select($account_id)->fetch();
+        $account = Accounts::select($account_parts['account'])->fetch();
 
         return [
             'success' => true,

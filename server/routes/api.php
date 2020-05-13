@@ -7,8 +7,14 @@ Router::any('/api(.+)', function () {
 
     // Check the api key
     if (APP_DEBUG || Devices::select([ 'key' => request('key') ])->rowCount() == 1) {
+        // Gosbank accounts
+        Router::any('/api/gosbank/accounts/{account}', 'ApiGosbankAccountsController::show');
+
+        // Gosbank transactions
+        Router::any('/api/gosbank/transactions/create', 'ApiGosbankTransactionsController::create');
+
         // ATM accounts
-        Router::any('/api/atm/accounts/{account_id}', 'ApiATMAccountsController::show');
+        Router::any('/api/atm/accounts/{account}', 'ApiATMAccountsController::show');
 
         // ATM transactions
         Router::any('/api/atm/transactions/create', 'ApiATMTransactionsController::create');

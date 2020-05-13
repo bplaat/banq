@@ -3,28 +3,30 @@
 class ApiATMTransactionsController {
     // The API ATM transactions create route
     public static function create () {
-        // Convert from account id string to banq id
-        $from_account_id = request('from_account_id');
+        // Parse accounts
+        $from_account_parts = parseAccountParts(request('from_account_id'));
+        $to_account_parts = parseAccountParts(request('to_account_id'));
 
-        if (substr($from_account_id, 0, strlen(BANK_CODE_PREFIX)) != BANK_CODE_PREFIX) {
+        // Check if it is a banq account
+        if (
+            (
+                $from_account_parts['country'] != COUNTRY_CODE ||
+                $from_account_parts['bank'] != BANK_CODE
+            ) ||
+            (
+                $to_account_parts['country'] != COUNTRY_CODE ||
+                $to_account_parts['bank'] != BANK_CODE
+            )
+        ) {
             return [
                 'success' => false,
                 'blocked' => false,
                 'message' => 'This API supports only Banq cards'
             ];
         }
-        $_REQUEST['from_account_id'] = floatval(substr($from_account_id, strlen(BANK_CODE_PREFIX)));
 
-        // Convert to account id string to banq id
-        $to_account_id = request('to_account_id');
-        if (substr($to_account_id, 0, strlen(BANK_CODE_PREFIX)) != BANK_CODE_PREFIX) {
-            return [
-                'success' => false,
-                'blocked' => false,
-                'message' => 'This API supports only Banq cards'
-            ];
-        }
-        $_REQUEST['to_account_id'] = floatval(substr($to_account_id, strlen(BANK_CODE_PREFIX)));
+        $_REQUEST['from_account_id'] = $from_account_parts["account"];
+        $_REQUEST['to_account_id'] = $to_account_parts["account"];
 
         // Validate the user input
         api_validate([

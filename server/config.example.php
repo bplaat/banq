@@ -25,7 +25,8 @@ define('PAGINATION_LIMIT_API', 20);
 define('PAGINATION_MAX_LIMIT_API', 50);
 
 // Bank constants
-define('BANK_CODE_PREFIX', 'SU-BANQ-');
+define('COUNTRY_CODE', 'SU');
+define('BANK_CODE', 'BANQ');
 
 // The max accounts count per user
 define('ACCOUNTS_MAX_COUNT', 6);
@@ -43,3 +44,11 @@ define('CARD_MAX_ATTEMPTS', 3);
 
 // The check if the client is the mobile Android app
 define('IS_MOBILE_APP', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'ml.banq.android');
+
+// Gosbanks status codes
+define('GOSBANK_CODE_SUCCESS', 200);
+define('GOSBANK_CODE_BROKEN_MESSAGE', 400);
+define('GOSBANK_CODE_AUTH_FAILED', 401);
+define('GOSBANK_CODE_NOT_ENOUGH_BALANCE', 402);
+define('GOSBANK_CODE_BLOCKED', 403);
+define('GOSBANK_CODE_DONT_EXISTS', 404);
