@@ -78,6 +78,14 @@ public class WithdrawMoneyPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the account menu option label
+        JLabel accountLabel = new JLabel("B. " + Language.getString("withdraw_money_page_account"));
+        accountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        accountLabel.setFont(Fonts.NORMAL);
+        add(accountLabel);
+
+        add(Box.createVerticalStrut(Paddings.NORMAL));
+
         // Create the back option
         JLabel backLabel = new JLabel("D. " + Language.getString("withdraw_money_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -88,17 +96,22 @@ public class WithdrawMoneyPage extends Page {
     }
 
     public void onKeypad(String key) {
-        // When back is pressed go back to the amount page
-        if (key.equals("D")) {
-            Navigator.getInstance().changePage(new WithdrawAmountPage(accountId, rfid_uid, pincode, account));
-        }
-
         // Loop trough the money pares
         for (int i = 0; i < moneyPares.size(); i++) {
             if (key.equals(String.valueOf(i + 1))) {
                 // Go to the withdraw confirm page
                 Navigator.getInstance().changePage(new WithdrawConfirmPage(accountId, rfid_uid, pincode, account, amount, moneyPares.get(i)));
             }
+        }
+
+        // Go back to the account page when the account menu option is selected
+        if (key.equals("B")) {
+            Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
+        }
+
+        // When back is pressed go back to the amount page
+        if (key.equals("D")) {
+            Navigator.getInstance().changePage(new WithdrawAmountPage(accountId, rfid_uid, pincode, account));
         }
     }
 }

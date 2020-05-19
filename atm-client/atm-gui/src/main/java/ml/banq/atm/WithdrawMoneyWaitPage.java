@@ -11,9 +11,11 @@ public class WithdrawMoneyWaitPage extends Page {
     private static final long serialVersionUID = 1;
 
     private BanqAPI.Transaction transaction;
+    private boolean wantReceipt;
 
-    public WithdrawMoneyWaitPage(BanqAPI.Transaction transaction, HashMap<String, Integer> moneyPare) {
+    public WithdrawMoneyWaitPage(BanqAPI.Transaction transaction, HashMap<String, Integer> moneyPare, boolean wantReceipt) {
         this.transaction = transaction;
+        this.wantReceipt = wantReceipt;
 
         // Send the money dispencer commands
         App.getInstance().sendMoney(moneyPare);
@@ -46,8 +48,12 @@ public class WithdrawMoneyWaitPage extends Page {
         add(Box.createVerticalGlue());
     }
 
-    // When money is ejected go to receipt page
+    // When money is ejected go to printing or done page
     public void onMoney() {
-        Navigator.getInstance().changePage(new WithdrawReceiptPage(transaction));
+        if (wantReceipt) {
+            Navigator.getInstance().changePage(new WithdrawPrintingPage(transaction));
+        } else {
+            Navigator.getInstance().changePage(new WithdrawDonePage());
+        }
     }
 }

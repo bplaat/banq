@@ -1,6 +1,7 @@
 package ml.banq.atm;
 
 import java.awt.Component;
+import java.util.HashMap;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -10,9 +11,11 @@ public class WithdrawReceiptPage extends Page {
     private static final long serialVersionUID = 1;
 
     private BanqAPI.Transaction transaction;
+    private HashMap<String, Integer> moneyPare;
 
-    public WithdrawReceiptPage(BanqAPI.Transaction transaction) {
+    public WithdrawReceiptPage(BanqAPI.Transaction transaction, HashMap<String, Integer> moneyPare) {
         this.transaction = transaction;
+        this.moneyPare = moneyPare;
 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -52,15 +55,14 @@ public class WithdrawReceiptPage extends Page {
     }
 
     public void onKeypad(String key) {
-        // When the first option is selected print receipt
+        // When the first option is selected money waint and print receipt
         if (key.equals("1")) {
-            // Go to the printing page
-            Navigator.getInstance().changePage(new WithdrawPrintingPage(transaction));
+            Navigator.getInstance().changePage(new WithdrawMoneyWaitPage(transaction, moneyPare, true));
         }
 
-        // Go to the next page without printer commands
+        // Go to the money wait page then to the done page
         if (key.equals("2")) {
-            Navigator.getInstance().changePage(new WithdrawDonePage());
+            Navigator.getInstance().changePage(new WithdrawMoneyWaitPage(transaction, moneyPare, false));
         }
     }
 }

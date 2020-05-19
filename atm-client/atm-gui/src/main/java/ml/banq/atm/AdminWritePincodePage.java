@@ -111,9 +111,11 @@ public class AdminWritePincodePage extends Page {
             if (pincode.equals(new String(pincodeConfirmationInput.getPassword()))) {
                 Navigator.getInstance().changePage(new AdminWriteRFIDPage(accountId, pincode));
             } else {
+                messageLabel.setFont(Fonts.NORMAL_BOLD);
                 messageLabel.setText(Language.getString("admin_write_pincode_page_error"));
             }
         } else {
+            messageLabel.setFont(Fonts.NORMAL_BOLD);
             messageLabel.setText(Language.getString("admin_write_pincode_page_message"));
         }
     }

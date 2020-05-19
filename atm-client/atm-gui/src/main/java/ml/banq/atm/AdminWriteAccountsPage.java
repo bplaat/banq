@@ -54,17 +54,17 @@ public class AdminWriteAccountsPage extends Page {
     }
 
     public void onKeypad(String key) {
-        // When the D is pressed logout and go back
-        if (key.equals("D")) {
-            BanqAPI.getInstance().logout();
-            Navigator.getInstance().changePage(new AdminWriteLoginPage());
-        }
-
         // When a menu option is selected go the the admin write pincode page with the account id string
         for (int i = 0; i < accounts.size(); i++) {
             if (key.equals(String.valueOf(i + 1))) {
                 Navigator.getInstance().changePage(new AdminWritePincodePage(String.format("SU-BANQ-%08d", accounts.get(i).getId())));
             }
+        }
+
+        // When the D is pressed logout and go back
+        if (key.equals("D")) {
+            BanqAPI.getInstance().logout();
+            Navigator.getInstance().changePage(new AdminWriteLoginPage());
         }
     }
 }

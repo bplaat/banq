@@ -108,6 +108,7 @@ public class AdminWriteLoginPage extends Page {
             Navigator.getInstance().changePage(new AdminWriteAccountsPage(), false);
         } else {
             App.getInstance().sendBeeper(110, 250);
+            messageLabel.setFont(Fonts.NORMAL_BOLD);
             messageLabel.setText(Language.getString("admin_write_login_page_error"));
         }
     }

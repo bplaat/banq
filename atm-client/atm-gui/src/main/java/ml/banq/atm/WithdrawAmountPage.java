@@ -58,6 +58,14 @@ public class WithdrawAmountPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the account menu option label
+        JLabel accountLabel = new JLabel("B. " + Language.getString("withdraw_amount_page_account"));
+        accountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        accountLabel.setFont(Fonts.NORMAL);
+        add(accountLabel);
+
+        add(Box.createVerticalStrut(Paddings.NORMAL));
+
         // Create the back option
         JLabel backLabel = new JLabel("D. " + Language.getString("withdraw_amount_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -68,11 +76,6 @@ public class WithdrawAmountPage extends Page {
     }
 
     public void onKeypad(String key) {
-        // When back is pressed go back
-        if (key.equals("D")) {
-            Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
-        }
-
         // Check if one of the amount is pressed and go to the money page
         for (int i = 0; i < Config.DEFAULT_AMOUNTS.length; i++) {
             if (key.equals(String.valueOf(i + 1))) {
@@ -80,6 +83,7 @@ public class WithdrawAmountPage extends Page {
                     Navigator.getInstance().changePage(new WithdrawMoneyPage(accountId, rfid_uid, pincode, account, Config.DEFAULT_AMOUNTS[i]));
                 } else {
                     App.getInstance().sendBeeper(110, 250);
+                    messageLabel.setFont(Fonts.NORMAL_BOLD);
                     messageLabel.setText(Language.getString("withdraw_amount_page_not_enough"));
                 }
             }
@@ -88,6 +92,16 @@ public class WithdrawAmountPage extends Page {
         // When the custom amount is selected go to the page
         if (key.equals(String.valueOf(Config.DEFAULT_AMOUNTS.length + 1))) {
             Navigator.getInstance().changePage(new WithdrawCustomAmountPage(accountId, rfid_uid, pincode, account));
+        }
+
+        // Go back to the account page when the account menu option is selected
+        if (key.equals("B")) {
+            Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
+        }
+
+        // When back is pressed go back
+        if (key.equals("D")) {
+            Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
         }
     }
 }

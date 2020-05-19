@@ -126,7 +126,7 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
             Log.debug("Read: " + line);
             if (line.charAt(0) == '{') {
                 try {
-                    final JSONObject message = new JSONObject(line);
+                    JSONObject message = new JSONObject(line);
                     SwingUtilities.invokeLater(() -> {
                         // Give all the events to the current page of the navigator
                         if (message.getString("type").equals("keypad")) {

@@ -72,11 +72,6 @@ public class WithdrawPincodePage extends Page {
     }
 
     public void onKeypad(String key) {
-        // When back is pressed go to the welcome page
-        if (key.equals("D")) {
-            Navigator.getInstance().changePage(new WelcomePage());
-        }
-
         // Pincode input field stuff
         String pincode = new String(pincodeInput.getPassword());
 
@@ -99,6 +94,7 @@ public class WithdrawPincodePage extends Page {
             // Show error when wrong pincode
             catch (BanqAPI.WrongPincodeException exception) {
                 App.getInstance().sendBeeper(110, 250);
+                messageLabel.setFont(Fonts.NORMAL_BOLD);
                 messageLabel.setText(Language.getString("withdraw_pincode_page_pincode_error"));
                 pincodeInput.setText("");
             }
@@ -106,9 +102,15 @@ public class WithdrawPincodePage extends Page {
             // Show error message when card is blocked
             catch (BanqAPI.BlockedCardException exception) {
                 App.getInstance().sendBeeper(110, 250);
+                messageLabel.setFont(Fonts.NORMAL_BOLD);
                 messageLabel.setText(Language.getString("withdraw_pincode_page_blocked_error"));
                 pincodeInput.setText("");
             }
+        }
+
+        // When back is pressed go to the welcome page
+        if (key.equals("D")) {
+            Navigator.getInstance().changePage(new WelcomePage());
         }
     }
 }

@@ -57,6 +57,14 @@ public class WithdrawConfirmPage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the account menu option label
+        JLabel accountLabel = new JLabel("B. " + Language.getString("withdraw_money_page_account"));
+        accountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        accountLabel.setFont(Fonts.NORMAL);
+        add(accountLabel);
+
+        add(Box.createVerticalStrut(Paddings.NORMAL));
+
         // Create the back option
         JLabel backLabel = new JLabel("D. " + Language.getString("withdraw_confirm_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -73,11 +81,17 @@ public class WithdrawConfirmPage extends Page {
             String name = Language.getString("withdraw_confirm_page_transaction_prefix") + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             BanqAPI.Transaction transaction = BanqAPI.getInstance().createTransaction(accountId, rfid_uid, pincode, name, "SU-BANQ-00000001", amount);
             if (transaction != null) {
-                Navigator.getInstance().changePage(new WithdrawMoneyWaitPage(transaction, moneyPare));
+                App.getInstance().sendBeeper(880, 250);
+                Navigator.getInstance().changePage(new WithdrawReceiptPage(transaction, moneyPare), false);
             } else {
                 App.getInstance().sendBeeper(110, 250);
                 messageLabel.setText(Language.getString("withdraw_confirm_page_error"));
             }
+        }
+
+        // Go back to the account page when the account menu option is selected
+        if (key.equals("B")) {
+            Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
         }
 
         // When back is pressed go back to the amount page

@@ -40,6 +40,14 @@ public class WithdrawBalancePage extends Page {
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
+        // Create the account menu option label
+        JLabel accountLabel = new JLabel("B. " + Language.getString("withdraw_balance_page_account"));
+        accountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        accountLabel.setFont(Fonts.NORMAL);
+        add(accountLabel);
+
+        add(Box.createVerticalStrut(Paddings.NORMAL));
+
         // Create the back menu option label
         JLabel backLabel = new JLabel("D. " + Language.getString("withdraw_balance_page_back"));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -50,6 +58,11 @@ public class WithdrawBalancePage extends Page {
     }
 
     public void onKeypad(String key) {
+        // Go back to the account page when the account menu option is selected
+        if (key.equals("B")) {
+            Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
+        }
+
         // Go back to the account page when the back menu option is selected
         if (key.equals("D")) {
             Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));

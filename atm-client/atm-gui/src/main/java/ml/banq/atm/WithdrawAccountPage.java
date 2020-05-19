@@ -1,6 +1,10 @@
 package ml.banq.atm;
 
 import java.awt.Component;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -13,6 +17,7 @@ public class WithdrawAccountPage extends Page {
     private String rfid_uid;
     private String pincode;
     private BanqAPI.Account account;
+    private JLabel messageLabel;
 
     public WithdrawAccountPage(String accountId, String rfid_uid, String pincode, BanqAPI.Account account) {
         this.accountId = accountId;
@@ -29,6 +34,14 @@ public class WithdrawAccountPage extends Page {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
+
+        add(Box.createVerticalStrut(Paddings.LARGE));
+
+        // Create the page message
+        messageLabel = new JLabel(Language.getString("withdraw_account_page_message"));
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        messageLabel.setFont(Fonts.NORMAL);
+        add(messageLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
@@ -49,10 +62,18 @@ public class WithdrawAccountPage extends Page {
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
         // Create the third menu option label
-        JLabel menu3Label = new JLabel("3. " + Language.getString("withdraw_account_page_70_quick_withdraw"));
+        JLabel menu3Label = new JLabel("3. " + Language.getString("withdraw_account_page_quick_withdraw"));
         menu3Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu3Label.setFont(Fonts.NORMAL);
         add(menu3Label);
+
+        add(Box.createVerticalStrut(Paddings.LARGE));
+
+        // Create the account menu option label
+        JLabel accountLabel = new JLabel("B. " + Language.getString("withdraw_account_page_account"));
+        accountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        accountLabel.setFont(Fonts.NORMAL);
+        add(accountLabel);
 
         add(Box.createVerticalStrut(Paddings.NORMAL));
 
@@ -76,12 +97,48 @@ public class WithdrawAccountPage extends Page {
             Navigator.getInstance().changePage(new WithdrawAmountPage(accountId, rfid_uid, pincode, account));
         }
 
-        // Go to the withdraw money page with 70 as amount when the third menu option is selected
+        // Withdraw 70 as amount when the third menu option is selected
         if (key.equals("3")) {
-            Navigator.getInstance().changePage(new WithdrawMoneyPage(accountId, rfid_uid, pincode, account, 70));
+            int amount = 70;
+
+            // Check account amount
+            if (account.getAmount() - amount >= 0) {
+                // Check if a money pare if available
+                ArrayList<HashMap<String, Integer>> moneyPares = MoneyUtils.getMoneyPares(amount);
+                if (moneyPares.size() != 0) {
+                    // Select the last money pare
+                    HashMap<String, Integer> moneyPare = moneyPares.get(moneyPares.size() - 1);
+
+                    // Create the transaction via the API
+                    String name = Language.getString("withdraw_confirm_page_transaction_prefix") + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                    BanqAPI.Transaction transaction = BanqAPI.getInstance().createTransaction(accountId, rfid_uid, pincode, name, "SU-BANQ-00000001", amount);
+                    if (transaction != null) {
+                        App.getInstance().sendBeeper(880, 250);
+                        Navigator.getInstance().changePage(new WithdrawMoneyWaitPage(transaction, moneyPare, false), false);
+                    } else {
+                        App.getInstance().sendBeeper(110, 250);
+                        messageLabel.setFont(Fonts.NORMAL_BOLD);
+                        messageLabel.setText(Language.getString("withdraw_account_page_quick_error"));
+                    }
+                }
+                else {
+                    App.getInstance().sendBeeper(110, 250);
+                    messageLabel.setFont(Fonts.NORMAL_BOLD);
+                    messageLabel.setText(Language.getString("withdraw_account_page_quick_no_pares"));
+                }
+            } else {
+                App.getInstance().sendBeeper(110, 250);
+                messageLabel.setFont(Fonts.NORMAL_BOLD);
+                messageLabel.setText(Language.getString("withdraw_account_page_quick_not_enough"));
+            }
         }
 
-        // Go back to the welcome page when the third / back menu option is selected
+        // Go back to the account page when the account menu option is selected
+        if (key.equals("B")) {
+            Navigator.getInstance().changePage(new WithdrawAccountPage(accountId, rfid_uid, pincode, account));
+        }
+
+        // Go back to the welcome page when the back menu option is selected
         if (key.equals("D")) {
             Navigator.getInstance().changePage(new WelcomePage());
         }
