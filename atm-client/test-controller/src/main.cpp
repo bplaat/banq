@@ -1,29 +1,11 @@
-// The serial I/O Controller for an Arduino Mega
+// The serial I/O test Controller for an Arduino Uno
 
 // Load all the libraries
 #include <Arduino.h>
 #include <Keypad.h>
 #include <SPI.h>
-#include <Stepper.h>
 #include <MFRC522.h>
 #include <ArduinoJson.h>
-#include <Adafruit_Thermal.h>
-#include "printer_logo.hpp"
-
-// Money steppers
-#define STEPPER_REVOLUTION 2048
-#define STEPPER_SPEED 10
-#define STEPPER_ROTATION_STEPS 2050
-
-#define ISSUE_AMOUNTS_LENGTH 4
-uint8_t issue_amounts[ISSUE_AMOUNTS_LENGTH] = { 5, 10, 20, 50 };
-
-Stepper steppers[ISSUE_AMOUNTS_LENGTH] = {
-    Stepper(STEPPER_REVOLUTION, 30, 31, 32, 33),
-    Stepper(STEPPER_REVOLUTION, 34, 35, 36, 37),
-    Stepper(STEPPER_REVOLUTION, 38, 39, 40, 41),
-    Stepper(STEPPER_REVOLUTION, 42, 43, 44, 45)
-};
 
 // Keypad
 #define KEYPAD_ROWS 4
@@ -36,8 +18,8 @@ char keypad_keys[KEYPAD_ROWS][KEYPAD_COLUMNS]= {
     { '*', '0', '#', 'D' }
 };
 
-uint8_t keypad_row_pins[KEYPAD_ROWS] = { 22, 23, 24, 25 };
-uint8_t keypad_column_pins[KEYPAD_COLUMNS] = { 26, 27, 28, 29 };
+uint8_t keypad_row_pins[KEYPAD_ROWS] = { 3, 4, 5, 6 };
+uint8_t keypad_column_pins[KEYPAD_COLUMNS] = { 7, 8, 9, 10 };
 
 Keypad keypad = Keypad(makeKeymap(keypad_keys), keypad_row_pins, keypad_column_pins, KEYPAD_ROWS, KEYPAD_COLUMNS);
 
@@ -45,8 +27,8 @@ Keypad keypad = Keypad(makeKeymap(keypad_keys), keypad_row_pins, keypad_column_p
 #define BEEPER_PIN 2
 
 // RFID
-#define SS_PIN 53
-#define RST_PIN 49
+#define SS_PIN A0
+#define RST_PIN A1
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key mfrc522_keyA;
@@ -54,9 +36,6 @@ MFRC522::MIFARE_Key mfrc522_keyA;
 #define ACCOUNT_ID_DATA_BLOCK 1
 #define ACCOUNT_ID_TRAILER_BLOCK 3
 #define ACOUNT_ID_LENGTH 16
-
-// Printer
-Adafruit_Thermal printer(&Serial1);
 
 // JSON
 StaticJsonDocument<512> document;
@@ -67,21 +46,11 @@ void setup() {
     Serial.begin(9600);
     Serial.setTimeout(50);
 
-    // Init printer serial com
-    Serial1.begin(9600);
-    printer.begin();
-    printer.sleep();
-
     // Init RFID
     SPI.begin();
     mfrc522.PCD_Init();
     for (uint8_t i = 0; i < 6; i++) {
         mfrc522_keyA.keyByte[i] = 0xff;
-    }
-
-    // Init steppers
-    for (uint8_t i = 0; i < ISSUE_AMOUNTS_LENGTH; i++) {
-        steppers[i].setSpeed(STEPPER_SPEED);
     }
 }
 
@@ -99,13 +68,8 @@ void loop() {
 
         // Money command
         if (document["type"] == "money") {
-            // Eject money bills by rotating steppers
-            for (uint8_t i = 0; i < ISSUE_AMOUNTS_LENGTH; i++) {
-                uint32_t amount = document["money"][String(issue_amounts[i])];
-                for (uint8_t j = 0; j < amount; j++) {
-                    steppers[i].step(STEPPER_ROTATION_STEPS);
-                }
-            }
+            // Do nothing
+            delay(1000);
 
             // Send money done message
             document.clear();
@@ -116,13 +80,8 @@ void loop() {
 
         // Printer command
         if (document["type"] == "printer") {
-            printer.wake();
-            printer.printBitmap(256, 64, printer_logo);
-            JsonArray lines = document["lines"];
-            for (uint8_t i = 0; i < lines.size(); i++) {
-                printer.println((char *)lines[i]);
-            }
-            printer.sleep();
+            // Do nothing
+            delay(1000);
 
             // Send printer done message
             document.clear();
