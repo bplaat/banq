@@ -21,7 +21,7 @@ public class Config {
         { "ru", "Русский" }
     };
 
-    public static final String[] ADMIN_RFID_UIDS = { "4a360c0b" };
+    public static final String[] ADMIN_RFID_UIDS = { "4a360c0b", "da88d20b" };
     public static final int[] DEFAULT_AMOUNTS = { 5, 10, 20, 50, 70, 100, 200 };
     public static final int[] ISSUE_AMOUNTS = { 5, 10, 20, 50 };
     public static final int PRINTER_PAPER_WIDTH = 32;
