@@ -45,6 +45,9 @@ define('CARD_MAX_ATTEMPTS', 3);
 // The check if the client is the mobile Android app
 define('IS_MOBILE_APP', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'ml.banq.android');
 
+// Gosbank client
+define('GOSBANK_CLIENT_API_URL', 'http://localhost:8081/api');
+
 // Gosbanks status codes
 define('GOSBANK_CODE_SUCCESS', 200);
 define('GOSBANK_CODE_BROKEN_MESSAGE', 400);

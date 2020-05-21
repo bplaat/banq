@@ -11,11 +11,44 @@ class ApiATMAccountsController {
             $account_parts['country'] != COUNTRY_CODE ||
             $account_parts['bank'] != BANK_CODE
         ) {
-            return [
-                'success' => false,
-                'blocked' => false,
-                'message' => 'This API supports only Banq cards'
-            ];
+            $gosbank_response = json_decode(file_get_contents(GOSBANK_CLIENT_API_URL + '/gosbank/accounts/' + $account + '?pin=' + request('pincode')));
+
+            // When success
+            if ($gosbank_response['code'] == GOSBANK_CODE_SUCCESS) {
+                return [
+                    'success' => true,
+                    'blocked' => false,
+                    'account' => [
+                        'id' => 0,
+                        'name' => 'Gosbank Account',
+                        'type' => Accounts::TYPE_PAYMENT,
+                        'amount' => $gosbank_response['balance'],
+                        'createdAt' => date('Y-m-d H:i:s')
+                    ]
+                ];
+            }
+
+            // When pincode is false
+            if ($gosbank_response['code'] == GOSBANK_CODE_AUTH_FAILED) {
+                return [
+                    'success' => false,
+                    'blocked' => false,
+                    'message' => 'Pincode false'
+                ];
+            }
+
+            // When error account is blocked
+            if (
+                $gosbank_response['code'] == GOSBANK_CODE_BROKEN_MESSAGE ||
+                $gosbank_response['code'] == GOSBANK_CODE_BLOCKED ||
+                $gosbank_response['code'] == GOSBANK_CODE_DONT_EXISTS
+            ) {
+                return [
+                    'success' => false,
+                    'blocked' => true,
+                    'message' => 'This account is blocked'
+                ];
+            }
         }
 
         // Validate the user input

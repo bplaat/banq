@@ -9,20 +9,70 @@ class ApiATMTransactionsController {
 
         // Check if it is a banq account
         if (
-            (
-                $from_account_parts['country'] != COUNTRY_CODE ||
-                $from_account_parts['bank'] != BANK_CODE
-            ) ||
-            (
-                $to_account_parts['country'] != COUNTRY_CODE ||
-                $to_account_parts['bank'] != BANK_CODE
-            )
+            $from_account_parts['country'] != COUNTRY_CODE ||
+            $from_account_parts['bank'] != BANK_CODE
         ) {
-            return [
-                'success' => false,
-                'blocked' => false,
-                'message' => 'This API supports only Banq cards'
-            ];
+            $gosbank_response = json_decode(file_get_contents(GOSBANK_CLIENT_API_URL + '/gosbank/transactions/create?from=' + request('from') + '&to=' + request('to') + '&pin=' + request('pincode') + '&amount=' + request('amount')));
+
+            // When success
+            if ($gosbank_response['code'] == GOSBANK_CODE_SUCCESS) {
+                // Parse the amount
+                $amount = parse_money_number(request('amount'));
+
+                // Update account
+                $to_account = Accounts::select(request('to_account_id'))->fetch();
+                $to_account->amount += $amount;
+
+                // Add the transaction to the database
+                Transactions::insert([
+                    'name' => request('name'),
+                    'from_account_id' => request('from_account_id'),
+                    'to_account_id' => $to_account_parts['account'],
+                    'amount' => $amount
+                ]);
+                $transaction_id = Database::lastInsertId();
+
+                // Update the account in the database
+                Accounts::update($to_account_parts['account'], [ 'amount' => $to_account->amount ]);
+
+                // Return a confirmation message
+                return [
+                    'success' => true,
+                    'blocked' => false,
+                    'transaction' => Transactions::select($transaction_id)->fetch()
+                ];
+            }
+
+            // Not enough balance
+            if ($gosbank_response['code'] == GOSBANK_CODE_NOT_ENOUGH_BALANCE) {
+                return [
+                    'success' => false,
+                    'blocked' => false,
+                    'message' => 'Not enough balance'
+                ];
+            }
+
+            // Pincode false
+            if ($gosbank_response['code'] == GOSBANK_CODE_AUTH_FAILED) {
+                return [
+                    'success' => false,
+                    'blocked' => false,
+                    'message' => 'Pincode false'
+                ];
+            }
+
+            // When error account is blocked
+            if (
+                $gosbank_response['code'] == GOSBANK_CODE_BROKEN_MESSAGE ||
+                $gosbank_response['code'] == GOSBANK_CODE_BLOCKED ||
+                $gosbank_response['code'] == GOSBANK_CODE_DONT_EXISTS
+            ) {
+                return [
+                    'success' => false,
+                    'blocked' => true,
+                    'message' => 'This account is blocked'
+                ];
+            }
         }
 
         $_REQUEST['from_account_id'] = $from_account_parts["account"];
