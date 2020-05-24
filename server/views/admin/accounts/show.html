@@ -40,7 +40,13 @@
                 <h2 class="title is-4">
                     <a class="has-text-white" href="/admin/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
                 </h2>
-                <p>From: <a class="has-text-white" href="/admin/accounts/{{ $transaction->from_account_id }}">{{ $transaction->from_account->name }}</a></p>
+
+                @if (is_numeric($transaction->from_account_id)):
+                    <p>From: <a class="has-text-white" href="/admin/accounts/{{ $transaction->from_account_id }}">{{ $transaction->from_account->name }}</a></p>
+                @else:
+                    <p>From: {{ $transaction->from_account_id }}</p>
+                @endif
+
                 <p>Amount: {!! format_money($transaction->amount) !!}</p>
                 <p>Send at: <i>{{ $transaction->created_at }}</i></p>
             </div>
@@ -51,7 +57,13 @@
                 <h2 class="title is-4">
                     <a class="has-text-white" href="/admin/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
                 </h2>
-                <p>To: <a class="has-text-white" href="/admin/accounts/{{ $transaction->to_account_id }}">{{ $transaction->to_account->name }}</a></p>
+
+                @if (is_numeric($transaction->to_account_id)):
+                    <p>To: <a class="has-text-white" href="/admin/accounts/{{ $transaction->to_account_id }}">{{ $transaction->to_account->name }}</a></p>
+                @else:
+                    <p>To: {{ $transaction->to_account_id }}</p>
+                @endif
+
                 <p>Amount: {!! format_money($transaction->amount) !!}</p>
                 <p>Send at: <i>{{ $transaction->created_at }}</i></p>
             </div>

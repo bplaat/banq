@@ -9,8 +9,19 @@
 </div>
 
 <h1 class="title">{{ $transaction->name }}</h1>
-<p>From: <a href="/accounts/{{ $transaction->from_account_id }}">{{ $transaction->from_account->name }}</a></p>
-<p>To: <a href="/accounts/{{ $transaction->to_account_id }}">{{ $transaction->to_account->name }}</a></p>
+
+@if (is_numeric($transaction->from_account_id)):
+    <p>From: <a href="/accounts/{{ $transaction->from_account_id }}">{{ $transaction->from_account->name }}</a></p>
+@else:
+    <p>From: {{ $transaction->from_account_id }}</p>
+@endif
+
+@if (is_numeric($transaction->to_account_id)):
+    <p>To: <a href="/accounts/{{ $transaction->to_account_id }}">{{ $transaction->to_account->name }}</a></p>
+@else:
+    <p>To: {{ $transaction->to_account_id }}</p>
+@endif
+
 <p>Amount: {!! format_money($transaction->amount) !!}</p>
 <p>Send at: <i>{{ $transaction->created_at }}</i></p>
 
