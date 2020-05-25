@@ -48,11 +48,33 @@ public class App implements Runnable, ComponentListener, SerialPortMessageListen
             Log.warning(exception);
         }
 
-        // Open the first serial port
+        // Open a serial port
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         if (serialPorts.length > 0) {
-            Log.debug("Opening the serial port");
-            serialPort = serialPorts[0];
+			
+			// Choose first port by default
+			SerialPort chosenPort = serialPorts[0];
+			
+			// If a port has been specified in the config, search for a port that matches that port
+			if (!Config.SERIAL_PORT.equals("")) {
+				boolean portFound = false;
+				
+				for (SerialPort port : serialPorts) {
+					if (port.getSystemPortName().equals(Config.SERIAL_PORT)) {
+						chosenPort = port;
+						portFound = true;
+						break;
+					}
+				}
+				
+				// If no port with that name has been found, show a message and keep using the first port
+				if (!portFound) {
+					Log.debug("No port with name " + Config.SERIAL_PORT + " was found. Defaulting to first port.");
+				}
+			}
+			
+            Log.debug("Opening serial port " + chosenPort.getSystemPortName());
+            serialPort = chosenPort;
             serialPort.openPort();
             serialPort.addDataListener(this);
         }
