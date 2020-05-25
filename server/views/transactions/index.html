@@ -31,7 +31,7 @@
     @view('pagination', [ 'page' => $page, 'last_page' => $last_page ])
 
     @foreach ($transactions as $transaction):
-        @if ($transaction->to_account_id == Auth::id()):
+        @if (!is_numeric($transaction->from_account_id) || (is_numeric($transaction->to_account_id) && $transaction->to_account->user_id == Auth::id())):
             <div class="box has-text-white has-background-success">
                 <h2 class="title is-4">
                     <a class="has-text-white" href="/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
@@ -54,7 +54,7 @@
             </div>
         @endif
 
-        @if ($transaction->from_account_id == Auth::id()):
+        @if (!is_numeric($transaction->to_account_id) || (is_numeric($transaction->from_account_id) && $transaction->from_account->user_id == Auth::id())):
             <div class="box has-text-white has-background-danger">
                 <h2 class="title is-4">
                     <a class="has-text-white" href="/transactions/{{ $transaction->id }}">{{ $transaction->name }}</a>
