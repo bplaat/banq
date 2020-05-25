@@ -4,9 +4,9 @@
 #include <LiquidCrystal.h>
 
 // keypad keybinds
-#define KEY_BACKSPACE '#'
-#define KEY_ENTER 'D'
-#define KEY_CANCEL '*'
+#define KEY_BACKSPACE '*'
+#define KEY_ENTER '#'
+#define KEY_CANCEL 'D'
 
 // max length
 #define PIN_CODE_LENGTH 4
