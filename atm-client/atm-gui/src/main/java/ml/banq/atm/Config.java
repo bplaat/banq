@@ -21,9 +21,9 @@ public class Config {
         { "ru", "Русский" }
     };
 
-	// first port will be selected if left blank
-	public static final String SERIAL_PORT = "";
-	
+    // First serial port will be used if left blank
+    public static final String SERIAL_PORT = "";
+
     public static final String[] ADMIN_RFID_UIDS = { "4a360c0b", "da88d20b" };
     public static final int[] DEFAULT_AMOUNTS = { 5, 10, 20, 50, 70, 100, 200 };
     public static final int[] ISSUE_AMOUNTS = { 5, 10, 20, 50 };
