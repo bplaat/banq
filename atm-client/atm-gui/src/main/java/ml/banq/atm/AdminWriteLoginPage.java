@@ -105,7 +105,7 @@ public class AdminWriteLoginPage extends Page {
     private void tryToLogin() {
         if (BanqAPI.getInstance().login(loginInput.getText(), new String(passwordInput.getPassword()))) {
             App.getInstance().sendBeeper(880, 250);
-            Navigator.getInstance().changePage(new AdminWriteAccountsPage(), false);
+            Navigator.getInstance().changePage(new AdminWriteAccountsPage(false), false);
         } else {
             App.getInstance().sendBeeper(110, 250);
             messageLabel.setFont(Fonts.NORMAL_BOLD);

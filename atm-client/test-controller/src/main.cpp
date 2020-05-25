@@ -19,7 +19,7 @@ char keypad_keys[KEYPAD_ROWS][KEYPAD_COLUMNS]= {
 };
 
 uint8_t keypad_row_pins[KEYPAD_ROWS] = { 3, 4, 5, 6 };
-uint8_t keypad_column_pins[KEYPAD_COLUMNS] = { 7, 8, 9, 10 };
+uint8_t keypad_column_pins[KEYPAD_COLUMNS] = { 7, 8, 9, A1 };
 
 Keypad keypad = Keypad(makeKeymap(keypad_keys), keypad_row_pins, keypad_column_pins, KEYPAD_ROWS, KEYPAD_COLUMNS);
 
@@ -27,8 +27,8 @@ Keypad keypad = Keypad(makeKeymap(keypad_keys), keypad_row_pins, keypad_column_p
 #define BEEPER_PIN 2
 
 // RFID
-#define SS_PIN A0
-#define RST_PIN A1
+#define SS_PIN 10
+#define RST_PIN A0
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key mfrc522_keyA;
@@ -56,11 +56,8 @@ void setup() {
 
 // Loop
 void loop() {
-    // Check if the computer send a message
-    if (Serial.available() > 0) {
-        // Parse the JSON message
-        deserializeJson(document, Serial);
-
+    // Check if the computer send a message and parse the message
+    if (Serial.available() > 0 && deserializeJson(document, Serial) == DeserializationError::Ok) {
         // Beeper command
         if (document["type"] == "beeper") {
             tone(BEEPER_PIN, document["frequency"], document["duration"]);

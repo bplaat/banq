@@ -208,9 +208,7 @@ public class BanqAPI {
         if (session != null) {
             try {
                 JSONObject data = fetch(Config.BANQ_API_URL + "/cards/create?key=" + Config.BANQ_API_DEVICE_KEY + "&session=" + session + "&name=" + URLEncoder.encode("Card for " + accountId, "UTF-8") + "&account_id=" + String.valueOf(parseAccountId(accountId)) + "&rfid=" + rfid_uid + "&pincode=" + pincode);
-                if (data != null) {
-                    return true;
-                }
+                return data.getBoolean("success");
             } catch (Exception exception) {
                 Log.error(exception);
             }

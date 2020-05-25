@@ -8,7 +8,7 @@ class Cards extends Model {
     const NAME_VALIDATION = 'required|min:3|max:35';
     const ACCOUNT_ID_VALIDATION = 'required|int|exists:Accounts,id';
     const ACCOUNT_ID_ADMIN_VALIDATION = 'required|int|exists:Accounts,id';
-    const RFID_VALIDATION = 'required|min:8|max:255';
+    const RFID_VALIDATION = 'required|min:8|max:255|unique:Cards';
     const PINCODE_VALIDATION = 'required|min:4|max:255';
 
     // The cards create table function

@@ -40,12 +40,21 @@ public class AdminWriteRFIDPage extends Page {
     }
 
     public void onRFIDWrite(String account_id, String rfid_uid) {
-        // When the card is written create card with API and logout
-        BanqAPI.getInstance().createCard(account_id, rfid_uid, pincode);
-        BanqAPI.getInstance().logout();
+        // When the card is written sucesfully and good created with the API
+        if (BanqAPI.getInstance().createCard(account_id, rfid_uid, pincode)) {
+            // Logout
+            BanqAPI.getInstance().logout();
 
-        // Go to the done page
-        App.getInstance().sendBeeper(880, 250);
-        Navigator.getInstance().changePage(new AdminWriteDonePage(), false);
+            // Go to the done page
+            App.getInstance().sendBeeper(880, 250);
+            Navigator.getInstance().changePage(new AdminWriteDonePage(), false);
+        }
+
+        // When a card is already written
+        else {
+            // Go to the write accounts page and show error message
+            App.getInstance().sendBeeper(440, 250);
+            Navigator.getInstance().changePage(new AdminWriteAccountsPage(true), false);
+        }
     }
 }

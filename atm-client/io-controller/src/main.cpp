@@ -87,11 +87,8 @@ void setup() {
 
 // Loop
 void loop() {
-    // Check if the computer send a message
-    if (Serial.available() > 0) {
-        // Parse the JSON message
-        deserializeJson(document, Serial);
-
+    // Check if the computer send a message and parse the message
+    if (Serial.available() > 0 && deserializeJson(document, Serial) == DeserializationError::Ok) {
         // Beeper command
         if (document["type"] == "beeper") {
             tone(BEEPER_PIN, document["frequency"], document["duration"]);

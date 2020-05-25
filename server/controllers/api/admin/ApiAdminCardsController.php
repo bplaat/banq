@@ -67,6 +67,7 @@ class ApiAdminCardsController {
 
         // Return a confirmation message
         return [
+            'success' => true,
             'message' => 'The card has been created successfully',
             'card_id' => Database::lastInsertId()
         ];

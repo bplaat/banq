@@ -13,7 +13,7 @@ public class AdminWriteAccountsPage extends Page {
     // A arraylist to hold the user payment accounts
     private ArrayList<BanqAPI.Account> accounts;
 
-    public AdminWriteAccountsPage() {
+    public AdminWriteAccountsPage(boolean showErrorMessage) {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         // Select all the payment accounts of the logged user
@@ -28,6 +28,16 @@ public class AdminWriteAccountsPage extends Page {
         add(titleLabel);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
+
+        // Create the page error message label when boolean in constructor is set
+        if (showErrorMessage) {
+            JLabel messageLabel = new JLabel(Language.getString("admin_write_accounts_page_error_message"));
+            messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            messageLabel.setFont(Fonts.NORMAL_BOLD);
+            add(messageLabel);
+
+            add(Box.createVerticalStrut(Paddings.LARGE));
+        }
 
         // Create the menu options for every account
         for (int i = 0; i < accounts.size(); i++) {

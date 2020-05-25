@@ -97,7 +97,7 @@ public class AdminWritePincodePage extends Page {
         backButton.setFont(Fonts.NORMAL);
         backButton.addActionListener((ActionEvent event) -> {
             // Go back to previous page
-            Navigator.getInstance().changePage(new AdminWriteAccountsPage());
+            Navigator.getInstance().changePage(new AdminWriteAccountsPage(false));
         });
         buttonsBox.add(backButton);
 
@@ -128,7 +128,7 @@ public class AdminWritePincodePage extends Page {
 
         // Go back to previous page
         if (key.equals("D")) {
-            Navigator.getInstance().changePage(new AdminWriteAccountsPage());
+            Navigator.getInstance().changePage(new AdminWriteAccountsPage(false));
         }
     }
 }
