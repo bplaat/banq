@@ -82,7 +82,7 @@ class ApiATMTransactionsController {
         api_validate([
             'name' => Transactions::NAME_VALIDATION,
             'from_account_id' => Transactions::FROM_ACCOUNT_ID_ADMIN_VALIDATION,
-            'rfid' => Cards::RFID_VALIDATION,
+            'rfid' => Cards::RFID_ADMIN_VALIDATION,
             'pincode' => Cards::PINCODE_VALIDATION,
             'to_account_id' => Transactions::TO_ACCOUNT_ID_VALIDATION,
             'amount' => Transactions::AMOUNT_VALIDATION

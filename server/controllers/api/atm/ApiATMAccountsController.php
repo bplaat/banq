@@ -53,7 +53,7 @@ class ApiATMAccountsController {
 
         // Validate the user input
         api_validate([
-            'rfid' => Cards::RFID_VALIDATION,
+            'rfid' => Cards::RFID_ADMIN_VALIDATION,
             'pincode' => Cards::PINCODE_VALIDATION
         ]);
 
