@@ -1,7 +1,7 @@
 // ########### CLIENT CONFIG ###########
 
 // Our country code
-const COUNTRY_CODE = 'SU';
+const COUNTRY_CODE = 'SO';
 
 // Our bank code
 const BANK_CODE = 'BANQ';
@@ -76,7 +76,7 @@ function connectToGosbank() {
             header: {
                 originCountry: COUNTRY_CODE,
                 originBank: BANK_CODE,
-                receiveCountry: 'SU',
+                receiveCountry: COUNTRY_CODE,
                 receiveBank: 'GOSB'
             },
             body: {}

@@ -116,7 +116,7 @@ public class BanqAPI {
 
     // A static function that formats a account id string
     public static String formatAccountId(int account_id) {
-        return String.format("SU-BANQ-%08d", account_id);
+        return String.format("SO-BANQ-%08d", account_id);
     }
 
     // A static function that parses a MySQL date

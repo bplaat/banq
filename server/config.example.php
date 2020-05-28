@@ -25,7 +25,7 @@ define('PAGINATION_LIMIT_API', 20);
 define('PAGINATION_MAX_LIMIT_API', 50);
 
 // Bank constants
-define('COUNTRY_CODE', 'SU');
+define('COUNTRY_CODE', 'SO');
 define('BANK_CODE', 'BANQ');
 
 // The max accounts count per user
