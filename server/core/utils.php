@@ -59,3 +59,8 @@ function parseAccountParts($account) {
         'account' => (int)substr($account, 8)
     ];
 }
+
+// A function which writes a id to an account string
+function formatAccountString($id) {
+    return sprintf("%s-%s-%08d", COUNTRY_CODE, BANK_CODE, $id);
+}

@@ -114,11 +114,6 @@ public class BanqAPI {
         return Integer.parseInt(account_id.substring(8));
     }
 
-    // A static function that formats a account id string
-    public static String formatAccountId(int account_id) {
-        return String.format("SO-BANQ-%08d", account_id);
-    }
-
     // A static function that parses a MySQL date
     public static Date parseDate(String date) throws Exception {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date);
@@ -274,8 +269,8 @@ public class BanqAPI {
                 return new Transaction(
                     json_transaction.getInt("id"),
                     json_transaction.getString("name"),
-                    formatAccountId(json_transaction.getInt("from_account_id")),
-                    formatAccountId(json_transaction.getInt("to_account_id")),
+                    json_transaction.getString("from_account_id"),
+                    json_transaction.getString("to_account_id"),
                     json_transaction.getFloat("amount"),
                     parseDate(json_transaction.getString("created_at"))
                 );

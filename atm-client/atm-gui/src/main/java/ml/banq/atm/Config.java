@@ -4,9 +4,9 @@ package ml.banq.atm;
 public class Config {
     private Config() {}
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
-    public static final boolean FULLSCREEN_MODE = false;
+    public static final boolean FULLSCREEN_MODE = true;
     public static final String BANK_NAME = "Banq";
     public static final String BANQ_API_URL = "https://banq.ml/api";
     public static final String BANQ_API_DEVICE_KEY = "d5b789b71530947b7e6bc0f23afafbba";

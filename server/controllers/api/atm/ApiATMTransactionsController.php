@@ -35,11 +35,20 @@ class ApiATMTransactionsController {
                 // Update the account in the database
                 Accounts::update($to_account_parts['account'], [ 'amount' => $to_account->amount ]);
 
+                // Convert ids to account string
+                $transaction  = Transactions::select($transaction_id)->fetch();
+                if (is_numeric($transaction->from_account_id)) {
+                    $transaction->from_account_id = formatAccountString($transaction->from_account_id);
+                }
+                if (is_numeric($transaction->to_account_id)) {
+                    $transaction->to_account_id = formatAccountString($transaction->to_account_id);
+                }
+
                 // Return a confirmation message
                 return [
                     'success' => true,
                     'blocked' => false,
-                    'transaction' => Transactions::select($transaction_id)->fetch()
+                    'transaction' => $transaction
                 ];
             }
 
@@ -148,11 +157,20 @@ class ApiATMTransactionsController {
         Accounts::update(request('from_account_id'), [ 'amount' => $from_account->amount ]);
         Accounts::update(request('to_account_id'), [ 'amount' => $to_account->amount ]);
 
+        // Convert ids to account string
+        $transaction  = Transactions::select($transaction_id)->fetch();
+        if (is_numeric($transaction->from_account_id)) {
+            $transaction->from_account_id = formatAccountString($transaction->from_account_id);
+        }
+        if (is_numeric($transaction->to_account_id)) {
+            $transaction->to_account_id = formatAccountString($transaction->to_account_id);
+        }
+
         // Return a confirmation message
         return [
             'success' => true,
             'blocked' => false,
-            'transaction' => Transactions::select($transaction_id)->fetch()
+            'transaction' => $transaction
         ];
     }
 }
