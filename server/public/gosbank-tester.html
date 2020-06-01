@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gosbank Tester</title>
+    <style>
+        body,input,button{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;font-size:16px;line-height:1.5;}
+        body{margin:0 auto;padding:16px;max-width:800px;color:#111;background-color:#fff}
+        a{color:#16c}label{display:block;font-weight:bold;margin-bottom:8px}
+        h1,h2,p,.field,pre{margin:16px 0}
+        form{margin:32px 0}input,button{padding:8px 12px}input{width:50%}
+        pre{padding:12px 16px;background-color:#eee;border:1px solid #ccc;white-space:pre-wrap}
+    </style>
+</head>
+<body>
+    <h1>Gosbank Tester</h1>
+
+    <form id="balance_form">
+        <h2>Create test balance request</h2>
+
+        <div class="field">
+            <label for="balance_account_input">Account</label>
+            <input type="text" id="balance_account_input" value="SO-DASB-00000010" />
+        </div>
+
+        <div class="field">
+            <label for="balance_rfid_input">RFID</label>
+            <input type="text" id="balance_rfid_input" value="00000000" />
+        </div>
+
+        <div class="field">
+            <label for="balance_pincode_input">Pincode</label>
+            <input type="text" id="balance_pincode_input" value="1234" />
+        </div>
+
+        <div class="field">
+            <button type="submit">Create balance request</button>
+        </div>
+
+        <a id="balance_link" href="#" target="_blank">Send a request to get an url</a>
+
+        <pre id="balance_response">Send a request to get a response</pre>
+    </form>
+
+    <form id="transaction_form">
+        <h2>Create test transaction request</h2>
+
+        <div class="field">
+            <label for="transaction_name_input">Name</label>
+            <input type="text" id="transaction_name_input" value="Gosbank Test Transaction" />
+        </div>
+
+        <div class="field">
+            <label for="transaction_from_account_input">From account</label>
+            <input type="text" id="transaction_from_account_input" value="SO-DASB-00000010" />
+        </div>
+
+        <div class="field">
+            <label for="transaction_to_account_input">To account</label>
+            <input type="text" id="transaction_to_account_input" value="SO-BANQ-00000001" />
+        </div>
+
+        <div class="field">
+            <label for="transaction_rfid_input">RFID</label>
+            <input type="text" id="transaction_rfid_input" value="00000000" />
+        </div>
+
+        <div class="field">
+            <label for="transaction_pincode_input">Pincode</label>
+            <input type="text" id="transaction_pincode_input" value="1234" />
+        </div>
+
+        <div class="field">
+            <label for="transaction_amount_input">Amount</label>
+            <input type="text" id="transaction_amount_input" value="12.34" />
+        </div>
+
+        <div class="field">
+            <button type="submit">Create transaction request</button>
+        </div>
+
+        <a id="transaction_link" href="#" target="_blank">Send a request to get an url</a>
+
+        <pre id="transaction_response">Send a request to get a response</pre>
+    </form>
+
+    <p>Made by <a href="https://bastiaan.ml/" target="_blank" rel="noreferrer">Bastiaan van der Plaat</a>, Deniz Kahriman and Don Luijendijk</p>
+
+    <script>
+        const API_URL = 'https://banq.ml/api';
+        const API_KEY = '588bc0551384f94a42b76145c89f9c11';
+
+        balance_form.onsubmit = function (event) {
+            event.preventDefault();
+
+            balance_response.textContent = 'Loading...';
+
+            const url = API_URL + '/atm/accounts/' + balance_account_input.value +'?key=' + API_KEY +
+                '&rfid=' + encodeURIComponent(balance_rfid_input.value) + '&pincode=' + encodeURIComponent(balance_pincode_input.value);
+            balance_link.href = url;
+            balance_link.textContent = url;
+
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                balance_response.textContent = xhr.responseText;
+            };
+            xhr.open('GET', url, true);
+            xhr.send();
+        };
+
+        transaction_form.onsubmit = function (event) {
+            event.preventDefault();
+
+            transaction_response.textContent = 'Loading...';
+
+            const url = API_URL + '/atm/transactions/create?key=' + API_KEY +
+                '&from_account_id=' + encodeURIComponent(transaction_from_account_input.value) + '&to_account_id=' + encodeURIComponent(transaction_to_account_input.value) +
+                '&name=' + encodeURIComponent(transaction_name_input.value) + '&rfid=' + encodeURIComponent(transaction_rfid_input.value) +
+                '&pincode=' + encodeURIComponent(transaction_pincode_input.value) + '&amount=' + encodeURIComponent(transaction_amount_input.value);
+            transaction_link.href = url;
+            transaction_link.textContent = url;
+
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                transaction_response.textContent = xhr.responseText;
+            };
+            xhr.open('GET', url, true);
+            xhr.send();
+        };
+    </script>
+</body>
+</html>

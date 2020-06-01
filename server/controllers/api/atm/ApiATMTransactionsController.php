@@ -12,10 +12,10 @@ class ApiATMTransactionsController {
             $from_account_parts['country'] != COUNTRY_CODE ||
             $from_account_parts['bank'] != BANK_CODE
         ) {
-            $gosbank_response = json_decode(file_get_contents(GOSBANK_CLIENT_API_URL + '/gosbank/transactions/create?from=' + request('from') + '&to=' + request('to') + '&pin=' + request('pincode') + '&amount=' + request('amount')));
+            $gosbank_response = json_decode(file_get_contents(GOSBANK_CLIENT_API_URL . '/gosbank/transactions/create?from=' . request('from_account_id') . '&to=' . request('to_account_id') . '&pin=' . request('pincode') . '&amount=' . request('amount')));
 
             // When success
-            if ($gosbank_response['code'] == GOSBANK_CODE_SUCCESS) {
+            if ($gosbank_response->code == GOSBANK_CODE_SUCCESS) {
                 // Parse the amount
                 $amount = parse_money_number(request('amount'));
 
@@ -53,7 +53,7 @@ class ApiATMTransactionsController {
             }
 
             // Not enough balance
-            if ($gosbank_response['code'] == GOSBANK_CODE_NOT_ENOUGH_BALANCE) {
+            if ($gosbank_response->code == GOSBANK_CODE_NOT_ENOUGH_BALANCE) {
                 return [
                     'success' => false,
                     'blocked' => false,
@@ -62,7 +62,7 @@ class ApiATMTransactionsController {
             }
 
             // Pincode false
-            if ($gosbank_response['code'] == GOSBANK_CODE_AUTH_FAILED) {
+            if ($gosbank_response->code == GOSBANK_CODE_AUTH_FAILED) {
                 return [
                     'success' => false,
                     'blocked' => false,
@@ -70,16 +70,30 @@ class ApiATMTransactionsController {
                 ];
             }
 
-            // When error account is blocked
-            if (
-                $gosbank_response['code'] == GOSBANK_CODE_BROKEN_MESSAGE ||
-                $gosbank_response['code'] == GOSBANK_CODE_BLOCKED ||
-                $gosbank_response['code'] == GOSBANK_CODE_DONT_EXISTS
-            ) {
+            // When account is blocked
+            if ($gosbank_response->code == GOSBANK_CODE_BLOCKED) {
                 return [
                     'success' => false,
                     'blocked' => true,
                     'message' => 'This account is blocked'
+                ];
+            }
+
+            // When account dont exists
+            if ($gosbank_response->code == GOSBANK_CODE_DONT_EXISTS) {
+                return [
+                    'success' => false,
+                    'blocked' => true,
+                    'message' => 'This account don\'t exists'
+                ];
+            }
+
+            // When broken message
+            if ($gosbank_response->code == GOSBANK_CODE_BROKEN_MESSAGE) {
+                return [
+                    'success' => false,
+                    'blocked' => true,
+                    'message' => 'Broken message or other bank connection error'
                 ];
             }
         }
