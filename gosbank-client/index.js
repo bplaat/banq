@@ -203,7 +203,7 @@ function connectToGosbank() {
             console.log('Balance request for: ' + data.body.account);
 
             // Fetch balance info from database via API
-            fetch(BANQ_API_URL + '/gosbank/accounts/' + data.body.account + '?key=' + BANQ_API_DEVICE_KEY + '&pincode=' + data.body.pincode, function (response) {
+            fetch(BANQ_API_URL + '/gosbank/accounts/' + data.body.account + '?key=' + BANQ_API_DEVICE_KEY + '&pincode=' + data.body.pin, function (response) {
                 responseMessage(id, 'balance', {
                     header: {
                         originCountry: COUNTRY_CODE,
@@ -221,7 +221,7 @@ function connectToGosbank() {
             console.log('Payment request for: ' + data.body.toAccount);
 
             // Send to Banq API
-            fetch(BANQ_API_URL + '/gosbank/transactions/create?key=' + BANQ_API_DEVICE_KEY + '&from=' + data.body.fromAccount + '&to=' + data.body.toAccount + '&pincode=' + data.body.pincode + '&amount=' + data.body.amount, function (reponse) {
+            fetch(BANQ_API_URL + '/gosbank/transactions/create?key=' + BANQ_API_DEVICE_KEY + '&from=' + data.body.fromAccount + '&to=' + data.body.toAccount + '&pincode=' + data.body.pin + '&amount=' + data.body.amount, function (reponse) {
                 responseMessage(id, 'payment', {
                     header: {
                         originCountry: COUNTRY_CODE,
