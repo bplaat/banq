@@ -5,17 +5,17 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 
-// The admin write done page
-public class AdminWriteDonePage extends Page {
+// The admin foreign write done page
+public class AdminWriteForeignDonePage extends Page {
     private static final long serialVersionUID = 1;
 
-    public AdminWriteDonePage(String rfid_uid) {
+    public AdminWriteForeignDonePage(String rfid_uid) {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(Box.createVerticalGlue());
 
         // Create the page title
-        JLabel titleLabel = new JLabel(Language.getString("admin_write_done_page_title"));
+        JLabel titleLabel = new JLabel(Language.getString("admin_write_foreign_done_page_title"));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(Fonts.HEADER);
         add(titleLabel);
@@ -23,7 +23,7 @@ public class AdminWriteDonePage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         // Create the page message label
-        JLabel messageLabel = new JLabel(Language.getString("admin_write_done_page_message"));
+        JLabel messageLabel = new JLabel(Language.getString("admin_write_foreign_done_page_message"));
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setFont(Fonts.NORMAL);
         add(messageLabel);
@@ -31,7 +31,7 @@ public class AdminWriteDonePage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         // Create the page rfid label
-        JLabel rfidLabel = new JLabel(Language.getString("admin_write_done_page_rfid_prefix") + " " + rfid_uid);
+        JLabel rfidLabel = new JLabel(Language.getString("admin_write_foreign_done_page_rfid_prefix") + " " + rfid_uid);
         rfidLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         rfidLabel.setFont(Fonts.NORMAL);
         add(rfidLabel);

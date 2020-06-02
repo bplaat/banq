@@ -47,7 +47,7 @@ public class AdminWriteRFIDPage extends Page {
 
             // Go to the done page
             App.getInstance().sendBeeper(880, 250);
-            Navigator.getInstance().changePage(new AdminWriteDonePage(), false);
+            Navigator.getInstance().changePage(new AdminWriteDonePage(rfid_uid), false);
         }
 
         // When a card is already written

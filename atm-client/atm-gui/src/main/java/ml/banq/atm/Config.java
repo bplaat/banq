@@ -28,4 +28,5 @@ public class Config {
     public static final int[] DEFAULT_AMOUNTS = { 5, 10, 20, 50, 70, 100, 200 };
     public static final int[] ISSUE_AMOUNTS = { 5, 10, 20, 50 };
     public static final int PRINTER_PAPER_WIDTH = 32;
+    public static final int ACCOUNT_STRING_LENGTH = 16;
 }

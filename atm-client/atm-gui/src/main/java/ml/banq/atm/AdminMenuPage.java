@@ -36,7 +36,7 @@ public class AdminMenuPage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         // Create the second menu option
-        JLabel menu2Label = new JLabel("2. " + Language.getString("admin_menu_page_location"));
+        JLabel menu2Label = new JLabel("2. " + Language.getString("admin_menu_page_write_foreign"));
         menu2Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu2Label.setFont(Fonts.NORMAL);
         add(menu2Label);
@@ -44,18 +44,26 @@ public class AdminMenuPage extends Page {
         add(Box.createVerticalStrut(Paddings.LARGE));
 
         // Create the third menu option
-        JLabel menu3Label = new JLabel("3. " + Language.getString("admin_menu_page_bills"));
+        JLabel menu3Label = new JLabel("3. " + Language.getString("admin_menu_page_location"));
         menu3Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu3Label.setFont(Fonts.NORMAL);
         add(menu3Label);
 
         add(Box.createVerticalStrut(Paddings.LARGE));
 
-        // Create the second menu / back option
-        JLabel menu4Label = new JLabel("D. " + Language.getString("admin_menu_page_back"));
+        // Create the fourth menu option
+        JLabel menu4Label = new JLabel("4. " + Language.getString("admin_menu_page_bills"));
         menu4Label.setAlignmentX(Component.CENTER_ALIGNMENT);
         menu4Label.setFont(Fonts.NORMAL);
         add(menu4Label);
+
+        add(Box.createVerticalStrut(Paddings.LARGE));
+
+        // Create the back menu option
+        JLabel backLabel = new JLabel("D. " + Language.getString("admin_menu_page_back"));
+        backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backLabel.setFont(Fonts.NORMAL);
+        add(backLabel);
 
         add(Box.createVerticalGlue());
     }
@@ -66,17 +74,22 @@ public class AdminMenuPage extends Page {
             Navigator.getInstance().changePage(new AdminWriteLoginPage());
         }
 
-        // When menu option 2 is selected go to the admin location page
+        // When menu option 2 is selected go to the admin write foreign input page
         if (key.equals("2")) {
+            Navigator.getInstance().changePage(new AdminWriteForeignInputPage());
+        }
+
+        // When menu option 3 is selected go to the admin location page
+        if (key.equals("3")) {
             Navigator.getInstance().changePage(new AdminLocationPage());
         }
 
-        // When menu option 3 is selected go to the admin bills page
-        if (key.equals("3")) {
+        // When menu option 4 is selected go to the admin bills page
+        if (key.equals("4")) {
             Navigator.getInstance().changePage(new AdminBillsPage());
         }
 
-        // When menu option 3 / back is selected go back to the welcome page and hide the cursor again
+        // When menu option back is selected go back to the welcome page and hide the cursor again
         if (key.equals("D")) {
             if (Config.FULLSCREEN_MODE) {
                 App.getInstance().hideCursor();
