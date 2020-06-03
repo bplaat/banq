@@ -23,7 +23,7 @@ class ApiATMAccountsController {
                         'name' => 'Gosbank Account',
                         'type' => Accounts::TYPE_PAYMENT,
                         'amount' => $gosbank_response->balance,
-                        'createdAt' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s')
                     ]
                 ];
             }
