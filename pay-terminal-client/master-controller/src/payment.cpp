@@ -33,9 +33,9 @@ void lcd_print_payment_amount() {
 
     lcd.print("Amount: P");
     printed_chars += 9;
-    
+
     int length = payment_amount.length();
-    
+
     // start with a zero if there are only decimals
     if (length - 2 <= 0) {
         lcd.print('0');
@@ -49,16 +49,16 @@ void lcd_print_payment_amount() {
             printed_chars++;
         }
     }
-    
+
     lcd.print('.');
     printed_chars++;
-    
+
     // print zeroes to pad decimals (if there are less than 2 decimals)
     for (int i = 0; i < max(0, 2 - length); i++) {
         lcd.print('0');
         printed_chars++;
     }
-    
+
     // print decimals
     for (int i = max(0, length - 2); i < length; i++) {
         lcd.print(payment_amount[i]);
@@ -69,7 +69,7 @@ void lcd_print_payment_amount() {
     for (int i = printed_chars; i < 16; i++) {
         lcd.print(' ');
     }
-    
+
 }
 
 State input_payment_amount() {
@@ -83,7 +83,7 @@ State input_payment_amount() {
     else if (communication_data.key_pressed(KEY_ENTER) && payment_amount != "") {
         return user_scan_card;
     }
-    
+
     // else check if the last key is a digit, append it to the string if it's not full
     else if (communication_data.new_key && isdigit(communication_data.key) &&
              payment_amount.length() < PAYMENT_AMOUNT_LENGTH)
@@ -182,7 +182,7 @@ ApiResponse call_api() {
         json_raw = http.getString();
         Serial.println(json_raw);
     }
-    
+
     // return error on failure
     else {
         Serial.print("HTTP request failed, error: ");
@@ -194,7 +194,7 @@ ApiResponse call_api() {
 
     // deserialize json
     StaticJsonDocument<JSON_BUFFER_SIZE> document;
-    
+
 
     DeserializationError err = deserializeJson(document, json_raw);
 
@@ -248,7 +248,7 @@ void do_transaction() {
     if (communication_data.key_pressed(KEY_CANCEL)) {
         state = begin;
     }
-    
+
     switch (state) {
 
         case begin:
@@ -322,7 +322,7 @@ void do_transaction() {
                 for(unsigned i = pin_code.length(); i < PIN_CODE_LENGTH; i++) lcd.print("-");
             }
             break;
-        
+
         case calling_api:
 
             // call api and print result on lcd
@@ -348,7 +348,7 @@ void do_transaction() {
             state = transaction_done_blocking;
             post_transaction_reset_time = millis();
             break;
-            
+
         case transaction_done_blocking:
 
             // do nothing for BLOCKING_RESET_TIME ms
