@@ -38,10 +38,11 @@ function fetch(url, callback) {
 
 // A function that parses a standart account id string
 function parseAccountParts(account) {
+    const parts = account.split('-');
     return {
-        country: account.substring(0, 2),
-        bank: account.substring(3, 7),
-        account: parseInt(account.substring(8))
+        country: parts[0],
+        bank: parts[1],
+        account: parseInt(parts[2])
     };
 }
 

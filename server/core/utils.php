@@ -53,10 +53,11 @@ function get_ip () {
 
 // A function that parses a standart account id string
 function parseAccountParts($account) {
+    $parts = explode('-', $account);
     return [
-        'country' => substr($account, 0, 2),
-        'bank' => substr($account, 3, 4),
-        'account' => (int)substr($account, 8)
+        'country' => $parts[0],
+        'bank' => $parts[1],
+        'account' => (int)$parts[2]
     ];
 }
 

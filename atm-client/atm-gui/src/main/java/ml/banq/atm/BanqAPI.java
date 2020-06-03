@@ -109,9 +109,21 @@ public class BanqAPI {
         return instance;
     }
 
-    // A static function that parses a account id string
-    public static int parseAccountId(String account_id) {
-        return Integer.parseInt(account_id.substring(8));
+    // The account parts data class
+    public static class AccountParts {
+        public String country;
+        public String bank;
+        public int account;
+    }
+
+    // A static function that parses an account string to its parts
+    public static AccountParts parseAccountParts(String account) {
+        String[] parts = account.split("-");
+        AccountParts accountParts = new AccountParts();
+        accountParts.country = parts[0];
+        accountParts.bank = parts[1];
+        accountParts.account = Integer.parseInt(parts[2]);
+        return accountParts;
     }
 
     // A static function that parses a MySQL date
@@ -202,7 +214,7 @@ public class BanqAPI {
     public boolean createCard(String accountId, String rfid_uid, String pincode) {
         if (session != null) {
             try {
-                JSONObject data = fetch(Config.BANQ_API_URL + "/cards/create?key=" + Config.BANQ_API_DEVICE_KEY + "&session=" + session + "&name=" + URLEncoder.encode("Card for " + accountId, "UTF-8") + "&account_id=" + String.valueOf(parseAccountId(accountId)) + "&rfid=" + rfid_uid + "&pincode=" + pincode);
+                JSONObject data = fetch(Config.BANQ_API_URL + "/cards/create?key=" + Config.BANQ_API_DEVICE_KEY + "&session=" + session + "&name=" + URLEncoder.encode("Card for " + accountId, "UTF-8") + "&account_id=" + String.valueOf(parseAccountParts(accountId).account) + "&rfid=" + rfid_uid + "&pincode=" + pincode);
                 return data.getBoolean("success");
             } catch (Exception exception) {
                 Log.error(exception);
