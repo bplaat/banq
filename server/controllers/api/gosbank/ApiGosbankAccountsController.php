@@ -60,7 +60,7 @@ class ApiGosbankAccountsController {
         // Fetch account info
         $account = Accounts::select($account_parts['account'])->fetch();
 
-        // Return sucess message
+        // Return success message
         return [
             'code' => 200,
             'balance' => (float)$account->amount

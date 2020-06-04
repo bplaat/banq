@@ -31,7 +31,7 @@ class PaymentLinks extends Model {
     public static function generateLink () {
         $link = '';
         for ($i = 0; $i < 10; $i++) {
-            $link .= substr(str_shuffle("0123456789bcdfghjklmnpqrstvwxyz"), 0, 1);
+            $link .= substr(str_shuffle('0123456789bcdfghjklmnpqrstvwxyz'), 0, 1);
         }
         if (static::select($link)->rowCount() == 1) {
             return static::generateLink();

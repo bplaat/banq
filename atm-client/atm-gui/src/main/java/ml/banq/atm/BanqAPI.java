@@ -156,7 +156,10 @@ public class BanqAPI {
     // The API login method
     public boolean login(String login, String password) {
         try {
-            JSONObject data = fetch(Config.BANQ_API_URL + "/auth/login?key=" + Config.BANQ_API_DEVICE_KEY + "&login=" + URLEncoder.encode(login, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8"));
+            JSONObject data = fetch(Config.BANQ_API_URL + "/auth/login?key=" + Config.BANQ_API_DEVICE_KEY +
+                "&login=" + URLEncoder.encode(login, "UTF-8") +
+                "&password=" + URLEncoder.encode(password, "UTF-8"));
+
             if (data.getBoolean("success")) {
                 session = data.getString("session");
                 return true;
@@ -170,7 +173,9 @@ public class BanqAPI {
     // The API logout method
     public boolean logout() {
         try {
-            JSONObject data = fetch(Config.BANQ_API_URL + "/auth/logout?key=" + Config.BANQ_API_DEVICE_KEY + "&session=" + session);
+            JSONObject data = fetch(Config.BANQ_API_URL + "/auth/logout?key=" + Config.BANQ_API_DEVICE_KEY +
+                "&session=" + session);
+
             if (data.getBoolean("success")) {
                 session = null;
                 return true;
@@ -185,7 +190,8 @@ public class BanqAPI {
     public ArrayList<Account> getPaymentAccounts() {
         if (session != null) {
             try {
-                JSONObject data = fetch(Config.BANQ_API_URL + "/accounts?key=" + Config.BANQ_API_DEVICE_KEY + "&session=" + session);
+                JSONObject data = fetch(Config.BANQ_API_URL + "/accounts?key=" + Config.BANQ_API_DEVICE_KEY +
+                    "&session=" + session);
 
                 ArrayList<Account> accounts = new ArrayList<Account>();
                 JSONArray json_accounts = data.getJSONArray("accounts");
@@ -214,7 +220,13 @@ public class BanqAPI {
     public boolean createCard(String accountId, String rfid_uid, String pincode) {
         if (session != null) {
             try {
-                JSONObject data = fetch(Config.BANQ_API_URL + "/cards/create?key=" + Config.BANQ_API_DEVICE_KEY + "&session=" + session + "&name=" + URLEncoder.encode("Card for " + accountId, "UTF-8") + "&account_id=" + String.valueOf(parseAccountParts(accountId).account) + "&rfid=" + rfid_uid + "&pincode=" + pincode);
+                JSONObject data = fetch(Config.BANQ_API_URL + "/cards/create?key=" + Config.BANQ_API_DEVICE_KEY +
+                    "&session=" + session +
+                    "&name=" + URLEncoder.encode("Card for " + accountId, "UTF-8") +
+                    "&account_id=" + String.valueOf(parseAccountParts(accountId).account) +
+                    "&rfid=" + rfid_uid +
+                    "&pincode=" + pincode);
+
                 return data.getBoolean("success");
             } catch (Exception exception) {
                 Log.error(exception);
@@ -234,7 +246,10 @@ public class BanqAPI {
 
     public Account getAccount(String accountId, String rfid_uid, String pincode) throws WrongPincodeException, BlockedCardException {
         try {
-            JSONObject data = fetch(Config.BANQ_API_URL + "/atm/accounts/" + accountId + "?key=" + Config.BANQ_API_DEVICE_KEY + "&rfid=" + rfid_uid + "&pincode=" + pincode);
+            JSONObject data = fetch(Config.BANQ_API_URL + "/atm/accounts/" + accountId + "?key=" + Config.BANQ_API_DEVICE_KEY +
+                "&rfid=" + rfid_uid +
+                "&pincode=" + pincode);
+
             if (data.getBoolean("success")) {
                 // Read the account data
                 JSONObject json_account = data.getJSONObject("account");
@@ -274,9 +289,16 @@ public class BanqAPI {
     // The ATM API create a transaction
     public Transaction createTransaction(String fromAccountId, String rfid_uid, String pincode, String name, String toAccountId, float amount) {
         try {
-            JSONObject data = fetch(Config.BANQ_API_URL + "/atm/transactions/create?key=" + Config.BANQ_API_DEVICE_KEY + "&name=" + URLEncoder.encode(name, "UTF-8") +
-                "&from_account_id=" + fromAccountId + "&to_account_id=" + toAccountId + "&rfid=" + rfid_uid + "&pincode=" + pincode + "&amount=" + amount);
+            JSONObject data = fetch(Config.BANQ_API_URL + "/atm/transactions/create?key=" + Config.BANQ_API_DEVICE_KEY +
+                "&name=" + URLEncoder.encode(name, "UTF-8") +
+                "&from_account_id=" + fromAccountId +
+                "&to_account_id=" + toAccountId +
+                "&rfid=" + rfid_uid +
+                "&pincode=" + pincode +
+                "&amount=" + amount);
+
             if (data != null && data.getBoolean("success")) {
+                // Read transaction data
                 JSONObject json_transaction = data.getJSONObject("transaction");
                 return new Transaction(
                     json_transaction.getInt("id"),

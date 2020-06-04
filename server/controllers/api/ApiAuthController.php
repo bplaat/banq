@@ -8,7 +8,7 @@ class ApiAuthController {
             // Return a confirmation message
             return [
                 'success' => true,
-                'message' => 'The user has sucessfull logged in',
+                'message' => 'The user has successfull logged in',
                 'session' => $session
             ];
         } else {
@@ -60,7 +60,7 @@ class ApiAuthController {
 
         // Return a confirmation message
         return [
-            'message' => 'The user has sucessfull registerd',
+            'message' => 'The user has successfull registerd',
             'session' => $session
         ];
     }

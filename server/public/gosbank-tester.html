@@ -21,17 +21,12 @@
 
         <div class="field">
             <label for="balance_account_input">Account</label>
-            <input type="text" id="balance_account_input" value="SO-DASB-00000010" />
-        </div>
-
-        <div class="field">
-            <label for="balance_rfid_input">RFID</label>
-            <input type="text" id="balance_rfid_input" value="00000000" />
+            <input type="text" id="balance_account_input" value="SO-BANK-00000002" />
         </div>
 
         <div class="field">
             <label for="balance_pincode_input">Pincode</label>
-            <input type="text" id="balance_pincode_input" value="1234" />
+            <input type="text" id="balance_pincode_input" value="2006" />
         </div>
 
         <div class="field">
@@ -53,7 +48,7 @@
 
         <div class="field">
             <label for="transaction_from_account_input">From account</label>
-            <input type="text" id="transaction_from_account_input" value="SO-DASB-00000010" />
+            <input type="text" id="transaction_from_account_input" value="SO-BANK-00000002" />
         </div>
 
         <div class="field">
@@ -62,13 +57,8 @@
         </div>
 
         <div class="field">
-            <label for="transaction_rfid_input">RFID</label>
-            <input type="text" id="transaction_rfid_input" value="00000000" />
-        </div>
-
-        <div class="field">
             <label for="transaction_pincode_input">Pincode</label>
-            <input type="text" id="transaction_pincode_input" value="1234" />
+            <input type="text" id="transaction_pincode_input" value="2006" />
         </div>
 
         <div class="field">
@@ -97,7 +87,7 @@
             balance_response.textContent = 'Loading...';
 
             const url = API_URL + '/atm/accounts/' + balance_account_input.value +'?key=' + API_KEY +
-                '&rfid=' + encodeURIComponent(balance_rfid_input.value) + '&pincode=' + encodeURIComponent(balance_pincode_input.value);
+                '&pincode=' + encodeURIComponent(balance_pincode_input.value);
             balance_link.href = url;
             balance_link.textContent = url;
 
@@ -115,9 +105,11 @@
             transaction_response.textContent = 'Loading...';
 
             const url = API_URL + '/atm/transactions/create?key=' + API_KEY +
-                '&from_account_id=' + encodeURIComponent(transaction_from_account_input.value) + '&to_account_id=' + encodeURIComponent(transaction_to_account_input.value) +
-                '&name=' + encodeURIComponent(transaction_name_input.value) + '&rfid=' + encodeURIComponent(transaction_rfid_input.value) +
-                '&pincode=' + encodeURIComponent(transaction_pincode_input.value) + '&amount=' + encodeURIComponent(transaction_amount_input.value);
+                '&from_account_id=' + encodeURIComponent(transaction_from_account_input.value) +
+                '&to_account_id=' + encodeURIComponent(transaction_to_account_input.value) +
+                '&name=' + encodeURIComponent(transaction_name_input.value) +
+                '&pincode=' + encodeURIComponent(transaction_pincode_input.value) +
+                '&amount=' + encodeURIComponent(transaction_amount_input.value);
             transaction_link.href = url;
             transaction_link.textContent = url;
 

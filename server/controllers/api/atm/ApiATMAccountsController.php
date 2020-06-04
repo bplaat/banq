@@ -6,11 +6,14 @@ class ApiATMAccountsController {
         // Parse the account parts
         $account_parts = parseAccountParts($account);
 
-        // Check if it is a banq account
+        // Check if it is a foreign bank account
         if (
-            $account_parts['country'] != COUNTRY_CODE ||
-            $account_parts['bank'] != BANK_CODE
+            !(
+                $account_parts['country'] == COUNTRY_CODE &&
+                $account_parts['bank'] == BANK_CODE
+            )
         ) {
+            // Send to Gosbank
             $gosbank_response = json_decode(file_get_contents(GOSBANK_CLIENT_API_URL . '/gosbank/accounts/' . $account . '?pin=' . request('pincode')));
 
             // When success
@@ -65,35 +68,32 @@ class ApiATMAccountsController {
             }
         }
 
-        // Validate the user input
-        api_validate([
-            'rfid' => Cards::RFID_ADMIN_VALIDATION,
-            'pincode' => Cards::PINCODE_VALIDATION
-        ]);
+        // Banq account
+        else {
+            // Get card if by account id
+            $cardQuery = Cards::select([ 'account_id' => $account_parts['account'] ]);
+            if ($cardQuery->rowCount() == 0) {
+                return [
+                    'success' => false,
+                    'blocked' => true,
+                    'message' => 'This account don\'t exists'
+                ];
+            }
 
-        // Check if card is blocked
-        $cardQuery = Cards::select([ 'rfid' => request('rfid') ]);
-        if ($cardQuery->rowCount() == 0) {
-            return [
-                'success' => false,
-                'blocked' => false,
-                'message' => 'This card is not found in the Banq database'
-            ];
-        }
+            // Fetch card info
+            $card = $cardQuery->fetch();
 
-        $card = $cardQuery->fetch();
-        if ($card->blocked) {
-            return [
-                'success' => false,
-                'blocked' => true,
-                'message' => 'This card is blocked'
-            ];
-        } else {
+            // Check if card is blocked
+            if ($card->blocked) {
+                return [
+                    'success' => false,
+                    'blocked' => true,
+                    'message' => 'This account is blocked'
+                ];
+            }
+
             // Check if the pincode matches
-            if (password_verify(request('pincode'), $card->pincode)) {
-                // The pincode is good reset attempts
-                Cards::update($card->id, [ 'attempts' => 0 ]);
-            } else {
+            if (!password_verify(request('pincode'), $card->pincode)) {
                 $attempts = $card->attempts + 1;
 
                 // Check if the attempts max
@@ -102,28 +102,31 @@ class ApiATMAccountsController {
                     return [
                         'success' => false,
                         'blocked' => true,
-                        'message' => 'This card is now blocked'
+                        'message' => 'This account is now blocked'
                     ];
                 }
 
-                // Increment the card attempts var
-                else {
-                    Cards::update($card->id, [ 'attempts' => $attempts ]);
-                    return [
-                        'success' => false,
-                        'blocked' => false,
-                        'message' => 'Pincode false'
-                    ];
-                }
+                // If card is not blocked but pincode is false
+                Cards::update($card->id, [ 'attempts' => $attempts ]);
+                return [
+                    'success' => false,
+                    'blocked' => false,
+                    'message' => 'Pincode false'
+                ];
             }
+
+            // The pincode is good reset attempts
+            Cards::update($card->id, [ 'attempts' => 0 ]);
+
+            // Fetch account info
+            $account = Accounts::select($account_parts['account'])->fetch();
+
+            // Return success message
+            return [
+                'success' => true,
+                'blocked' => false,
+                'account' => $account
+            ];
         }
-
-        $account = Accounts::select($account_parts['account'])->fetch();
-
-        return [
-            'success' => true,
-            'blocked' => false,
-            'account' => $account
-        ];
     }
 }
