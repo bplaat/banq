@@ -167,7 +167,7 @@ function connectToGosbank() {
                     }
 
                     else if (pathname === '/api/gosbank/transactions/create') {
-                        requestPayment(query.from, query.to, query.pin, query.amount, function ({ body }) {
+                        requestPayment(query.from, query.to, query.pin, parseFloat(query.amount), function ({ body }) {
                             res.writeHead(200, { 'Content-Type': 'application/json' });
                             res.end(JSON.stringify(body));
                         });

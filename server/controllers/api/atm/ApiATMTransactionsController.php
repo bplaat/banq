@@ -126,7 +126,7 @@ class ApiATMTransactionsController {
                 return [
                     'success' => false,
                     'blocked' => true,
-                    'message' => 'Other side didn\'t accepted the transaction, error code: ' . $gosbank_response->code
+                    'message' => 'Foreign bank didn\'t accepted the transaction, error code: ' . $gosbank_response->code
                 ];
             }
         }
@@ -151,7 +151,7 @@ class ApiATMTransactionsController {
                 if ($amount <= 0) {
                     return [
                         'success' => false,
-                        'blocked' => false,
+                        'blocked' => true,
                         'message' => 'Foreign bank accepts negative or zero amount'
                     ];
                 }
