@@ -15,7 +15,7 @@ function get_limit () {
 
 // A function that parse input money amount
 function parse_money_number ($string) {
-    return floatval($string);
+    return round(floatval($string), 2);
 }
 
 // A function which formats money

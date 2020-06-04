@@ -10,15 +10,6 @@ class ApiATMTransactionsController {
         // Parse amount
         $amount = parse_money_number(request('amount'));
 
-        // Check if amount is not 0 or smaller
-        if ($amount <= 0) {
-            return [
-                'success' => false,
-                'blocked' => false,
-                'message' => 'Amount can\'t be negative'
-            ];
-        }
-
         // Check we pay money foreign bank account
         if (
             (
@@ -80,6 +71,15 @@ class ApiATMTransactionsController {
 
             // Fetch account info
             $from_account = Accounts::select($from_account_parts['account'])->fetch();
+
+            // Check if amount is not negative or zero
+            if ($amount <= 0) {
+                return [
+                    'success' => false,
+                    'blocked' => false,
+                    'message' => 'Amount can\'t be negative or zero'
+                ];
+            }
 
             // Check saldo
             if ($from_account->amount < $amount) {
@@ -147,6 +147,15 @@ class ApiATMTransactionsController {
 
             // When success
             if ($gosbank_response->code == GOSBANK_CODE_SUCCESS) {
+                // Check if amount is not negative or zero
+                if ($amount <= 0) {
+                    return [
+                        'success' => false,
+                        'blocked' => false,
+                        'message' => 'Foreign bank accepts negative or zero amount'
+                    ];
+                }
+
                 // Fetch to account info
                 $to_account = Accounts::select($to_account_parts['account'])->fetch();
 
@@ -275,6 +284,15 @@ class ApiATMTransactionsController {
             // Fetch account info
             $from_account = Accounts::select($from_account_parts['account'])->fetch();
             $to_account = Accounts::select($to_account_parts['account'])->fetch();
+
+            // Check if amount is not negative or zero
+            if ($amount <= 0) {
+                return [
+                    'success' => false,
+                    'blocked' => false,
+                    'message' => 'Amount can\'t be negative or zero'
+                ];
+            }
 
             // Check saldo
             if ($from_account->amount < $amount) {
