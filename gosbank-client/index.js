@@ -9,6 +9,9 @@ const BANK_CODE = 'BANQ';
 // When disconnect try to reconnect timeout (in ms)
 const RECONNECT_TIMEOUT = 2 * 1000;
 
+// The no response timeout
+const NO_RESPONSE_TIMEOUT = 2 * 1000;
+
 // The local http server port
 const HTTP_SERVER_PORT = process.env.PORT || 8081;
 
@@ -160,14 +163,29 @@ function connectToGosbank() {
 
                     else if (pathname.startsWith('/api/gosbank/accounts/')) {
                         const account = pathname.replace('/api/gosbank/accounts/', '');
+
+                        const noResponseTimeout = setTimeout(function () {
+                            res.writeHead(200, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ code: 400 }));
+                        }, NO_RESPONSE_TIMEOUT);
+
                         requestBalance(account, query.pin, function ({ body }) {
+                            clearTimeout(noResponseTimeout);
+
                             res.writeHead(200, { 'Content-Type': 'application/json' });
                             res.end(JSON.stringify(body));
                         });
                     }
 
                     else if (pathname === '/api/gosbank/transactions/create') {
+                        const noResponseTimeout = setTimeout(function () {
+                            res.writeHead(200, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ code: 400 }));
+                        }, NO_RESPONSE_TIMEOUT);
+
                         requestPayment(query.from, query.to, query.pin, parseFloat(query.amount), function ({ body }) {
+                            clearTimeout(noResponseTimeout);
+
                             res.writeHead(200, { 'Content-Type': 'application/json' });
                             res.end(JSON.stringify(body));
                         });
