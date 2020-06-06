@@ -16,6 +16,15 @@ class ApiATMAccountsController {
             // Send to Gosbank
             $gosbank_response = json_decode(file_get_contents(GOSBANK_CLIENT_API_URL . '/gosbank/accounts/' . $account . '?pin=' . request('pincode')));
 
+            // Check if gosbank client is alive
+            if ($gosbank_response == false) {
+                return [
+                    'success' => false,
+                    'blocked' => true,
+                    'message' => 'Gosbank client is not active'
+                ];
+            }
+
             // When success
             if ($gosbank_response->code == GOSBANK_CODE_SUCCESS) {
                 return [

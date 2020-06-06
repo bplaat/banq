@@ -93,6 +93,15 @@ class ApiATMTransactionsController {
             // Send to Gosbank
             $gosbank_response = json_decode(file_get_contents(GOSBANK_CLIENT_API_URL . '/gosbank/transactions/create?from=' . request('from_account_id') . '&to=' . request('to_account_id') . '&pin=' . request('pincode') . '&amount=' . request('amount')));
 
+            // Check if gosbank client is alive
+            if ($gosbank_response == false) {
+                return [
+                    'success' => false,
+                    'blocked' => true,
+                    'message' => 'Gosbank client is not active'
+                ];
+            }
+
             // When success
             if ($gosbank_response->code == GOSBANK_CODE_SUCCESS) {
                 // Add the transaction to the database
@@ -144,6 +153,15 @@ class ApiATMTransactionsController {
         ) {
             // Send to Gosbank
             $gosbank_response = json_decode(file_get_contents(GOSBANK_CLIENT_API_URL . '/gosbank/transactions/create?from=' . request('from_account_id') . '&to=' . request('to_account_id') . '&pin=' . request('pincode') . '&amount=' . request('amount')));
+
+            // Check if gosbank client is alive
+            if ($gosbank_response == false) {
+                return [
+                    'success' => false,
+                    'blocked' => true,
+                    'message' => 'Gosbank client is not active'
+                ];
+            }
 
             // When success
             if ($gosbank_response->code == GOSBANK_CODE_SUCCESS) {
